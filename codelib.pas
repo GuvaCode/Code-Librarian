@@ -175,12 +175,12 @@ uses Clipbrd, codesrch, LazIDEIntf;
 
 { TCodeFrm }
 procedure TCodeFrm.FormCreate(Sender: TObject);
-var dbPath:string;
+var dbFPath:string;
 begin
  caption:=SMenuName;
- dbPath:=LazarusIDE.GetPrimaryConfigPath;
- CodeDB := OpenDB(dbPath+'/CodeLibrarian.dat'); // do not localize
- if CodeDB = nil then CodeDB := createNewDb(dbPath+'/CodeLibrarian.dat');
+ dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+'CodeLibrarian.dat';
+ CodeDB := OpenDB(dbFPath); // do not localize
+ if CodeDB = nil then CodeDB := createNewDb(dbFPath);
  InitializeTreeView;
  //
 end;
@@ -583,7 +583,7 @@ begin
      FieldDefs.Add('Type', ftString, 1, True);
      FieldDefs.Add('Parent', ftInteger, 0, False);
      FieldDefs.Add('System', ftInteger, 0, False);
-     FieldDefs.Add('Topic', ftString, 50, False);
+     FieldDefs.Add('Topic', ftString, 250, False);
      FieldDefs.Add('Code', ftMemo, 0, False);
      FieldDefs.Add('Language', ftString, 4, False);
      IndexDefs.Add('Main', 'Key', [ixPrimary]);
