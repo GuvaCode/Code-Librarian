@@ -7,6 +7,7 @@ interface
 uses
   Classes, SysUtils, DB, BufDataset, Forms, Controls, Graphics, Dialogs,
   DBGrids, ComCtrls, StdCtrls, ExtCtrls, Menus, DBCtrls, ActnList,  LCLintf,
+  LazFileUtils,
   SynEdit,
   SynHighlighterCpp,
   SynHighlighterHTML,
@@ -159,6 +160,7 @@ var
   CodeFrm: TCodeFrm = nil;
 
 resourcestring
+  SMenuName = 'Code Librarian';
   SNewCode = 'New Code';
   SNewFolder = 'New Folder';
   SSnippet = 'snippet';
@@ -168,18 +170,19 @@ resourcestring
 
 
 implementation
-uses Clipbrd, codesrch;
+uses Clipbrd, codesrch, LazIDEIntf;
 {$R *.lfm}
 
 { TCodeFrm }
 procedure TCodeFrm.FormCreate(Sender: TObject);
+var dbPath:string;
 begin
- CodeDB := OpenDB('code.dat'); // do not localize
- if CodeDB = nil then CodeDB := createNewDb('code.dat');
+ caption:=SMenuName;
+ dbPath:=LazarusIDE.GetPrimaryConfigPath;
+ CodeDB := OpenDB(dbPath+'/CodeLibrarian.dat'); // do not localize
+ if CodeDB = nil then CodeDB := createNewDb(dbPath+'/CodeLibrarian.dat');
  InitializeTreeView;
  //
-
-
 end;
 
 procedure TCodeFrm.Folder1Click(Sender: TObject);
@@ -575,7 +578,7 @@ begin
   try
     with Result do
     begin
-     Filename := Application.Location + DBFileName;
+     Filename := DBFileName;
      FieldDefs.Add('Key', ftAutoInc, 0, False);
      FieldDefs.Add('Type', ftString, 1, True);
      FieldDefs.Add('Parent', ftInteger, 0, False);
@@ -609,7 +612,7 @@ begin
   {$Warnings On}
   with Result do
   begin
-    Filename := Application.Location + DBFileName;
+    Filename:=DBFileName;
     try
       Open;
       IndexFieldNames := 'Parent';
@@ -790,7 +793,11 @@ try
     FirstLoop := True;
     while Node <> nil do
     begin
+      {$Warnings Off}
+      {$Notes Off}
       if CodeDB.Locate('Key', Integer(Node.Data), []) then
+      {$Notes On}
+      {$Warnings On}
       begin
         if FirstLoop and (ActiveControl = CodeText) and (CodeText.SelAvail) then
         begin

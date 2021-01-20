@@ -1161,6 +1161,7 @@ object CodeFrm: TCodeFrm
         Caption = '&Find'
         ImageIndex = 11
         ShortCut = 16454
+        OnClick = tbFindClick
       end
       object FindNext1: TMenuItem
         Caption = 'Find &Next'

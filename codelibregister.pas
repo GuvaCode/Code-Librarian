@@ -19,7 +19,7 @@ end;
 
 procedure Register;
 begin
-  RegisterIDEMenuCommand(mnuTools, 'CodeLibrarianItem', 'Code Librarian',
+  RegisterIDEMenuCommand(mnuTools, 'CodeLibrarianItem', SMenuName,
     nil, @ShowCodeLib, nil, 'ce_interface');
 end;
 
