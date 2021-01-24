@@ -1,6 +1,7 @@
 unit codelib;
 
 {$mode objfpc}{$H+}
+
 {$WARN 6058 off : Call to subroutine "$1" marked as inline is not inlined}
 {$WARN 5024 off : Parameter "$1" not used}
 {$WARN 4055 off : Conversion between ordinals and pointers is not portable}
@@ -10,8 +11,8 @@ interface
 uses
    Clipbrd, Forms, Db, BufDataset, ImgList, Controls, StdActns, Classes,
    LazFileUtils, SysUtils, LCLType,
-   ActnList, Dialogs, Menus, ComCtrls, ExtCtrls, SynHighlighterPas,
-   SynEdit, SynHighlighterCpp, SynHighlighterHTML, SynHighlighterSQL;
+   ActnList, Dialogs, Menus, ComCtrls, ExtCtrls,
+   SynEdit, SynHighlighterCpp, SynHighlighterHTML, SynHighlighterSQL, SynHighlighterPas;
 
 type
   TSearchRecord = record
@@ -202,15 +203,16 @@ type
   end;
 
 resourcestring
-  SMenuName = 'Code Librarian ...';
-  SModified = 'Modified';
-  SSnippet = 'snippet';
-  SFolder = 'folder';
-  SConfirmDelete = 'Delete this %s?';
-  SNotForFormFiles = 'Copy/Paste is not allowed in form files.';
-  SCannotAttach = 'Subitems cannot be attached to a code snippet, only folders.';
-  SNewCode = 'New Code';
-  SCouldNotCreateDatabase = 'Could not create database.';
+  rsMenuName = 'Code Librarian';
+  rsModified = 'Modified';
+  rsSnippet = 'snippet';
+  rsFolder = 'folder';
+  rsConfirmDelete = 'Delete this %s?';
+  rsNotForFormFiles = 'Copy/Paste is not allowed in form files.';
+  rsCannotAttach = 'Subitems cannot be attached to a code snippet, only folders.';
+  rsNewCode = 'New Code';
+  rsCouldNotCreateDatabase = 'Could not create database.';
+  rsNewFolder = 'New Folder';
 
   const
   ConfigurationSection = 'CodeLib';
@@ -370,7 +372,6 @@ begin
     FieldByName('Topic').AsString := Desc; // Do not localize.
     FieldByname('Type').AsString := 'F';  // Do not localize.
     Post;
-
   end;
   NNode := tvTopics.Items.AddChildObject(Node, Desc,
     Pointer(PtrInt(CodeDB.FieldByName('Key').AsInteger))); // Do not localize.
@@ -386,7 +387,7 @@ procedure TCodeFrm.SetModified(New: Boolean);
 begin
   FModified := New;
   if FModified then
-    StatusBar.Panels[1].Text := SModified
+    StatusBar.Panels[1].Text := rsModified
   else
     StatusBar.Panels[1].Text := ''; // No need to localize.
 end;
@@ -407,9 +408,8 @@ begin
     if mitPascal.Checked then
       FieldByName('Language').AsString := 'P'  // Do not localize.
     else
-      FieldByName('Language').AsString := 'C';  // Do not localize.
+      FieldByName('Language').AsString := 'N';  // Do not localize.
     Post;
-
   end;
   Node := tvTopics.Items.AddChildObject(tvTopics.Selected, Desc,
     Pointer(PtrInt(CodeDB.FieldByName('Key').AsInteger)));  // Do not localize.
@@ -445,7 +445,7 @@ begin
   finally
     Screen.Cursor := crDefault;
   end;}
- caption:=SMenuName;
+ caption:=rsMenuName;
  dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+'CodeLibrarian.dat';
  CodeDB := OpenDB(dbFPath); // do not localize
  if CodeDB = nil then CodeDB := createNewDb(dbFPath);
@@ -541,7 +541,6 @@ begin
         CodeDB.FieldByName('Language').AsString := 'N'
     end;
     CodeDB.Post;
-
   end;
 end;
 
@@ -560,40 +559,32 @@ begin
       begin
         FCodeText.Lines.BeginUpdate;
         try
-          if CodeDB.FieldByName('Language').AsString = 'N' then  // Do not localize.
-          begin
-            // This is raw text
-            mitNone.Checked := True;
-            FCodeText.HighLighter := nil;
-          end
-          else
-          if CodeDB.FieldByName('Language').AsString = 'C' then  // Do not localize.
-          begin
-            // This is CPP source code
-            mitCPP.Checked := True;
-            FCodeText.HighLighter := SynCPP;
-          end
-          else
-          if CodeDB.FieldByName('Language').AsString = 'H' then  // Do not localize.
-          begin
-            // This is HTML source code
-            mitHTML.Checked := True;
-            FCodeText.HighLighter := SynHTML;
-          end
-          else
-          if CodeDB.FieldByName('Language').AsString = 'S' then  // Do not localize.
-          begin
-            // This is SQL code
-            mitSQL.Checked := True;
-            FCodeText.HighLighter := SynSQL;
-          end
-          else
-          begin
-            // This is Object Pascal source code.
-            mitPascal.Checked := True;
-            FCodeText.HighLighter := SynPAS;
+          case  CodeDB.FieldByName('Language').AsString of
+
+          'N': begin // This is non source code
+                 mitNone.Checked := True;
+                 FCodeText.HighLighter := nil;
+               end;
+          'C': begin // This is CPP source code
+                 mitNone.Checked := True;
+                 FCodeText.HighLighter := SynCPP;
+               end;
+          'H': begin // This is HTML source code
+                 mitNone.Checked := True;
+                 FCodeText.HighLighter := SynHTML;
+               end;
+          'S': begin // This is SQL source code
+                 mitNone.Checked := True;
+                 FCodeText.HighLighter := SynSQL;
+               end;
+          'P': begin // This is Pascal source code
+                 mitNone.Checked := True;
+                 FCodeText.HighLighter := SynPas;
+               end;
           end;
+
           FCodeText.Text:=CodeDB.FieldByName('Code').AsString;
+
         finally
           FCodeText.Lines.EndUpdate;
         end;
@@ -637,10 +628,10 @@ begin
     if CodeDB.Locate('Key', PtrInt(tvTopics.Selected.Data), []) then  // Do not localize.
     begin
       if tvTopics.Selected.ImageIndex = CodeSnippetImageIndex then
-        NodeType := SSnippet
+        NodeType := rsSnippet
       else
-        NodeType := SFolder;
-      if MessageDlg(Format(SConfirmDelete, [NodeType]), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+        NodeType := rsFolder;
+      if MessageDlg(Format(rsConfirmDelete, [NodeType]), mtConfirmation, [mbYes, mbNo], 0) = mrYes then
       begin
         CodeDB.Delete;
         DeleteRecords(tvTopics.Selected);
@@ -666,7 +657,6 @@ begin
     FCodeText.Print(tvTopics.Selected.Text)
   else
     FCodeText.Print(RS_PRINTTITLE); }
-
 end;
 
 procedure TCodeFrm.ExitExecute(Sender: TObject);
@@ -688,8 +678,7 @@ end;
 
 procedure TCodeFrm.PasteExecute(Sender: TObject);
 begin
-  if not FCodeText.ReadOnly then
-    FCodeText.PasteFromClipBoard
+  if not FCodeText.ReadOnly then FCodeText.PasteFromClipBoard
 end;
 
 procedure TCodeFrm.HelpAboutExecute(Sender: TObject);
@@ -868,7 +857,7 @@ begin
       Exit;
     if Node.ImageIndex = CodeSnippetImageIndex then
     begin
-      MessageDlg(SCannotAttach, mtError, [mbOK], 0);
+      MessageDlg(rsCannotAttach, mtError, [mbOK], 0);
       Exit;
     end;
     if CodeDB.Locate('Key', PtrInt(tvTopics.Selected.Data), []) then  // Do not localize.
@@ -876,7 +865,6 @@ begin
       CodeDB.Edit;
       CodeDB.FieldByName('Parent').AsInteger := PtrInt(Node.Data);  // Do not localize.
       CodeDB.Post;
-
       tvTopics.Selected.MoveTo(Node, naAddChild);
     end;
   except
@@ -920,7 +908,6 @@ begin
 end;
 
 procedure TCodeFrm.SaveSettings;
-
 begin
   // Do not localize any of the following lines.
  { BaseKey := ConfigInfo.GExpertsIdeRootRegistryKey;
@@ -988,16 +975,12 @@ end;
 
 procedure TCodeFrm.HelpExecute(Sender: TObject);
 begin
-
  // GxContextHelp(Self, 17);
-
 end;
 
 procedure TCodeFrm.HelpContentsExecute(Sender: TObject);
 begin
-
  // GxContextHelpContents(Self);
-
 end;
 
 procedure TCodeFrm.StatusBarResize(Sender: TObject);
@@ -1013,7 +996,7 @@ var
 begin
   Screen.Cursor := crHourglass;
   try
-    Node := AddCode(SNewCode);
+    Node := AddCode(rsNewCode);
     if Node <> nil then
     begin
       tvTopics.Selected := Node;
@@ -1024,14 +1007,11 @@ begin
   end;
 end;
 
-resourcestring
-  SNewFolder = 'New Folder';
-
 procedure TCodeFrm.NewRootFolderExecute(Sender: TObject);
 var
   Node: TTreeNode;
 begin
-  Node := AddFolder(nil, SNewFolder);
+  Node := AddFolder(nil, rsNewFolder);
   if Node <> nil then
   begin
     tvTopics.Selected := Node;
@@ -1045,7 +1025,7 @@ var
 begin
   Screen.Cursor := crHourglass;
   try
-    Node := AddFolder(tvTopics.Selected, SNewFolder);
+    Node := AddFolder(tvTopics.Selected, rsNewFolder);
     if Node <> nil then
     begin
       tvTopics.Selected := Node;
@@ -1149,7 +1129,7 @@ end;
 procedure TCodeFrm.FormHide(Sender: TObject);
 begin
   if FModified then SaveRecord;
-   CloseDB;
+  CloseDB;
 end;
 
 procedure TCodeFrm.FormShow(Sender: TObject);
@@ -1166,6 +1146,7 @@ end;
 procedure TCodeFrm.GenericSyntaxHighlightingExecute(Sender: TObject);
 begin
   Modified := True;
+
   if Sender = actSyntaxNone then
     FCodeText.HighLighter :=  nil
   else

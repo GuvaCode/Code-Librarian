@@ -193,7 +193,7 @@ object CodeFrm: TCodeFrm
       object mitFileNew: TMenuItem
         Caption = '&New'
         object mitFileNewRootFolder: TMenuItem
-          Action = actNewSnippet
+          Action = actNewRootFolder
         end
         object mitFileNewFolder: TMenuItem
           Action = actNewFolder
@@ -460,16 +460,16 @@ object CodeFrm: TCodeFrm
     end
     object actEditCopyFromIde: TAction
       Category = 'Edit'
-      Caption = 'Copy from IDE Editor'
-      Hint = 'Copy from IDE Editor'
+      Caption = 'Copy select text from IDE Editor'
+      Hint = 'Copy select text from IDE Editor'
       ImageIndex = 9
       OnExecute = CopyFromIdeExecute
       ShortCut = 24662
     end
     object actEditPasteToIde: TAction
       Category = 'Edit'
-      Caption = 'Paste to IDE Editor'
-      Hint = 'Paste to IDE Editor'
+      Caption = 'Paste select text to IDE Editor'
+      Hint = 'Paste select text to IDE Editor'
       ImageIndex = 8
       OnExecute = PasteToIdeExecute
       ShortCut = 24643

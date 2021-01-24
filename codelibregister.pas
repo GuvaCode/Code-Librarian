@@ -31,11 +31,11 @@ begin
   if IDECommandCategory <> nil then
   begin
     IDECommand := RegisterIDECommand(IDECommandCategory, 'Code Librarian',
-    SMenuName, IDEShortCutX, nil, @ShowCodeLib);
+    rsMenuName, IDEShortCutX, nil, @ShowCodeLib);
     if IDECommand <> nil then
       RegisterIDEButtonCommand(IDECommand);
   end;
-  RegisterIDEMenuCommand(itmOptionsDialogs, 'Code Librarian', SMenuName,
+  RegisterIDEMenuCommand(itmOptionsDialogs, 'Code Librarian', rsMenuName+' ...',
     nil, @ShowCodeLib, IDECommand, 'ce_interface');
 end;
 
