@@ -23,7 +23,7 @@ type
   { TCodeFrm }
  type
   TCodeFrm = class(TForm)
-    BufDataset1: TBufDataset;
+    CodeDB: TBufDataset;
     DataSource1: TDataSource;
     StatusBar: TStatusBar;
     Splitter: TSplitter;
@@ -182,8 +182,6 @@ type
     FSearch: TSearchRecord;
     FDatabasePath: string;
     FCodeText: TSynEdit;
-   // FCurrentSyntaxMode: TSynCustomHighliter;
-    CodeDB: TDataSet;
     function CreateNewDB(const DatabaseFile: string): TBufDataset;
     function OpenDB(const DatabaseFile: string): TBufDataset;
     procedure CloseDB(ClearFileName: Boolean = False);
@@ -193,13 +191,10 @@ type
     procedure SaveSettings;
     procedure LoadSettings;
     procedure SetModified(New: Boolean);
-
     procedure SortNodes;
     procedure AddDefaultIndexes(DataSet: TBufDataset);
     procedure SetupSyntaxHighlightingControl;
   public
-    //constructor Create(AOwner: TComponent); override;
-   // destructor Destroy; override;
     function AddFolder(Node: TTreeNode; const Desc: string): TTreeNode;
     function AddCode(const Desc: string): TTreeNode;
     property Modified: Boolean read FModified write SetModified;
@@ -207,7 +202,7 @@ type
   end;
 
 resourcestring
-  SMenuName = 'Code Librarian';
+  SMenuName = 'Code Librarian ...';
   SModified = 'Modified';
   SSnippet = 'snippet';
   SFolder = 'folder';
@@ -353,8 +348,8 @@ begin
       CodeDB.Next;
     end;
   finally
-    tvTopics.SortType := stText;
-    //tvTopics.SortType := stNone;
+    //tvTopics.SortType := stText;
+    tvTopics.SortType := stNone;
     tvTopics.Items.EndUpdate;
   end;
 
@@ -371,7 +366,7 @@ begin
     if Node <> nil then
       FieldByName('Parent').AsInteger := PtrInt(Node.Data)  // Do not localize.
     else
-      FieldByName('Parent').AsInteger := 0;  // Do not localize.
+    FieldByName('Parent').AsInteger := 0;  // Do not localize.
     FieldByName('Topic').AsString := Desc; // Do not localize.
     FieldByname('Type').AsString := 'F';  // Do not localize.
     Post;
@@ -406,7 +401,6 @@ begin
   with CodeDB do
   begin
     Insert;
-
     FieldByName('Parent').AsInteger := PtrInt(tvTopics.Selected.Data);  // Do not localize.
     FieldByName('Topic').AsString := Desc;  // Do not localize.
     FieldByName('Type').AsString := 'C';  // Do not localize.
@@ -451,11 +445,13 @@ begin
   finally
     Screen.Cursor := crDefault;
   end;}
-caption:=SMenuName;
+ caption:=SMenuName;
  dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+'CodeLibrarian.dat';
  CodeDB := OpenDB(dbFPath); // do not localize
  if CodeDB = nil then CodeDB := createNewDb(dbFPath);
  InitializeTreeView;
+ mitPascal.Checked := True;
+ FModified := False;
 end;
 
 procedure TCodeFrm.mActionsUpdate(AAction: TBasicAction; var Handled: Boolean);
@@ -468,8 +464,10 @@ begin
   HaveEditorSelection := Length(FCodeText.SelText) > 0;
   actEditCut.Enabled := HaveEditorSelection;
   actEditCopy.Enabled := HaveEditorSelection;
+
   // bug on linux on menu
   // actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
+
   HaveSelectedNode  := tvTopics.Selected <> nil;
   SnippetIsSelected := HaveSelectedNode and (tvTopics.Selected.ImageIndex = CodeSnippetImageIndex);
 
@@ -494,7 +492,6 @@ begin
     actNewSnippet.Enabled := not SnippetIsSelected;
     actNewFolder.Enabled := not SnippetIsSelected;
   end;
-
   Handled := True;
 end;
 
@@ -506,8 +503,7 @@ end;
 procedure TCodeFrm.tvTopicsChanging(Sender: TObject; Node: TTreeNode;
   var AllowChange: Boolean);
 begin
-  if (tvTopics.Selected <> nil) and Modified then
-    SaveRecord;
+  if (tvTopics.Selected <> nil) and Modified then SaveRecord;
   // Do not alter value of AllowChange.
 end;
 
@@ -516,9 +512,7 @@ begin
   // This is called from the destructor where
   // we may be in a forced clean-up state due
   // to an exception in the constructor.
-  if ExceptObject <> nil then
-    Exit;
-
+  if ExceptObject <> nil then Exit;
   // Do not localize any of the following lines.
   Modified := False;
   if not CodeDB.Active then Exit;
@@ -718,10 +712,7 @@ var
 begin
   Editor:=SourceEditorManagerIntf.ActiveEditor;
    if Editor=nil then exit;
-    //editor.CurrentLineText:=FCodeText.SelText;
-     //editor.CursorTextXY;
     editor.InsertLine(editor.CursorTextXY.Y,FCodeText.SelText,true);
-    //  EDitor.InsertLine(Editor.LinesInWindow,'test');
 end;
 
 procedure TCodeFrm.FindExecute(Sender: TObject);
@@ -866,10 +857,8 @@ begin
 end;
 
 procedure TCodeFrm.tvTopicsDragDrop(Sender, Source: TObject; X, Y: Integer);
-
 var
   Node: TTreeNode;
-
 begin
   try
     if tvTopics.Selected = nil then
@@ -919,16 +908,13 @@ var
   Node: TTreeNode;
 begin
   // OnChanging doesn't fire under Delphi 5 when calling Collapse below
-  if (tvTopics.Selected <> nil) and Modified then
-    SaveRecord;
-
+  if (tvTopics.Selected <> nil) and Modified then SaveRecord;
   Node := tvTopics.Items.GetFirstNode;
   while Node <> nil do
   begin
     Node.Collapse(True);
     Node := Node.GetNextSibling;
   end;
-
   // OnChange doesn't fire under Delphi 5 when calling Collapse above
   tvTopicsChange(tvTopics, tvTopics.Selected);
 end;
@@ -1173,14 +1159,13 @@ end;
 
 procedure TCodeFrm.SortNodes;
 begin
-  tvTopics.AlphaSort;
-  //tvTopics.SortType := stNone;
+  //tvTopics.AlphaSort;
+  tvTopics.SortType := stNone;
 end;
 
 procedure TCodeFrm.GenericSyntaxHighlightingExecute(Sender: TObject);
 begin
   Modified := True;
-
   if Sender = actSyntaxNone then
     FCodeText.HighLighter :=  nil
   else
@@ -1212,13 +1197,14 @@ begin
   FCodeText.Gutter.Parts[1].Visible:=false;
   FCodeText.BorderStyle:=bsNone;
   FCodeText.RightEdge:=-1;
+  FCodetext.Keystrokes[88].ShortCut:=(0);
   actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
 end;
 {
 constructor TCodeFrm.Create(AOwner: TComponent);
 var dbFPath:string;
 begin
- { inherited Create(AOwner);
+  inherited Create(AOwner);
 
   SetupSyntaxHighlightingControl;
 
@@ -1238,18 +1224,18 @@ begin
     FModified := False;
   finally
     Screen.Cursor := crDefault;
-  end; }
-end;
+  end;
+end; }
 
-destructor TCodeFrm.Destroy;
+{destructor TCodeFrm.Destroy;
 begin
   if FModified then
     SaveRecord;
-{  SaveSettings;
+    SaveSettings;
   CloseDB(True);
   FreeAndNil(CodeDB);
 
-  inherited Destroy;}
+  inherited Destroy;
 end; }
 
 procedure TCodeFrm.tvTopicsDblClick(Sender: TObject);

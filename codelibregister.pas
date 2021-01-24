@@ -5,22 +5,38 @@ unit CodeLibRegister;
 interface
 
 uses
-  Forms, Dialogs, LazIDEIntf, ProjectIntf, MenuIntf, CodeLib;
+  Classes,
+  LCLType,
+  MenuIntf, IDECommands, ToolBarIntf, PackageLinkIntf;
 
  procedure Register;
 
 implementation
+uses CodeLib;
 
 procedure ShowCodeLib(Sender: TObject);
 begin
-   if CodeFrm=nil then CodeFrm:=TCodeFrm.Create(Application);
+   if CodeFrm=nil then CodeFrm:=TCodeFrm.Create(nil);
    CodeFrm.ShowOnTop;
 end;
 
 procedure Register;
+var
+  IDEShortCutX: TIDEShortCut;
+  IDECommandCategory: TIDECommandCategory;
+  IDECommand: TIDECommand;
 begin
-  RegisterIDEMenuCommand(mnuTools, 'CodeLibrarianItem', SMenuName,
-    nil, @ShowCodeLib, nil, 'ce_interface');
+  IDEShortCutX := IDEShortCut(VK_C, [ssCtrl, ssAlt], VK_UNKNOWN, []);
+  IDECommandCategory := IDECommandList.FindCategoryByName(CommandCategoryToolMenuName);
+  if IDECommandCategory <> nil then
+  begin
+    IDECommand := RegisterIDECommand(IDECommandCategory, 'Code Librarian',
+    SMenuName, IDEShortCutX, nil, @ShowCodeLib);
+    if IDECommand <> nil then
+      RegisterIDEButtonCommand(IDECommand);
+  end;
+  RegisterIDEMenuCommand(itmOptionsDialogs, 'Code Librarian', SMenuName,
+    nil, @ShowCodeLib, IDECommand, 'ce_interface');
 end;
 
 end.

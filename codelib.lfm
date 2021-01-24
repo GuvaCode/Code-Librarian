@@ -1,11 +1,11 @@
 object CodeFrm: TCodeFrm
-  Left = 384
-  Height = 568
-  Top = 195
-  Width = 655
+  Left = 569
+  Height = 391
+  Top = 144
+  Width = 660
   Caption = 'Code Librarian'
-  ClientHeight = 544
-  ClientWidth = 655
+  ClientHeight = 367
+  ClientWidth = 660
   KeyPreview = True
   Menu = MainMenu
   OnCreate = FormCreate
@@ -15,7 +15,7 @@ object CodeFrm: TCodeFrm
   LCLVersion = '2.0.10.0'
   object Splitter: TSplitter
     Left = 205
-    Height = 503
+    Height = 326
     Top = 24
     Width = 4
     ParentColor = False
@@ -23,8 +23,8 @@ object CodeFrm: TCodeFrm
   object StatusBar: TStatusBar
     Left = 0
     Height = 17
-    Top = 527
-    Width = 655
+    Top = 350
+    Width = 660
     Font.Color = clWindowText
     Font.Height = -11
     Font.Name = 'Ubuntu'
@@ -43,9 +43,9 @@ object CodeFrm: TCodeFrm
   end
   object pnlView: TPanel
     Left = 209
-    Height = 503
+    Height = 326
     Top = 24
-    Width = 446
+    Width = 451
     Align = alClient
     BevelOuter = bvNone
     Caption = 'This editor is created at runtime'
@@ -54,7 +54,7 @@ object CodeFrm: TCodeFrm
   end
   object tvTopics: TTreeView
     Left = 0
-    Height = 503
+    Height = 326
     Top = 24
     Width = 205
     Align = alLeft
@@ -87,10 +87,9 @@ object CodeFrm: TCodeFrm
     Left = 0
     Height = 24
     Top = 0
-    Width = 655
+    Width = 660
     AutoSize = True
     Images = ilActions
-    ParentColor = False
     TabOrder = 0
     object tbnNewFolder: TToolButton
       Left = 1
@@ -187,8 +186,8 @@ object CodeFrm: TCodeFrm
   end
   object MainMenu: TMainMenu
     Images = ilActions
-    Left = 392
-    Top = 184
+    Left = 344
+    Top = 40
     object mitFile: TMenuItem
       Caption = '&File'
       object mitFileNew: TMenuItem
@@ -285,8 +284,8 @@ object CodeFrm: TCodeFrm
   end
   object pmTopics: TPopupMenu
     Images = ilActions
-    Left = 392
-    Top = 264
+    Left = 344
+    Top = 96
     object mitTreeNew: TMenuItem
       Caption = '&New'
       object mitTreeNewSnippet: TMenuItem
@@ -312,8 +311,8 @@ object CodeFrm: TCodeFrm
   object pmCode: TPopupMenu
     Images = ilActions
     OnPopup = pmCodePopup
-    Left = 264
-    Top = 324
+    Left = 344
+    Top = 160
     object mitEditorCut: TMenuItem
       Action = actEditCut
     end
@@ -372,8 +371,8 @@ object CodeFrm: TCodeFrm
   object mActions: TActionList
     Images = ilActions
     OnUpdate = mActionsUpdate
-    Left = 264
-    Top = 112
+    Left = 280
+    Top = 40
     object actDelete: TAction
       Category = 'File'
       Caption = 'Delete'
@@ -465,7 +464,7 @@ object CodeFrm: TCodeFrm
       Hint = 'Copy from IDE Editor'
       ImageIndex = 9
       OnExecute = CopyFromIdeExecute
-      ShortCut = 24643
+      ShortCut = 24662
     end
     object actEditPasteToIde: TAction
       Category = 'Edit'
@@ -473,7 +472,7 @@ object CodeFrm: TCodeFrm
       Hint = 'Paste to IDE Editor'
       ImageIndex = 8
       OnExecute = PasteToIdeExecute
-      ShortCut = 24662
+      ShortCut = 24643
     end
     object actEditFind: TAction
       Category = 'Edit'
@@ -569,8 +568,8 @@ object CodeFrm: TCodeFrm
     end
   end
   object ilActions: TImageList
-    Left = 384
-    Top = 115
+    Left = 280
+    Top = 96
     Bitmap = {
       4C69150000001000000010000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1251,36 +1250,36 @@ object CodeFrm: TCodeFrm
     Enabled = False
     CompilerMode = pcmDelphi
     NestedComments = False
-    Left = 328
-    Top = 115
+    Left = 224
+    Top = 40
   end
-  object BufDataset1: TBufDataset
+  object CodeDB: TBufDataset
     FieldDefs = <>
-    Left = 264
-    Top = 264
+    Left = 424
+    Top = 40
   end
   object DataSource1: TDataSource
-    DataSet = BufDataset1
-    Left = 264
-    Top = 184
+    DataSet = CodeDB
+    Left = 424
+    Top = 104
   end
   object SynCpp: TSynCppSyn
     DefaultFilter = 'Файлы C++ (*.c,*.cpp,*.h,*.hpp,*.hh)|*.c;*.cpp;*.h;*.hpp;*.hh'
     Enabled = False
-    Left = 328
-    Top = 184
+    Left = 224
+    Top = 96
   end
   object SynHTML: TSynHTMLSyn
     DefaultFilter = 'Документ HTML (*.htm,*.html)|*.htm;*.html'
     Enabled = False
-    Left = 328
-    Top = 264
+    Left = 224
+    Top = 160
   end
   object SynSQL: TSynSQLSyn
     DefaultFilter = 'Файлы SQL (*.sql)|*.sql'
     Enabled = False
     SQLDialect = sqlSybase
-    Left = 331
-    Top = 324
+    Left = 224
+    Top = 224
   end
 end
