@@ -244,7 +244,7 @@ begin
      FieldDefs.Add('System', ftInteger, 0, False);
      FieldDefs.Add('Topic', ftString, 250, False);
      FieldDefs.Add('Code', ftMemo, 0, False);
-     FieldDefs.Add('Language', ftString, 4, False);
+     FieldDefs.Add('Language', ftString, 1, False);
      IndexDefs.Add('Main', 'Key', [ixPrimary]);
      IndexDefs.Add('Parent', 'Parent', []);
      IndexDefs.Add('System', 'System', []);
@@ -566,25 +566,23 @@ begin
                  FCodeText.HighLighter := nil;
                end;
           'C': begin // This is CPP source code
-                 mitNone.Checked := True;
+                 mitCPP.Checked := True;
                  FCodeText.HighLighter := SynCPP;
                end;
           'H': begin // This is HTML source code
-                 mitNone.Checked := True;
+                 mitHTML.Checked := True;
                  FCodeText.HighLighter := SynHTML;
                end;
           'S': begin // This is SQL source code
-                 mitNone.Checked := True;
+                 mitSQL.Checked := True;
                  FCodeText.HighLighter := SynSQL;
                end;
           'P': begin // This is Pascal source code
-                 mitNone.Checked := True;
+                 mitPascal.Checked := True;
                  FCodeText.HighLighter := SynPas;
-               end;
+             end;
           end;
-
           FCodeText.Text:=CodeDB.FieldByName('Code').AsString;
-
         finally
           FCodeText.Lines.EndUpdate;
         end;

@@ -7,7 +7,7 @@ interface
 uses
   Classes,
   LCLType,
-  MenuIntf, IDECommands, ToolBarIntf, PackageLinkIntf;
+  MenuIntf, IDECommands, ToolBarIntf;
 
  procedure Register;
 
