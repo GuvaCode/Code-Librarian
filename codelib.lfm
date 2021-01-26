@@ -158,12 +158,12 @@ object CodeFrm: TCodeFrm
     object tbnExpandAll: TToolButton
       Left = 209
       Top = 2
-      Action = actExpandAll
+      Action = actContractAll
     end
     object tbnContractAll: TToolButton
       Left = 232
       Top = 2
-      Action = actContractAll
+      Action = actExpandAll
     end
     object tbnSep4: TToolButton
       Left = 255

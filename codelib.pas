@@ -222,14 +222,13 @@ resourcestring
   DefaultDBFileName = 'CodeDB.db';
 
   var
-   // CodeFrm: TCodeFrm;
     CodeFrm: TCodeFrm = nil;
 
 implementation
 {$R *.lfm}
 
 uses
-   LazIDEIntf, SrcEditorIntf;
+   LazIDEIntf, SrcEditorIntf, codesrch;
 
 function TCodeFrm.CreateNewDB(const DatabaseFile: string): TBufDataset;
 begin
@@ -475,7 +474,7 @@ begin
   if Editor <> nil then
   begin
    actEditCopyFromIde.Enabled := (SnippetIsSelected and (Editor.SelectionAvailable));
-    actEditPasteToIde.Enabled := (SnippetIsSelected and (FCodeText.SelAvail))
+   actEditPasteToIde.Enabled := (SnippetIsSelected and (FCodeText.SelAvail))
   end;
 
   actDelete.Enabled := HaveSelectedNode;
@@ -704,8 +703,8 @@ end;
 
 procedure TCodeFrm.FindExecute(Sender: TObject);
 begin
-  //try
-    {with TfmCodeSearch.Create(nil) do
+  try
+    with TfmCodeSearch.Create(nil) do
     try
       if ShowModal = mrOK then
       begin
@@ -720,7 +719,7 @@ begin
   except
     on E: Exception do
       showmessage(E.Message);
-  end;  }
+  end;
 end;
 
 procedure TCodeFrm.DoSearch(First: Boolean);
@@ -819,11 +818,12 @@ begin
           tvTopics.SetFocus
         else
         begin
+          showMessage('OnFind');
           FCodeText.Enabled:=true;
           FCodeText.SetFocus;
           Dec(Match);
            FCodeText.SelStart := Match + 1;
-          FCodeText.SelEnd := Match + Length(FSearch.Text) + 1;
+           FCodeText.SelEnd := Match + Length(FSearch.Text) + 1;
         end;
       end;
     except
@@ -1133,6 +1133,7 @@ end;
 procedure TCodeFrm.FormShow(Sender: TObject);
 begin
   if (CodeDB <> nil) and not CodeDB.Active then CodeDB.Open;
+  SetupSyntaxHighlightingControl;
 end;
 
 procedure TCodeFrm.SortNodes;
@@ -1165,8 +1166,29 @@ end;
 
 procedure TCodeFrm.SetupSyntaxHighlightingControl;
 begin
+  if not Assigned(FCodeText) then
   FCodeText := TSynEdit.Create(Self);
-  FCodeText.HighLighter := SynPas;
+
+  FCodeText.HighLighter := SynCPP;
+  SourceEditorManagerIntf.GetEditorControlSettings(FCodeText);
+ // SourceEditorManagerIntf.GetHighlighterSettings(SynPas);
+  SourceEditorManagerIntf.GetHighlighterSettings(SynCPP);
+  SourceEditorManagerIntf.GetHighlighterSettings(SynSQL);
+  SourceEditorManagerIntf.GetHighlighterSettings(SynHTML);
+  // bug in pascal no insert for SynPAs
+  SynPas.AsmAttri:=SynCpp.AsmAttri;
+  SynPas.CommentAttri:=SynCpp.CommentAttri;
+  SynPas.DirectiveAttri:=SynCPP.DirecAttri;
+  SynPas.IdentifierAttri:=SynCPP.IdentifierAttri;
+ // SynPas.IDEDirectiveAttri:=SynCPP.InvalidAttri;
+  SynPas.KeyAttri:=SynCPP.KeyAttri;
+  SynPAs.NumberAttri:=SynCPP.NumberAttri;
+  SynPas.SpaceAttri:=SynCpp.SpaceAttri;
+  SynPas.SymbolAttri:=SynCpp.SymbolAttri;
+  // end black hack
+
+
+  //
   FCodeText.Align := alClient;
   FCodeText.PopupMenu := pmCode;
   FCodeText.OnChange := @CodeTextChange;
