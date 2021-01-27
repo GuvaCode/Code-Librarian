@@ -243,7 +243,7 @@ begin
      FieldDefs.Add('System', ftInteger, 0, False);
      FieldDefs.Add('Topic', ftString, 250, False);
      FieldDefs.Add('Code', ftMemo, 0, False);
-     FieldDefs.Add('Language', ftString, 1, False);
+     FieldDefs.Add('Language', ftString, 10, False);
      IndexDefs.Add('Main', 'Key', [ixPrimary]);
      IndexDefs.Add('Parent', 'Parent', []);
      IndexDefs.Add('System', 'System', []);
@@ -405,9 +405,9 @@ begin
     FieldByName('Topic').AsString := Desc;  // Do not localize.
     FieldByName('Type').AsString := 'C';  // Do not localize.
     if mitPascal.Checked then
-      FieldByName('Language').AsString := 'P'  // Do not localize.
+      FieldByName('Language').AsString := 'PASCAL'  // Do not localize.
     else
-      FieldByName('Language').AsString := 'N';  // Do not localize.
+      FieldByName('Language').AsString := 'NONE';  // Do not localize.
     Post;
   end;
   Node := tvTopics.Items.AddChildObject(tvTopics.Selected, Desc,
@@ -445,7 +445,7 @@ begin
     Screen.Cursor := crDefault;
   end;}
  caption:=rsMenuName;
- dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+'CodeLibrarian.dat';
+ dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+'codelibrarian.dat';
  CodeDB := OpenDB(dbFPath); // do not localize
  if CodeDB = nil then CodeDB := createNewDb(dbFPath);
  InitializeTreeView;
@@ -526,18 +526,18 @@ begin
       CodeDB.FieldByName('Code').AsString:=FCodeText.Text;
 
       if mitPascal.Checked then
-        CodeDB.FieldByName('Language').AsString := 'P'
+        CodeDB.FieldByName('Language').AsString := 'PASCAL'
       else
       if mitCPP.Checked then
-        CodeDB.FieldByName('Language').AsString := 'C'
+        CodeDB.FieldByName('Language').AsString := 'CPP'
       else
       if mitHTML.Checked then
-        CodeDB.FieldByName('Language').AsString := 'H'
+        CodeDB.FieldByName('Language').AsString := 'HTML'
       else
       if mitSQL.Checked then
-        CodeDB.FieldByName('Language').AsString := 'S'
+        CodeDB.FieldByName('Language').AsString := 'SQL'
       else
-        CodeDB.FieldByName('Language').AsString := 'N'
+        CodeDB.FieldByName('Language').AsString := 'NONE'
     end;
     CodeDB.Post;
   end;
@@ -560,26 +560,26 @@ begin
         try
           case  CodeDB.FieldByName('Language').AsString of
 
-          'N': begin // This is non source code
-                 mitNone.Checked := True;
-                 FCodeText.HighLighter := nil;
+          'NONE': begin // This is non source code
+                   mitNone.Checked := True;
+                   FCodeText.HighLighter := nil;
+                  end;
+          'CPP': begin // This is CPP source code
+                  mitCPP.Checked := True;
+                  FCodeText.HighLighter := SynCPP;
                end;
-          'C': begin // This is CPP source code
-                 mitCPP.Checked := True;
-                 FCodeText.HighLighter := SynCPP;
-               end;
-          'H': begin // This is HTML source code
-                 mitHTML.Checked := True;
-                 FCodeText.HighLighter := SynHTML;
-               end;
-          'S': begin // This is SQL source code
-                 mitSQL.Checked := True;
-                 FCodeText.HighLighter := SynSQL;
-               end;
-          'P': begin // This is Pascal source code
-                 mitPascal.Checked := True;
-                 FCodeText.HighLighter := SynPas;
-             end;
+          'HTML': begin // This is HTML source code
+                   mitHTML.Checked := True;
+                   FCodeText.HighLighter := SynHTML;
+                  end;
+          'SQL': begin // This is SQL source code
+                  mitSQL.Checked := True;
+                  FCodeText.HighLighter := SynSQL;
+                 end;
+          'PASCAL': begin // This is Pascal source code
+                     mitPascal.Checked := True;
+                     FCodeText.HighLighter := SynPas;
+                    end;
           end;
           FCodeText.Text:=CodeDB.FieldByName('Code').AsString;
         finally
@@ -1171,12 +1171,12 @@ begin
 
   FCodeText.HighLighter := SynCPP;
   SourceEditorManagerIntf.GetEditorControlSettings(FCodeText);
- // SourceEditorManagerIntf.GetHighlighterSettings(SynPas);
   SourceEditorManagerIntf.GetHighlighterSettings(SynCPP);
   SourceEditorManagerIntf.GetHighlighterSettings(SynSQL);
   SourceEditorManagerIntf.GetHighlighterSettings(SynHTML);
+  SourceEditorManagerIntf.GetHighlighterSettings(SynPas);
   // bug in pascal no insert for SynPAs
-  SynPas.AsmAttri:=SynCpp.AsmAttri;
+  {SynPas.AsmAttri:=SynCpp.AsmAttri;
   SynPas.CommentAttri:=SynCpp.CommentAttri;
   SynPas.DirectiveAttri:=SynCPP.DirecAttri;
   SynPas.IdentifierAttri:=SynCPP.IdentifierAttri;
@@ -1184,7 +1184,7 @@ begin
   SynPas.KeyAttri:=SynCPP.KeyAttri;
   SynPAs.NumberAttri:=SynCPP.NumberAttri;
   SynPas.SpaceAttri:=SynCpp.SpaceAttri;
-  SynPas.SymbolAttri:=SynCpp.SymbolAttri;
+  SynPas.SymbolAttri:=SynCpp.SymbolAttri;}
   // end black hack
 
 

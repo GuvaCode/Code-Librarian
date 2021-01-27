@@ -12,6 +12,7 @@ object CodeFrm: TCodeFrm
   OnHide = FormHide
   OnKeyPress = FormKeyPress
   OnShow = FormShow
+  Position = poMainFormCenter
   LCLVersion = '2.0.10.0'
   object Splitter: TSplitter
     Left = 205
@@ -460,7 +461,7 @@ object CodeFrm: TCodeFrm
     end
     object actEditCopyFromIde: TAction
       Category = 'Edit'
-      Caption = 'Copy select text from IDE Editor'
+      Caption = 'Insert select text from IDE Editor'
       Hint = 'Copy select text from IDE Editor'
       ImageIndex = 9
       OnExecute = CopyFromIdeExecute
@@ -468,7 +469,7 @@ object CodeFrm: TCodeFrm
     end
     object actEditPasteToIde: TAction
       Category = 'Edit'
-      Caption = 'Paste select text to IDE Editor'
+      Caption = 'Inser select text to IDE Editor'
       Hint = 'Paste select text to IDE Editor'
       ImageIndex = 8
       OnExecute = PasteToIdeExecute
