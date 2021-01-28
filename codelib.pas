@@ -12,7 +12,8 @@ uses
    Clipbrd, Forms, Db, BufDataset, ImgList, Controls, StdActns, Classes,
    LazFileUtils, SysUtils, LCLType,
    ActnList, Dialogs, Menus, ComCtrls, ExtCtrls,
-   SynEdit, SynHighlighterCpp, SynHighlighterHTML, SynHighlighterSQL, SynHighlighterPas;
+   SynEdit, SynHighlighterCpp, SynHighlighterHTML,
+   SynHighlighterSQL, SynHighlighterPas, SynEditHighlighter;
 
 type
   TSearchRecord = record
@@ -20,7 +21,7 @@ type
     CaseSensitive: Boolean;
     WholeWord: Boolean;
   end;
-
+   TIDESynPasSyn = class(TSynPasSyn);
   { TCodeFrm }
  type
   TCodeFrm = class(TForm)
@@ -85,7 +86,11 @@ type
     mitSQL: TMenuItem;
     SynCpp: TSynCppSyn;
     SynHTML: TSynHTMLSyn;
-    SynPas: TSynPasSyn;
+    {$IFDEF LCL_FULLVERSION >= 2010000}
+    SynPas: TSynCustomHighlighter;
+    {$ELSE}
+    SynPas: TIDESynPasSyn;
+    {$ENDIF}
     SynSQL: TSynSQLSyn;
     tvTopics: TTreeView;
     mActions: TActionList;
@@ -219,7 +224,7 @@ resourcestring
   ClosedFolderImageIndex = 0;
   OpenFolderImageIndex   = 17;
   CodeSnippetImageIndex = 18;
-  DefaultDBFileName = 'CodeDB.db';
+  DefaultDBFileName = 'codelibrarian.dat';
 
   var
     CodeFrm: TCodeFrm = nil;
@@ -228,7 +233,8 @@ implementation
 {$R *.lfm}
 
 uses
-   LazIDEIntf, SrcEditorIntf, codesrch;
+   LazIDEIntf, SrcEditorIntf,
+   IDEOptEditorIntf, EditorSyntaxHighlighterDef, codesrch;
 
 function TCodeFrm.CreateNewDB(const DatabaseFile: string): TBufDataset;
 begin
@@ -445,12 +451,13 @@ begin
     Screen.Cursor := crDefault;
   end;}
  caption:=rsMenuName;
- dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+'codelibrarian.dat';
+ dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+DefaultDBFileName;
  CodeDB := OpenDB(dbFPath); // do not localize
  if CodeDB = nil then CodeDB := createNewDb(dbFPath);
  InitializeTreeView;
  mitPascal.Checked := True;
  FModified := False;
+
 end;
 
 procedure TCodeFrm.mActionsUpdate(AAction: TBasicAction; var Handled: Boolean);
@@ -1167,28 +1174,37 @@ end;
 procedure TCodeFrm.SetupSyntaxHighlightingControl;
 begin
   if not Assigned(FCodeText) then
+  begin
   FCodeText := TSynEdit.Create(Self);
-
+  {$IFDEF LCL_FULLVERSION >= 2010000}
+  SynPas := TSynCustomHighlighter(IDEEditorOptions.CreateSynHighlighter(lshFreePascal));
+  {$ENDIF}
+  SynPas:=TIDESynPasSyn.Create(self);
+  end;
+  FCodeText.BeginUpdate();
+  {$IFDEF LCL_FULLVERSION >= 2010000}
+  FCodeText.HighLighter := SynPas;
+  {$ELSE}
   FCodeText.HighLighter := SynCPP;
+  {$ENDIF}
   SourceEditorManagerIntf.GetEditorControlSettings(FCodeText);
   SourceEditorManagerIntf.GetHighlighterSettings(SynCPP);
   SourceEditorManagerIntf.GetHighlighterSettings(SynSQL);
   SourceEditorManagerIntf.GetHighlighterSettings(SynHTML);
   SourceEditorManagerIntf.GetHighlighterSettings(SynPas);
-  // bug in pascal no insert for SynPAs
-  {SynPas.AsmAttri:=SynCpp.AsmAttri;
+
+  {$IFNDEF LCL_FULLVERSION >= 2010000}
+  SynPas.AsmAttri:=SynCpp.AsmAttri;
   SynPas.CommentAttri:=SynCpp.CommentAttri;
   SynPas.DirectiveAttri:=SynCPP.DirecAttri;
   SynPas.IdentifierAttri:=SynCPP.IdentifierAttri;
- // SynPas.IDEDirectiveAttri:=SynCPP.InvalidAttri;
   SynPas.KeyAttri:=SynCPP.KeyAttri;
   SynPAs.NumberAttri:=SynCPP.NumberAttri;
   SynPas.SpaceAttri:=SynCpp.SpaceAttri;
-  SynPas.SymbolAttri:=SynCpp.SymbolAttri;}
-  // end black hack
+  SynPas.SymbolAttri:=SynCpp.SymbolAttri;
+  {$ENDIF}
 
 
-  //
   FCodeText.Align := alClient;
   FCodeText.PopupMenu := pmCode;
   FCodeText.OnChange := @CodeTextChange;
@@ -1199,6 +1215,8 @@ begin
   FCodeText.BorderStyle:=bsNone;
   FCodeText.RightEdge:=-1;
   FCodetext.Keystrokes[88].ShortCut:=(0);
+  FCodeText.EndUpdate;
+
   actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
 end;
 {

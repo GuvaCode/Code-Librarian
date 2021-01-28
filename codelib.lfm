@@ -12,7 +12,7 @@ object CodeFrm: TCodeFrm
   OnHide = FormHide
   OnKeyPress = FormKeyPress
   OnShow = FormShow
-  Position = poMainFormCenter
+  Position = poDesktopCenter
   LCLVersion = '2.0.10.0'
   object Splitter: TSplitter
     Left = 205
@@ -1246,13 +1246,6 @@ object CodeFrm: TCodeFrm
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000
     }
-  end
-  object SynPas: TSynPasSyn
-    Enabled = False
-    CompilerMode = pcmDelphi
-    NestedComments = False
-    Left = 224
-    Top = 40
   end
   object CodeDB: TBufDataset
     FieldDefs = <>
