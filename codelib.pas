@@ -12,8 +12,11 @@ uses
    Clipbrd, Forms, Db, BufDataset, ImgList, Controls, StdActns, Classes,
    LazFileUtils, SysUtils, LCLType,
    ActnList, Dialogs, Menus, ComCtrls, ExtCtrls,
-   SynEdit, SynHighlighterCpp, SynHighlighterHTML,
-   SynHighlighterSQL, SynHighlighterPas, SynEditHighlighter;
+   LCLVersion,
+   SynEdit,
+   SynHighlighterCpp, SynHighlighterHTML,
+   SynHighlighterSQL, SynHighlighterPas,
+   SynEditHighlighter;
 
 type
   TSearchRecord = record
@@ -21,8 +24,8 @@ type
     CaseSensitive: Boolean;
     WholeWord: Boolean;
   end;
-   TIDESynPasSyn = class(TSynPasSyn);
-  { TCodeFrm }
+
+ { TCodeFrm }
  type
   TCodeFrm = class(TForm)
     CodeDB: TBufDataset;
@@ -86,10 +89,10 @@ type
     mitSQL: TMenuItem;
     SynCpp: TSynCppSyn;
     SynHTML: TSynHTMLSyn;
-    {$IFDEF LCL_FULLVERSION >= 2010000}
+    {$IF LCL_FULLVERSION >= 2010000}
     SynPas: TSynCustomHighlighter;
     {$ELSE}
-    SynPas: TIDESynPasSyn;
+    SynPas: TSynPasSyn;
     {$ENDIF}
     SynSQL: TSynSQLSyn;
     tvTopics: TTreeView;
@@ -1176,24 +1179,26 @@ begin
   if not Assigned(FCodeText) then
   begin
   FCodeText := TSynEdit.Create(Self);
-  {$IFDEF LCL_FULLVERSION >= 2010000}
+  {$IF LCL_FULLVERSION >= 2010000}
   SynPas := TSynCustomHighlighter(IDEEditorOptions.CreateSynHighlighter(lshFreePascal));
+  {$ELSE}
+  SynPas:= TSynPasSyn.Create(Self);
   {$ENDIF}
-  SynPas:=TIDESynPasSyn.Create(self);
   end;
-  FCodeText.BeginUpdate();
+
   {$IFDEF LCL_FULLVERSION >= 2010000}
   FCodeText.HighLighter := SynPas;
   {$ELSE}
   FCodeText.HighLighter := SynCPP;
   {$ENDIF}
+
   SourceEditorManagerIntf.GetEditorControlSettings(FCodeText);
   SourceEditorManagerIntf.GetHighlighterSettings(SynCPP);
   SourceEditorManagerIntf.GetHighlighterSettings(SynSQL);
   SourceEditorManagerIntf.GetHighlighterSettings(SynHTML);
   SourceEditorManagerIntf.GetHighlighterSettings(SynPas);
 
-  {$IFNDEF LCL_FULLVERSION >= 2010000}
+ {$IF LCL_FULLVERSION < 2010000}
   SynPas.AsmAttri:=SynCpp.AsmAttri;
   SynPas.CommentAttri:=SynCpp.CommentAttri;
   SynPas.DirectiveAttri:=SynCPP.DirecAttri;
@@ -1202,9 +1207,9 @@ begin
   SynPAs.NumberAttri:=SynCPP.NumberAttri;
   SynPas.SpaceAttri:=SynCpp.SpaceAttri;
   SynPas.SymbolAttri:=SynCpp.SymbolAttri;
-  {$ENDIF}
+ {$ENDIF}
 
-
+  FCodeText.BeginUpdate();
   FCodeText.Align := alClient;
   FCodeText.PopupMenu := pmCode;
   FCodeText.OnChange := @CodeTextChange;
@@ -1214,10 +1219,25 @@ begin
   FCodeText.Gutter.Parts[1].Visible:=false;
   FCodeText.BorderStyle:=bsNone;
   FCodeText.RightEdge:=-1;
-  FCodetext.Keystrokes[88].ShortCut:=(0);
+  FCodetext.Keystrokes[88].ShortCut:=(0); //remove Ctrl+Alt+C from synedit
   FCodeText.EndUpdate;
 
   actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
+
+
+      if mitPascal.Checked then
+         FCodeText.HighLighter := SynPAS
+      else
+      if mitCPP.Checked then
+         FCodeText.HighLighter := SynCPP
+      else
+      if mitHTML.Checked then
+         FCodeText.HighLighter := SynHTML
+      else
+      if mitSQL.Checked then
+         FCodeText.HighLighter := SynSQL
+      else
+         FCodeText.HighLighter := nil;
 end;
 {
 constructor TCodeFrm.Create(AOwner: TComponent);
