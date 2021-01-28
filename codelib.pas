@@ -382,7 +382,7 @@ begin
     Post;
   end;
   NNode := tvTopics.Items.AddChildObject(Node, Desc,
-    Pointer(PtrInt(CodeDB.FieldByName('Key').AsInteger))); // Do not localize.
+  Pointer(PtrInt(CodeDB.FieldByName('Key').AsInteger))); // Do not localize.
   NNode.ImageIndex := ClosedFolderImageIndex;
   NNode.SelectedIndex := OpenFolderImageIndex;
   Result := NNode;
@@ -436,31 +436,13 @@ procedure TCodeFrm.FormCreate(Sender: TObject);
 var dbFPath:string;
 begin
   SetupSyntaxHighlightingControl;
-{  Screen.Cursor := crHourglass;
-  try
-    CodeDB := nil;
-    dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+DefaultDBFileName;
-    CodeDB := OpenDB(DefaultDBFileName); // do not localize
-    if CodeDB = nil then CodeDB := createNewDb(dbFPath);
-    if CodeDB = nil then
-    begin
-      MessageDlg(SCouldNotCreateDatabase, mtError, [mbOK], 0);
-      Exit;
-    end;
-    InitializeTreeView;
-    mitPascal.Checked := True;
-    FModified := False;
-  finally
-    Screen.Cursor := crDefault;
-  end;}
- caption:=rsMenuName;
- dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+DefaultDBFileName;
- CodeDB := OpenDB(dbFPath); // do not localize
- if CodeDB = nil then CodeDB := createNewDb(dbFPath);
- InitializeTreeView;
- mitPascal.Checked := True;
- FModified := False;
-
+  caption:=rsMenuName;
+  dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+DefaultDBFileName;
+  CodeDB := OpenDB(dbFPath); // do not localize
+  if CodeDB = nil then CodeDB := createNewDb(dbFPath);
+  InitializeTreeView;
+  mitPascal.Checked := True;
+  FModified := False;
 end;
 
 procedure TCodeFrm.mActionsUpdate(AAction: TBasicAction; var Handled: Boolean);
@@ -473,10 +455,8 @@ begin
   HaveEditorSelection := Length(FCodeText.SelText) > 0;
   actEditCut.Enabled := HaveEditorSelection;
   actEditCopy.Enabled := HaveEditorSelection;
-
   // bug on linux on menu
   // actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
-
   HaveSelectedNode  := tvTopics.Selected <> nil;
   SnippetIsSelected := HaveSelectedNode and (tvTopics.Selected.ImageIndex = CodeSnippetImageIndex);
 
@@ -778,10 +758,7 @@ begin
       Node := nil;
       if not First then
       begin
-        //if ActiveControl = FCodeText then
           Node := tvTopics.Selected
-        //else
-        //  Node := tvTopics.Selected.GetNext;
       end;
       if First or (Node = nil) then
         Node := tvTopics.Items.GetFirstNode;
@@ -1224,47 +1201,20 @@ begin
 
   actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
 
-
-      if mitPascal.Checked then
-         FCodeText.HighLighter := SynPAS
-      else
-      if mitCPP.Checked then
-         FCodeText.HighLighter := SynCPP
-      else
-      if mitHTML.Checked then
-         FCodeText.HighLighter := SynHTML
-      else
-      if mitSQL.Checked then
-         FCodeText.HighLighter := SynSQL
-      else
-         FCodeText.HighLighter := nil;
+  if mitPascal.Checked then
+     FCodeText.HighLighter := SynPAS
+   else
+  if mitCPP.Checked then
+     FCodeText.HighLighter := SynCPP
+   else
+  if mitHTML.Checked then
+     FCodeText.HighLighter := SynHTML
+   else
+  if mitSQL.Checked then
+     FCodeText.HighLighter := SynSQL
+   else
+     FCodeText.HighLighter := nil;
 end;
-{
-constructor TCodeFrm.Create(AOwner: TComponent);
-var dbFPath:string;
-begin
-  inherited Create(AOwner);
-
-  SetupSyntaxHighlightingControl;
-
-  Screen.Cursor := crHourglass;
-  try
-    CodeDB := nil;
-    dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+DefaultDBFileName;
-    CodeDB := OpenDB(DefaultDBFileName); // do not localize
-    if CodeDB = nil then CodeDB := createNewDb(dbFPath);
-    if CodeDB = nil then
-    begin
-      MessageDlg(SCouldNotCreateDatabase, mtError, [mbOK], 0);
-      Exit;
-    end;
-    InitializeTreeView;
-    mitPascal.Checked := True;
-    FModified := False;
-  finally
-    Screen.Cursor := crDefault;
-  end;
-end; }
 
 {destructor TCodeFrm.Destroy;
 begin
@@ -1273,7 +1223,6 @@ begin
     SaveSettings;
   CloseDB(True);
   FreeAndNil(CodeDB);
-
   inherited Destroy;
 end; }
 
