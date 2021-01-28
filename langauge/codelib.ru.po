@@ -1,0 +1,53 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: codelib.rscannotattach
+msgid "Subitems cannot be attached to a code snippet, only folders."
+msgstr ""
+
+#: codelib.rsconfirmdelete
+msgid "Delete this %s?"
+msgstr ""
+
+#: codelib.rscouldnotcreatedatabase
+msgid "Could not create database."
+msgstr ""
+
+#: codelib.rsfolder
+msgid "folder"
+msgstr ""
+
+#: codelib.rsmenuname
+msgctxt "codelib.rsmenuname"
+msgid "Code Librarian"
+msgstr ""
+
+#: codelib.rsmodified
+msgid "Modified"
+msgstr ""
+
+#: codelib.rsnewcode
+msgid "New Code"
+msgstr ""
+
+#: codelib.rsnewfolder
+msgctxt "codelib.rsnewfolder"
+msgid "New Folder"
+msgstr ""
+
+#: codelib.rsnotforformfiles
+msgid "Copy/Paste is not allowed in form files."
+msgstr ""
+
+#: codelib.rssnippet
+msgid "snippet"
+msgstr ""
+
+#: codelib.actexit.caption
+msgctxt "codelib.actexit.caption"
+msgid "Exit"
+msgstr "99999"
+
+#: codelib.actexit.hint
+msgid "Exit"
+msgstr "99999"

@@ -12,7 +12,7 @@ uses
    Clipbrd, Forms, Db, BufDataset, ImgList, Controls, StdActns, Classes,
    LazFileUtils, SysUtils, LCLType,
    ActnList, Dialogs, Menus, ComCtrls, ExtCtrls,
-   LCLVersion,
+   LCLVersion, LCLTranslator,
    SynEdit,
    SynHighlighterCpp, SynHighlighterHTML,
    SynHighlighterSQL, SynHighlighterPas,
@@ -210,7 +210,7 @@ type
     property DatabasePath: string read FDatabasePath write FDatabasePath;
   end;
 
-resourcestring
+ resourcestring
   rsMenuName = 'Code Librarian';
   rsModified = 'Modified';
   rsSnippet = 'snippet';
@@ -230,7 +230,7 @@ resourcestring
   DefaultDBFileName = 'codelibrarian.dat';
 
   var
-    CodeFrm: TCodeFrm = nil;
+    CodeFrm: TCodeFrm;// = nil;
 
 implementation
 {$R *.lfm}

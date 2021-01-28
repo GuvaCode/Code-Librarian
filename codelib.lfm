@@ -1,7 +1,7 @@
 object CodeFrm: TCodeFrm
-  Left = 569
+  Left = 310
   Height = 391
-  Top = 144
+  Top = 316
   Width = 660
   Caption = 'Code Librarian'
   ClientHeight = 367
@@ -15,7 +15,7 @@ object CodeFrm: TCodeFrm
   Position = poDesktopCenter
   LCLVersion = '2.0.10.0'
   object Splitter: TSplitter
-    Left = 205
+    Left = 156
     Height = 326
     Top = 24
     Width = 4
@@ -43,13 +43,12 @@ object CodeFrm: TCodeFrm
     OnResize = StatusBarResize
   end
   object pnlView: TPanel
-    Left = 209
+    Left = 160
     Height = 326
     Top = 24
-    Width = 451
+    Width = 500
     Align = alClient
     BevelOuter = bvNone
-    Caption = 'This editor is created at runtime'
     ParentColor = False
     TabOrder = 1
   end
@@ -57,7 +56,7 @@ object CodeFrm: TCodeFrm
     Left = 0
     Height = 326
     Top = 24
-    Width = 205
+    Width = 156
     Align = alLeft
     BorderStyle = bsNone
     Constraints.MinHeight = 30
@@ -372,7 +371,7 @@ object CodeFrm: TCodeFrm
   object mActions: TActionList
     Images = ilActions
     OnUpdate = mActionsUpdate
-    Left = 280
+    Left = 288
     Top = 40
     object actDelete: TAction
       Category = 'File'
@@ -569,8 +568,8 @@ object CodeFrm: TCodeFrm
     end
   end
   object ilActions: TImageList
-    Left = 280
-    Top = 96
+    Left = 224
+    Top = 32
     Bitmap = {
       4C69150000001000000010000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1254,8 +1253,8 @@ object CodeFrm: TCodeFrm
   end
   object DataSource1: TDataSource
     DataSet = CodeDB
-    Left = 424
-    Top = 104
+    Left = 480
+    Top = 40
   end
   object SynCpp: TSynCppSyn
     DefaultFilter = 'Файлы C++ (*.c,*.cpp,*.h,*.hpp,*.hh)|*.c;*.cpp;*.h;*.hpp;*.hh'

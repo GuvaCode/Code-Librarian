@@ -6,13 +6,13 @@ interface
 
 uses
   Classes,
-  LCLType,
+  LCLType,  CodeLib, LCLTranslator,
   MenuIntf, IDECommands, ToolBarIntf;
 
  procedure Register;
 
 implementation
-uses CodeLib;
+
 
 procedure ShowCodeLib(Sender: TObject);
 begin

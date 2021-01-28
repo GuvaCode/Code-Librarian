@@ -8,7 +8,7 @@ unit codelibrarian;
 interface
 
 uses
-  CodeLibRegister, LazarusPackageIntf;
+  CodeLibRegister, codelib, codesrch, LazarusPackageIntf;
 
 implementation
 

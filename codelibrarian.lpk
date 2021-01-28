@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="5">
+  <Package Version="4">
     <Name Value="codelibrarian"/>
     <Type Value="RunAndDesignTime"/>
     <CompilerOptions>
@@ -12,14 +12,31 @@
         <CustomOptions Value="$(IDEBuildOptions)"/>
       </Other>
     </CompilerOptions>
-    <Files Count="1">
+    <Files Count="4">
       <Item1>
         <Filename Value="codelibregister.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="CodeLibRegister"/>
       </Item1>
+      <Item2>
+        <Filename Value="codelib.pas"/>
+        <DisableI18NForLFM Value="True"/>
+        <UnitName Value="codelib"/>
+      </Item2>
+      <Item3>
+        <Filename Value="codesrch.pas"/>
+        <UnitName Value="codesrch"/>
+      </Item3>
+      <Item4>
+        <Filename Value="codesrch.lfm"/>
+        <Type Value="LFM"/>
+      </Item4>
     </Files>
-    <CompatibilityMode Value="True"/>
+    <i18n>
+      <EnableI18N Value="True"/>
+      <OutDir Value="langauge"/>
+      <EnableI18NForLFM Value="True"/>
+    </i18n>
     <RequiredPkgs Count="3">
       <Item1>
         <PackageName Value="SynEdit"/>
@@ -38,5 +55,8 @@
       <Version Value="2"/>
       <UseFileFilters Value="True"/>
     </PublishOptions>
+    <CustomOptions Items="ExternHelp" Version="2">
+      <_ExternHelp Items="Count"/>
+    </CustomOptions>
   </Package>
 </CONFIG>

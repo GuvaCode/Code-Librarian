@@ -1,72 +1,74 @@
 object fmCodeSearch: TfmCodeSearch
   Left = 237
+  Height = 159
   Top = 181
+  Width = 363
   BorderStyle = bsDialog
   Caption = 'Code Librarian Search'
-  ClientHeight = 143
-  ClientWidth = 277
-  Font.Charset = DEFAULT_CHARSET
+  ClientHeight = 159
+  ClientWidth = 363
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
   KeyPreview = True
   Position = poScreenCenter
-  PixelsPerInch = 96
-  TextHeight = 13
+  LCLVersion = '2.0.10.0'
   object lblFind: TLabel
     Left = 8
+    Height = 12
     Top = 11
-    Width = 53
-    Height = 13
+    Width = 61
     Caption = 'Text to find'
+    ParentColor = False
   end
   object edSearch: TEdit
     Left = 72
+    Height = 25
     Top = 7
-    Width = 201
-    Height = 21
+    Width = 272
     TabOrder = 0
   end
   object gbxOptions: TGroupBox
     Left = 8
+    Height = 65
     Top = 40
     Width = 265
-    Height = 65
     Caption = 'Options'
+    ClientHeight = 50
+    ClientWidth = 263
     TabOrder = 1
     object cbCaseSensitive: TCheckBox
-      Left = 6
-      Top = 7
-      Width = 161
-      Height = 17
+      Left = 8
+      Height = 23
+      Top = 0
+      Width = 107
       Caption = 'Case sensitive'
       TabOrder = 0
     end
     object cbWholeWord: TCheckBox
       Left = 6
+      Height = 23
       Top = 26
-      Width = 161
-      Height = 17
+      Width = 124
       Caption = 'Whole words only'
       TabOrder = 1
     end
   end
   object btnOK: TButton
-    Left = 116
+    Left = 184
+    Height = 25
     Top = 112
     Width = 75
-    Height = 25
     Caption = 'OK'
     Default = True
     ModalResult = 1
     TabOrder = 2
   end
   object btnCancel: TButton
-    Left = 198
+    Left = 269
+    Height = 25
     Top = 112
     Width = 75
-    Height = 25
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2

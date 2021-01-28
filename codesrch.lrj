@@ -1,0 +1,9 @@
+{"version":1,"strings":[
+{"hash":124132184,"name":"tfmcodesearch.caption","sourcebytes":[67,111,100,101,32,76,105,98,114,97,114,105,97,110,32,83,101,97,114,99,104],"value":"Code Librarian Search"},
+{"hash":12204740,"name":"tfmcodesearch.lblfind.caption","sourcebytes":[84,101,120,116,32,116,111,32,102,105,110,100],"value":"Text to find"},
+{"hash":108725763,"name":"tfmcodesearch.gbxoptions.caption","sourcebytes":[79,112,116,105,111,110,115],"value":"Options"},
+{"hash":219672053,"name":"tfmcodesearch.cbcasesensitive.caption","sourcebytes":[67,97,115,101,32,115,101,110,115,105,116,105,118,101],"value":"Case sensitive"},
+{"hash":153444057,"name":"tfmcodesearch.cbwholeword.caption","sourcebytes":[87,104,111,108,101,32,119,111,114,100,115,32,111,110,108,121],"value":"Whole words only"},
+{"hash":1339,"name":"tfmcodesearch.btnok.caption","sourcebytes":[79,75],"value":"OK"},
+{"hash":77089212,"name":"tfmcodesearch.btncancel.caption","sourcebytes":[67,97,110,99,101,108],"value":"Cancel"}
+]}
