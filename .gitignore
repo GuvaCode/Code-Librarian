@@ -17,6 +17,7 @@ binary/*
 
 # laz
 backup/
+
 #examples/
 lib/
 templates/standard_game/

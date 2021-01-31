@@ -1,7 +1,7 @@
 object CodeFrm: TCodeFrm
-  Left = 377
+  Left = 406
   Height = 391
-  Top = 225
+  Top = 170
   Width = 660
   Caption = 'Code Librarian'
   ClientHeight = 367
@@ -16,7 +16,7 @@ object CodeFrm: TCodeFrm
   ShowInTaskBar = stAlways
   LCLVersion = '2.0.10.0'
   object Splitter: TSplitter
-    Left = 156
+    Left = 180
     Height = 326
     Top = 24
     Width = 4
@@ -44,10 +44,10 @@ object CodeFrm: TCodeFrm
     OnResize = StatusBarResize
   end
   object pnlView: TPanel
-    Left = 160
+    Left = 184
     Height = 326
     Top = 24
-    Width = 500
+    Width = 476
     Align = alClient
     BevelOuter = bvNone
     ParentColor = False
@@ -57,7 +57,7 @@ object CodeFrm: TCodeFrm
     Left = 0
     Height = 326
     Top = 24
-    Width = 156
+    Width = 180
     Align = alLeft
     BorderStyle = bsNone
     Constraints.MinHeight = 30
@@ -207,6 +207,12 @@ object CodeFrm: TCodeFrm
         Action = actDelete
       end
       object mitFileSep1: TMenuItem
+        Caption = '-'
+      end
+      object mitExportHtml: TMenuItem
+        Action = actSaveAsHtml
+      end
+      object mitExpSep: TMenuItem
         Caption = '-'
       end
       object mitFilePrinterSetup: TMenuItem
@@ -575,6 +581,11 @@ object CodeFrm: TCodeFrm
       Category = 'Syntax'
       Caption = '&Java'
       OnExecute = GenericSyntaxHighlightingExecute
+    end
+    object actSaveAsHtml: TAction
+      Category = 'File'
+      Caption = 'Export as Html'
+      OnExecute = actSaveAsHtmlExecute
     end
   end
   object ilActions: TImageList
@@ -1289,6 +1300,31 @@ object CodeFrm: TCodeFrm
     DefaultFilter = 'Файлы Java (*.java)|*.java'
     Enabled = False
     Left = 192
+    Top = 128
+  end
+  object dlgPrinterSetup: TPrinterSetupDialog
+    Left = 482
+    Top = 240
+  end
+  object dlgPrint: TPrintDialog
+    Left = 482
+    Top = 184
+  end
+  object SynExportHTML: TSynExporterHTML
+    Color = clWindow
+    DefaultFilter = 'Документ HTML (*.htm,*.html)|*.htm;*.html'
+    Font.Color = clBlack
+    Font.Height = -13
+    Font.Name = 'Courier New'
+    HTMLFontSize = fs03
+    Title = 'Без имени'
+    UseBackground = False
+    Left = 272
+    Top = 128
+  end
+  object dlgSave: TSaveDialog
+    Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
+    Left = 482
     Top = 128
   end
 end

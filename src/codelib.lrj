@@ -60,5 +60,6 @@
 {"hash":178268,"name":"tcodefrm.actsyntaxsql.caption","sourcebytes":[38,83,81,76],"value":"&SQL"},
 {"hash":93079605,"name":"tcodefrm.acteditrename.caption","sourcebytes":[82,101,110,97,109,101],"value":"Rename"},
 {"hash":217685428,"name":"tcodefrm.acteditrename.hint","sourcebytes":[82,101,110,97,109,101,32,102,111,108,100,101,114,47,115,110,105,112,112,101,116],"value":"Rename folder/snippet"},
-{"hash":2820289,"name":"tcodefrm.actsyntaxjava.caption","sourcebytes":[38,74,97,118,97],"value":"&Java"}
+{"hash":2820289,"name":"tcodefrm.actsyntaxjava.caption","sourcebytes":[38,74,97,118,97],"value":"&Java"},
+{"hash":119695772,"name":"tcodefrm.actsaveashtml.caption","sourcebytes":[69,120,112,111,114,116,32,97,115,32,72,116,109,108],"value":"Export as Html"}
 ]}

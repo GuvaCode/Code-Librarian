@@ -6,6 +6,7 @@
     <CompilerOptions>
       <Version Value="11"/>
       <SearchPaths>
+        <OtherUnitFiles Value="src;src/extra"/>
         <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
       <Other>
@@ -19,7 +20,7 @@
         <UnitName Value="CodeLibRegister"/>
       </Item1>
       <Item2>
-        <Filename Value="codelib.pas"/>
+        <Filename Value="src/codelib.pas"/>
         <UnitName Value="codelib"/>
       </Item2>
     </Files>
@@ -30,13 +31,13 @@
     </i18n>
     <RequiredPkgs Count="3">
       <Item1>
-        <PackageName Value="SynEdit"/>
+        <PackageName Value="Printer4Lazarus"/>
       </Item1>
       <Item2>
-        <PackageName Value="IDEIntf"/>
+        <PackageName Value="SynEdit"/>
       </Item2>
       <Item3>
-        <PackageName Value="FCL"/>
+        <PackageName Value="IDEIntf"/>
       </Item3>
     </RequiredPkgs>
     <UsageOptions>

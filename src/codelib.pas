@@ -10,11 +10,10 @@ interface
 
 uses
    Clipbrd, Forms, Db, BufDataset, ImgList, Controls, StdActns, Classes,
-   LazFileUtils, SysUtils, LCLType,
-   ActnList, Dialogs, Menus, ComCtrls, ExtCtrls,
-   LCLVersion,
-   SynEdit,SynHighlighterCpp, SynHighlighterHTML,
-   SynHighlighterSQL, SynHighlighterPas,SynEditHighlighter, SynHighlighterJava;
+   LazFileUtils, SysUtils, LCLType, ActnList, Dialogs, Menus, ComCtrls,
+   ExtCtrls, LCLVersion, SynEdit, SynHighlighterCpp, SynHighlighterHTML,
+   SynHighlighterSQL, SynHighlighterPas, SynEditHighlighter, SynHighlighterJava,
+   SynExportHTML, PrintersDlgs;
 
 type
   TSearchRecord = record
@@ -26,10 +25,16 @@ type
  { TCodeFrm }
  type
   TCodeFrm = class(TForm)
+    actSaveAsHtml: TAction;
     actSyntaxJava: TAction;
     CodeDB: TBufDataset;
     DataSource1: TDataSource;
+    mitExportHtml: TMenuItem;
+    mitExpSep: TMenuItem;
     mitJAVA: TMenuItem;
+    dlgPrinterSetup: TPrinterSetupDialog;
+    dlgPrint: TPrintDialog;
+    dlgSave: TSaveDialog;
     StatusBar: TStatusBar;
     Splitter: TSplitter;
     MainMenu: TMainMenu;
@@ -88,6 +93,7 @@ type
     mitHTML: TMenuItem;
     mitSQL: TMenuItem;
     SynCpp: TSynCppSyn;
+    SynExportHTML: TSynExporterHTML;
     SynHTML: TSynHTMLSyn;
     SynJava: TSynJavaSyn;
     {$IF LCL_FULLVERSION >= 2010000}
@@ -145,6 +151,7 @@ type
     actEditRename: TAction;
     mitTreeRename: TMenuItem;
 
+    procedure actSaveAsHtmlExecute(Sender: TObject);
     procedure CodeTextChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure mActionsUpdate(AAction: TBasicAction; var Handled: Boolean);
@@ -237,7 +244,7 @@ implementation
 {$R *.lfm}
 
 uses
-   LazIDEIntf, SrcEditorIntf,
+   LazIDEIntf, SrcEditorIntf, MySEPrint,
    IDEOptEditorIntf, EditorSyntaxHighlighterDef, codesrch;
 
 function TCodeFrm.CreateNewDB(const DatabaseFile: string): TBufDataset;
@@ -434,6 +441,28 @@ begin
   Modified := FCodeText.Modified;
 end;
 
+procedure TCodeFrm.actSaveAsHtmlExecute(Sender: TObject);
+var T : TStringList;
+begin
+  dlgSave.Filter:= SynExportHTML.DefaultFilter;
+  dlgSave.DefaultExt:='.html';
+  if dlgSave.Execute then
+  begin
+   SynExportHTML.Highlighter:=FCodeText.Highlighter;
+   SynExportHTML.Title:='';//FCodeText;
+   SynExportHTML.Color:=FCodeText.Color;
+   SynExportHTML.ExportAsText:=true;
+   if FCodeText.SelText='' then
+   SynExportHTML.ExportAll(FCodeText.Lines) else
+     begin
+      T := TStringList.Create;
+      T.Add(FCodeText.SelText);
+      SynExportHTML.ExportAll(T);
+      T.Free;
+     end;
+   SynExportHTML.SaveToFile(dlgSave.FileName);
+  end;
+end;
 
 procedure TCodeFrm.FormCreate(Sender: TObject);
 var dbFPath:string;
@@ -484,7 +513,12 @@ begin
     actNewSnippet.Enabled := not SnippetIsSelected;
     actNewFolder.Enabled := not SnippetIsSelected;
   end;
+
+  actPrint.Enabled:=SnippetIsSelected;
+  actSaveAsHtml.Enabled:=SnippetIsSelected;
   Handled := True;
+
+
 end;
 
 procedure TCodeFrm.pmCodePopup(Sender: TObject);
@@ -643,17 +677,27 @@ end;
 
 procedure TCodeFrm.PrinterSetupExecute(Sender: TObject);
 begin
- // dlgPrinterSetup.Execute;
+  dlgPrinterSetup.Execute;
 end;
 
 procedure TCodeFrm.PrintExecute(Sender: TObject);
-//resourcestring
-//  RS_PRINTTITLE = 'GExperts';
+var  Print : TMySEPrint;
 begin
- { if tvTopics.Selected <> nil then
-    FCodeText.Print(tvTopics.Selected.Text)
-  else
-    FCodeText.Print(RS_PRINTTITLE); }
+
+  if dlgPrint.Execute then
+  begin
+     Print := TMySEPrint.Create(Self);
+     Print.SynEdit := FCodeText;
+     Print.Highlighter := FCodeText.Highlighter;
+     Print.Colors := True;
+     Print.Title :='';/// ExtractFileName((Tmp As TEditor).FileInEditing);
+     Print.Color := FCodeText.Color; ///
+     Print.Font := FCodeText.Font;
+     Print.LineNumbers := false;
+     If Assigned(Print.Highlighter) Then Print.Highlight := True;
+      Print.Print;
+      Print.Free;
+  end;
 end;
 
 procedure TCodeFrm.ExitExecute(Sender: TObject);
@@ -721,6 +765,8 @@ begin
     on E: Exception do
       showmessage(E.Message);
   end;
+
+
 end;
 
 procedure TCodeFrm.DoSearch(First: Boolean);
