@@ -1,7 +1,7 @@
 object CodeFrm: TCodeFrm
-  Left = 384
+  Left = 377
   Height = 391
-  Top = 199
+  Top = 225
   Width = 660
   Caption = 'Code Librarian'
   ClientHeight = 367
@@ -186,8 +186,8 @@ object CodeFrm: TCodeFrm
   end
   object MainMenu: TMainMenu
     Images = ilActions
-    Left = 344
-    Top = 40
+    Left = 272
+    Top = 184
     object mitFile: TMenuItem
       Caption = '&File'
       object mitFileNew: TMenuItem
@@ -284,8 +284,8 @@ object CodeFrm: TCodeFrm
   end
   object pmTopics: TPopupMenu
     Images = ilActions
-    Left = 344
-    Top = 96
+    Left = 272
+    Top = 240
     object mitTreeNew: TMenuItem
       Caption = '&New'
       object mitTreeNewSnippet: TMenuItem
@@ -311,8 +311,8 @@ object CodeFrm: TCodeFrm
   object pmCode: TPopupMenu
     Images = ilActions
     OnPopup = pmCodePopup
-    Left = 344
-    Top = 160
+    Left = 272
+    Top = 296
     object mitEditorCut: TMenuItem
       Action = actEditCut
     end
@@ -371,8 +371,8 @@ object CodeFrm: TCodeFrm
   object mActions: TActionList
     Images = ilActions
     OnUpdate = mActionsUpdate
-    Left = 288
-    Top = 40
+    Left = 416
+    Top = 184
     object actDelete: TAction
       Category = 'File'
       Caption = 'Delete'
@@ -568,8 +568,8 @@ object CodeFrm: TCodeFrm
     end
   end
   object ilActions: TImageList
-    Left = 480
-    Top = 112
+    Left = 416
+    Top = 240
     Bitmap = {
       4C69150000001000000010000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1248,31 +1248,31 @@ object CodeFrm: TCodeFrm
   end
   object CodeDB: TBufDataset
     FieldDefs = <>
-    Left = 416
-    Top = 40
+    Left = 344
+    Top = 184
   end
   object DataSource1: TDataSource
     DataSet = CodeDB
-    Left = 480
-    Top = 40
+    Left = 344
+    Top = 240
   end
   object SynCpp: TSynCppSyn
     DefaultFilter = 'Файлы C++ (*.c,*.cpp,*.h,*.hpp,*.hh)|*.c;*.cpp;*.h;*.hpp;*.hh'
     Enabled = False
-    Left = 224
-    Top = 96
+    Left = 192
+    Top = 184
   end
   object SynHTML: TSynHTMLSyn
     DefaultFilter = 'Документ HTML (*.htm,*.html)|*.htm;*.html'
     Enabled = False
-    Left = 224
-    Top = 160
+    Left = 192
+    Top = 240
   end
   object SynSQL: TSynSQLSyn
     DefaultFilter = 'Файлы SQL (*.sql)|*.sql'
     Enabled = False
     SQLDialect = sqlSybase
-    Left = 224
-    Top = 224
+    Left = 192
+    Top = 296
   end
 end

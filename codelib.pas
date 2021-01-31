@@ -12,11 +12,9 @@ uses
    Clipbrd, Forms, Db, BufDataset, ImgList, Controls, StdActns, Classes,
    LazFileUtils, SysUtils, LCLType,
    ActnList, Dialogs, Menus, ComCtrls, ExtCtrls,
-   LCLVersion, LCLTranslator,
-   SynEdit,
-   SynHighlighterCpp, SynHighlighterHTML,
-   SynHighlighterSQL, SynHighlighterPas,
-   SynEditHighlighter;
+   LCLVersion,
+   SynEdit,SynHighlighterCpp, SynHighlighterHTML,
+   SynHighlighterSQL, SynHighlighterPas,SynEditHighlighter;
 
 type
   TSearchRecord = record
@@ -805,12 +803,11 @@ begin
           tvTopics.SetFocus
         else
         begin
-          showMessage('OnFind');
           FCodeText.Enabled:=true;
           FCodeText.SetFocus;
           Dec(Match);
-           FCodeText.SelStart := Match + 1;
-           FCodeText.SelEnd := Match + Length(FSearch.Text) + 1;
+          FCodeText.SelStart := Match + 1;
+          FCodeText.SelEnd := Match + Length(FSearch.Text) + 1;
         end;
       end;
     except
@@ -1194,6 +1191,7 @@ begin
   FCodeText.ReadOnly := True;
   FCodeText.Gutter.Parts[0].Visible:=false;
   FCodeText.Gutter.Parts[1].Visible:=false;
+  FCodeText.Gutter.Parts[3].Visible:=false;
   FCodeText.BorderStyle:=bsNone;
   FCodeText.RightEdge:=-1;
   FCodetext.Keystrokes[88].ShortCut:=(0); //remove Ctrl+Alt+C from synedit
