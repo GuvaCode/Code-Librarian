@@ -25,10 +25,13 @@ type
  { TCodeFrm }
  type
   TCodeFrm = class(TForm)
+    actCopyAsHtml: TAction;
     actSaveAsHtml: TAction;
     actSyntaxJava: TAction;
     CodeDB: TBufDataset;
     DataSource1: TDataSource;
+    mitEditorSep3: TMenuItem;
+    mitEditorCopyHtml: TMenuItem;
     mitExportHtml: TMenuItem;
     mitExpSep: TMenuItem;
     mitJAVA: TMenuItem;
@@ -151,6 +154,7 @@ type
     actEditRename: TAction;
     mitTreeRename: TMenuItem;
 
+    procedure actCopyAsHtmlExecute(Sender: TObject);
     procedure actSaveAsHtmlExecute(Sender: TObject);
     procedure CodeTextChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -464,6 +468,18 @@ begin
   end;
 end;
 
+procedure TCodeFrm.actCopyAsHtmlExecute(Sender: TObject);
+begin
+  If FCodeText.Highlighter<> nil then
+  SynExportHTML.Highlighter:=FCodeText.Highlighter;
+  SynExportHTML.Color:=FCodeText.Color;
+  SynExportHTML.ExportAsText:=True;
+  SynExportHTML.Options:=[heoFragmentOnly];
+  SynExportHTML.UseBackground:=True;
+  SynExportHTML.ExportRange(FCodeText.Lines,FCodeText.BlockBegin,FCodeText.BlockEnd);
+  SynExportHTML.CopyToClipboard;
+end;
+
 procedure TCodeFrm.FormCreate(Sender: TObject);
 var dbFPath:string;
 begin
@@ -487,6 +503,7 @@ begin
   HaveEditorSelection := Length(FCodeText.SelText) > 0;
   actEditCut.Enabled := HaveEditorSelection;
   actEditCopy.Enabled := HaveEditorSelection;
+  actCopyAsHtml.Enabled:= actEditCopy.Enabled;
   // bug on linux on menu
   // actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
   HaveSelectedNode  := tvTopics.Selected <> nil;
@@ -1236,21 +1253,22 @@ begin
   SynPas.SpaceAttri:=SynCpp.SpaceAttri;
   SynPas.SymbolAttri:=SynCpp.SymbolAttri;
  {$ENDIF}
-
-  FCodeText.BeginUpdate();
-  FCodeText.Align := alClient;
-  FCodeText.PopupMenu := pmCode;
-  FCodeText.OnChange := @CodeTextChange;
-  FCodeText.Parent := pnlView;
-  FCodeText.ReadOnly := True;
-  FCodeText.Gutter.Parts[0].Visible:=false;
-  FCodeText.Gutter.Parts[1].Visible:=false;
-  FCodeText.Gutter.Parts[3].Visible:=false;
-  FCodeText.BorderStyle:=bsNone;
-  FCodeText.RightEdge:=-1;
-  FCodetext.Keystrokes[88].ShortCut:=(0); //remove Ctrl+Alt+C from synedit
-  FCodeText.EndUpdate;
-
+  with FCodeText do
+  begin
+  BeginUpdate();
+  Align := alClient;
+  PopupMenu := pmCode;
+  OnChange := @CodeTextChange;
+  Parent := pnlView;
+  ReadOnly := True;
+  Gutter.Parts[0].Visible:=false;
+  Gutter.Parts[1].Visible:=false;
+  Gutter.Parts[3].Visible:=false;
+  BorderStyle:=bsNone;
+  RightEdge:=-1;
+  Keystrokes[88].ShortCut:=(0); //remove Ctrl+Alt+C from synedit
+  EndUpdate;
+  end;
   actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
 
   if mitPascal.Checked then
