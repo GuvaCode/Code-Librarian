@@ -366,6 +366,10 @@ object CodeFrm: TCodeFrm
         AutoCheck = True
         RadioItem = True
       end
+      object mitJAVA: TMenuItem
+        Action = actSyntaxJava
+        RadioItem = True
+      end
     end
   end
   object mActions: TActionList
@@ -565,6 +569,11 @@ object CodeFrm: TCodeFrm
       Hint = 'Rename folder/snippet'
       OnExecute = actEditRenameExecute
       ShortCut = 113
+    end
+    object actSyntaxJava: TAction
+      Category = 'Syntax'
+      Caption = '&Java'
+      OnExecute = GenericSyntaxHighlightingExecute
     end
   end
   object ilActions: TImageList
@@ -1274,5 +1283,11 @@ object CodeFrm: TCodeFrm
     SQLDialect = sqlSybase
     Left = 192
     Top = 296
+  end
+  object SynJava: TSynJavaSyn
+    DefaultFilter = 'Файлы Java (*.java)|*.java'
+    Enabled = False
+    Left = 196
+    Top = 127
   end
 end

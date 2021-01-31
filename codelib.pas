@@ -14,7 +14,7 @@ uses
    ActnList, Dialogs, Menus, ComCtrls, ExtCtrls,
    LCLVersion,
    SynEdit,SynHighlighterCpp, SynHighlighterHTML,
-   SynHighlighterSQL, SynHighlighterPas,SynEditHighlighter;
+   SynHighlighterSQL, SynHighlighterPas,SynEditHighlighter, SynHighlighterJava;
 
 type
   TSearchRecord = record
@@ -26,8 +26,10 @@ type
  { TCodeFrm }
  type
   TCodeFrm = class(TForm)
+    actSyntaxJava: TAction;
     CodeDB: TBufDataset;
     DataSource1: TDataSource;
+    mitJAVA: TMenuItem;
     StatusBar: TStatusBar;
     Splitter: TSplitter;
     MainMenu: TMainMenu;
@@ -87,6 +89,7 @@ type
     mitSQL: TMenuItem;
     SynCpp: TSynCppSyn;
     SynHTML: TSynHTMLSyn;
+    SynJava: TSynJavaSyn;
     {$IF LCL_FULLVERSION >= 2010000}
     SynPas: TSynCustomHighlighter;
     {$ELSE}
@@ -425,10 +428,12 @@ begin
   SortNodes;
 end;
 
+
 procedure TCodeFrm.CodeTextChange(Sender: TObject);
 begin
   Modified := FCodeText.Modified;
 end;
+
 
 procedure TCodeFrm.FormCreate(Sender: TObject);
 var dbFPath:string;
@@ -525,6 +530,9 @@ begin
       if mitSQL.Checked then
         CodeDB.FieldByName('Language').AsString := 'SQL'
       else
+     if mitJAVA.Checked then
+        CodeDB.FieldByName('Language').AsString := 'JAVA'
+      else
         CodeDB.FieldByName('Language').AsString := 'NONE'
     end;
     CodeDB.Post;
@@ -563,6 +571,10 @@ begin
           'SQL': begin // This is SQL source code
                   mitSQL.Checked := True;
                   FCodeText.HighLighter := SynSQL;
+                 end;
+          'JAVA': begin // This is SQL source code
+                  mitJAVA.Checked := True;
+                  FCodeText.HighLighter := SynJava;
                  end;
           'PASCAL': begin // This is Pascal source code
                      mitPascal.Checked := True;
@@ -1145,6 +1157,9 @@ begin
   if Sender = actSyntaxSql then
     FCodeText.HighLighter := SynSQL
   else
+  if Sender = actSyntaxJava then
+    FCodeText.HighLighter := SynJava
+  else
     raise Exception.Create('Internal error selecting language');
 end;
 
@@ -1170,6 +1185,7 @@ begin
   SourceEditorManagerIntf.GetHighlighterSettings(SynCPP);
   SourceEditorManagerIntf.GetHighlighterSettings(SynSQL);
   SourceEditorManagerIntf.GetHighlighterSettings(SynHTML);
+  SourceEditorManagerIntf.GetHighlighterSettings(SynJava);
   SourceEditorManagerIntf.GetHighlighterSettings(SynPas);
 
  {$IF LCL_FULLVERSION < 2010000}
@@ -1210,6 +1226,9 @@ begin
    else
   if mitSQL.Checked then
      FCodeText.HighLighter := SynSQL
+  else
+  if mitJava.Checked then
+     FCodeText.HighLighter := SynJava
    else
      FCodeText.HighLighter := nil;
 end;
