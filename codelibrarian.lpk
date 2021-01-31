@@ -12,7 +12,7 @@
         <CustomOptions Value="$(IDEBuildOptions)"/>
       </Other>
     </CompilerOptions>
-    <Files Count="4">
+    <Files Count="2">
       <Item1>
         <Filename Value="codelibregister.pas"/>
         <HasRegisterProc Value="True"/>
@@ -23,14 +23,6 @@
         <DisableI18NForLFM Value="True"/>
         <UnitName Value="codelib"/>
       </Item2>
-      <Item3>
-        <Filename Value="codesrch.pas"/>
-        <UnitName Value="codesrch"/>
-      </Item3>
-      <Item4>
-        <Filename Value="codesrch.lfm"/>
-        <Type Value="LFM"/>
-      </Item4>
     </Files>
     <i18n>
       <EnableI18N Value="True"/>

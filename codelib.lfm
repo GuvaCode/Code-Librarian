@@ -1,7 +1,7 @@
 object CodeFrm: TCodeFrm
-  Left = 310
+  Left = 384
   Height = 391
-  Top = 316
+  Top = 199
   Width = 660
   Caption = 'Code Librarian'
   ClientHeight = 367
@@ -568,8 +568,8 @@ object CodeFrm: TCodeFrm
     end
   end
   object ilActions: TImageList
-    Left = 224
-    Top = 32
+    Left = 480
+    Top = 112
     Bitmap = {
       4C69150000001000000010000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1248,7 +1248,7 @@ object CodeFrm: TCodeFrm
   end
   object CodeDB: TBufDataset
     FieldDefs = <>
-    Left = 424
+    Left = 416
     Top = 40
   end
   object DataSource1: TDataSource
