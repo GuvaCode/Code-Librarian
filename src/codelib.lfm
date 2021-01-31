@@ -1,7 +1,7 @@
 object CodeFrm: TCodeFrm
-  Left = 406
+  Left = 418
   Height = 391
-  Top = 170
+  Top = 209
   Width = 660
   Caption = 'Code Librarian'
   ClientHeight = 367
@@ -329,6 +329,13 @@ object CodeFrm: TCodeFrm
     object mitEditorPaste: TMenuItem
       Action = actEditPaste
     end
+    object mitEditorSep3: TMenuItem
+      Caption = '-'
+    end
+    object mitEditorCopyHtml: TMenuItem
+      Action = actCopyAsHtml
+      Hint = 'Copy as HTML'
+    end
     object mitEditorSep1: TMenuItem
       Caption = '-'
     end
@@ -586,6 +593,11 @@ object CodeFrm: TCodeFrm
       Category = 'File'
       Caption = 'Export as Html'
       OnExecute = actSaveAsHtmlExecute
+    end
+    object actCopyAsHtml: TAction
+      Category = 'Edit'
+      Caption = 'Copy as HTML'
+      OnExecute = actCopyAsHtmlExecute
     end
   end
   object ilActions: TImageList
