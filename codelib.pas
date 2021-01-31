@@ -572,7 +572,7 @@ begin
                   mitSQL.Checked := True;
                   FCodeText.HighLighter := SynSQL;
                  end;
-          'JAVA': begin // This is SQL source code
+          'JAVA': begin // This is Java source code
                   mitJAVA.Checked := True;
                   FCodeText.HighLighter := SynJava;
                  end;
@@ -711,6 +711,7 @@ begin
         FSearch.Text := edSearch.Text;
         FSearch.CaseSensitive := cbCaseSensitive.Checked;
         FSearch.WholeWord := cbWholeWord.Checked;
+        FCodeText.SetFocus;
         DoSearch(True);
       end;
     finally
@@ -817,6 +818,7 @@ begin
         begin
           FCodeText.Enabled:=true;
           FCodeText.SetFocus;
+
           Dec(Match);
           FCodeText.SelStart := Match + 1;
           FCodeText.SelEnd := Match + Length(FSearch.Text) + 1;
@@ -1141,26 +1143,16 @@ end;
 procedure TCodeFrm.GenericSyntaxHighlightingExecute(Sender: TObject);
 begin
   Modified := True;
-
-  if Sender = actSyntaxNone then
-    FCodeText.HighLighter :=  nil
-  else
-  if Sender = actSyntaxPascal then
-    FCodeText.HighLighter :=  SynPAS
-  else
-  if Sender = actSyntaxCpp then
-    FCodeText.HighLighter := SynCPP
-  else
-  if Sender = actSyntaxHtml then
-    FCodeText.HighLighter := SynHTML
-  else
-  if Sender = actSyntaxSql then
-    FCodeText.HighLighter := SynSQL
-  else
-  if Sender = actSyntaxJava then
-    FCodeText.HighLighter := SynJava
+  case (Sender as TAction).Name of
+  'actSyntaxNone':  FCodeText.HighLighter :=  nil;
+  'actSyntaxPascal': FCodeText.HighLighter :=  SynPAS;
+  'actSyntaxCpp': FCodeText.HighLighter := SynCPP;
+  'actSyntaxHtml': FCodeText.HighLighter := SynHTML;
+  'actSyntaxSql': FCodeText.HighLighter := SynSQL;
+  'actSyntaxJava': FCodeText.HighLighter := SynJava;
   else
     raise Exception.Create('Internal error selecting language');
+  end;
 end;
 
 procedure TCodeFrm.SetupSyntaxHighlightingControl;

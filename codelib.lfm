@@ -13,6 +13,7 @@ object CodeFrm: TCodeFrm
   OnKeyPress = FormKeyPress
   OnShow = FormShow
   Position = poDesktopCenter
+  ShowInTaskBar = stAlways
   LCLVersion = '2.0.10.0'
   object Splitter: TSplitter
     Left = 156
@@ -1287,7 +1288,7 @@ object CodeFrm: TCodeFrm
   object SynJava: TSynJavaSyn
     DefaultFilter = 'Файлы Java (*.java)|*.java'
     Enabled = False
-    Left = 196
-    Top = 127
+    Left = 192
+    Top = 128
   end
 end
