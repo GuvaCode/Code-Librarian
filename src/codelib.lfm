@@ -1,7 +1,7 @@
 object CodeFrm: TCodeFrm
-  Left = 265
+  Left = 605
   Height = 391
-  Top = 217
+  Top = 181
   Width = 660
   Caption = 'Code Librarian'
   ClientHeight = 367

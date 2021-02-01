@@ -1195,6 +1195,7 @@ procedure TCodeFrm.FormShow(Sender: TObject);
 begin
   if (CodeDB <> nil) and not CodeDB.Active then CodeDB.Open;
   SetupSyntaxHighlightingControl;
+  tvTopics.OnChange(Self,tvTopics.Selected);
 end;
 
 procedure TCodeFrm.SortNodes;
