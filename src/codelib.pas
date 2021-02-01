@@ -158,6 +158,7 @@ type
     procedure actSaveAsHtmlExecute(Sender: TObject);
     procedure CodeTextChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure mActionsUpdate(AAction: TBasicAction; var Handled: Boolean);
     procedure pmCodePopup(Sender: TObject);
     procedure tvTopicsChanging(Sender: TObject; Node: TTreeNode; var AllowChange: Boolean);
@@ -491,6 +492,13 @@ begin
   InitializeTreeView;
   mitPascal.Checked := True;
   FModified := False;
+end;
+
+procedure TCodeFrm.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key = VK_F3 then actEditFindNext.Execute;
+    if (Key = VK_F) and (ssCtrl in Shift) then actEditFind.Execute;
 end;
 
 procedure TCodeFrm.mActionsUpdate(AAction: TBasicAction; var Handled: Boolean);
@@ -835,7 +843,7 @@ begin
           Node := tvTopics.Selected
       end;
       if First or (Node = nil) then
-        Node := tvTopics.Items.GetFirstNode;
+      Node := tvTopics.Items.GetFirstNode;
       Match := 0;
       InTopic := False;
       FirstLoop := True;
@@ -879,10 +887,10 @@ begin
           tvTopics.SetFocus
         else
         begin
-          FCodeText.Enabled:=true;
-          FCodeText.SetFocus;
-
+         { FCodeText.Enabled:=true;
+          FCodeText.SetFocus; }
           Dec(Match);
+          tvTopics.OnChange(Self,tvTopics.Selected);
           FCodeText.SelStart := Match + 1;
           FCodeText.SelEnd := Match + Length(FSearch.Text) + 1;
         end;
@@ -1343,6 +1351,7 @@ begin
     Key := #0;
     actExit.Execute;
   end;
+
 end;
 
 end.
