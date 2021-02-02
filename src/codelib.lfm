@@ -1,7 +1,7 @@
 object CodeFrm: TCodeFrm
-  Left = 605
+  Left = 429
   Height = 391
-  Top = 181
+  Top = 149
   Width = 660
   Caption = 'Code Librarian'
   ClientHeight = 367
@@ -188,8 +188,8 @@ object CodeFrm: TCodeFrm
   end
   object MainMenu: TMainMenu
     Images = ilActions
-    Left = 272
-    Top = 184
+    Left = 584
+    Top = 32
     object mitFile: TMenuItem
       Caption = '&File'
       object mitFileNew: TMenuItem
@@ -292,8 +292,8 @@ object CodeFrm: TCodeFrm
   end
   object pmTopics: TPopupMenu
     Images = ilActions
-    Left = 272
-    Top = 240
+    Left = 584
+    Top = 96
     object mitTreeNew: TMenuItem
       Caption = '&New'
       object mitTreeNewSnippet: TMenuItem
@@ -319,8 +319,8 @@ object CodeFrm: TCodeFrm
   object pmCode: TPopupMenu
     Images = ilActions
     OnPopup = pmCodePopup
-    Left = 272
-    Top = 296
+    Left = 584
+    Top = 168
     object mitEditorCut: TMenuItem
       Action = actEditCut
     end
@@ -403,6 +403,14 @@ object CodeFrm: TCodeFrm
       end
       object mitPython: TMenuItem
         Action = actSyntaxPython
+        AutoCheck = True
+        RadioItem = True
+      end
+      object mitSeparatorHighliter: TMenuItem
+        Caption = '-'
+      end
+      object mitUNIXShell: TMenuItem
+        Action = actSyntaxUNIXShell
         AutoCheck = True
         RadioItem = True
       end
@@ -639,6 +647,11 @@ object CodeFrm: TCodeFrm
     object actSyntaxPython: TAction
       Category = 'Syntax'
       Caption = 'P&ython'
+      OnExecute = GenericSyntaxHighlightingExecute
+    end
+    object actSyntaxUNIXShell: TAction
+      Category = 'Syntax'
+      Caption = 'UNIX Shell Script'
       OnExecute = GenericSyntaxHighlightingExecute
     end
   end
@@ -1323,13 +1336,13 @@ object CodeFrm: TCodeFrm
   end
   object CodeDB: TBufDataset
     FieldDefs = <>
-    Left = 120
-    Top = 88
+    Left = 208
+    Top = 32
   end
   object DataSource1: TDataSource
     DataSet = CodeDB
-    Left = 120
-    Top = 152
+    Left = 208
+    Top = 96
   end
   object SynCpp: TSynCppSyn
     DefaultFilter = 'Файлы C++ (*.c,*.cpp,*.h,*.hpp,*.hh)|*.c;*.cpp;*.h;*.hpp;*.hh'
@@ -1403,5 +1416,11 @@ object CodeFrm: TCodeFrm
     Enabled = False
     Left = 120
     Top = 280
+  end
+  object SynUNIXShell: TSynUNIXShellScriptSyn
+    DefaultFilter = 'Сценарии UNIX Shell (*.sh)|*.sh'
+    Enabled = False
+    Left = 120
+    Top = 96
   end
 end
