@@ -396,6 +396,11 @@ object CodeFrm: TCodeFrm
         AutoCheck = True
         RadioItem = True
       end
+      object mitPHP: TMenuItem
+        Action = actSyntaxPHP
+        AutoCheck = True
+        RadioItem = True
+      end
     end
   end
   object mActions: TActionList
@@ -581,7 +586,7 @@ object CodeFrm: TCodeFrm
     end
     object actSyntaxHtml: TAction
       Category = 'Syntax'
-      Caption = '&HTML'
+      Caption = 'HTM&L'
       OnExecute = GenericSyntaxHighlightingExecute
     end
     object actSyntaxSql: TAction
@@ -619,6 +624,11 @@ object CodeFrm: TCodeFrm
     object actSyntaxPerl: TAction
       Category = 'Syntax'
       Caption = 'P&erl'
+      OnExecute = GenericSyntaxHighlightingExecute
+    end
+    object actSyntaxPHP: TAction
+      Category = 'Syntax'
+      Caption = 'P&HP'
       OnExecute = GenericSyntaxHighlightingExecute
     end
   end
@@ -1371,5 +1381,11 @@ object CodeFrm: TCodeFrm
     Enabled = False
     Left = 16
     Top = 24
+  end
+  object SynPHP: TSynPHPSyn
+    DefaultFilter = 'Файлы PHP (*.php,*.php3,*.phtml,*.inc)|*.php;*.php3;*.phtml;*.inc'
+    Enabled = False
+    Left = 120
+    Top = 216
   end
 end

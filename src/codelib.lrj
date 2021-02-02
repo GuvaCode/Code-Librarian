@@ -57,7 +57,7 @@
 {"hash":2840133,"name":"tcodefrm.actsyntaxnone.caption","sourcebytes":[38,78,111,110,101],"value":"&None"},
 {"hash":191404380,"name":"tcodefrm.actsyntaxpascal.caption","sourcebytes":[38,80,97,115,99,97,108],"value":"&Pascal"},
 {"hash":173531,"name":"tcodefrm.actsyntaxcpp.caption","sourcebytes":[38,67,43,43],"value":"&C++"},
-{"hash":2808092,"name":"tcodefrm.actsyntaxhtml.caption","sourcebytes":[38,72,84,77,76],"value":"&HTML"},
+{"hash":5083052,"name":"tcodefrm.actsyntaxhtml.caption","sourcebytes":[72,84,77,38,76],"value":"HTM&L"},
 {"hash":351068,"name":"tcodefrm.actsyntaxsql.caption","sourcebytes":[83,38,81,76],"value":"S&QL"},
 {"hash":93079605,"name":"tcodefrm.acteditrename.caption","sourcebytes":[82,101,110,97,109,101],"value":"Rename"},
 {"hash":217685428,"name":"tcodefrm.acteditrename.hint","sourcebytes":[82,101,110,97,109,101,32,102,111,108,100,101,114,47,115,110,105,112,112,101,116],"value":"Rename folder/snippet"},
@@ -65,5 +65,6 @@
 {"hash":119695772,"name":"tcodefrm.actsaveashtml.caption","sourcebytes":[69,120,112,111,114,116,32,97,115,32,72,116,109,108],"value":"Export as Html"},
 {"hash":217228412,"name":"tcodefrm.actcopyashtml.caption","sourcebytes":[67,111,112,121,32,97,115,32,72,84,77,76],"value":"Copy as HTML"},
 {"hash":62888116,"name":"tcodefrm.actsyntaxjavascript.caption","sourcebytes":[74,97,118,97,38,83,114,105,112,116],"value":"Java&Sript"},
-{"hash":5426316,"name":"tcodefrm.actsyntaxperl.caption","sourcebytes":[80,38,101,114,108],"value":"P&erl"}
+{"hash":5426316,"name":"tcodefrm.actsyntaxperl.caption","sourcebytes":[80,38,101,114,108],"value":"P&erl"},
+{"hash":338640,"name":"tcodefrm.actsyntaxphp.caption","sourcebytes":[80,38,72,80],"value":"P&HP"}
 ]}

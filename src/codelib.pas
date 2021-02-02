@@ -13,7 +13,8 @@ uses
    LazFileUtils, SysUtils, LCLType, ActnList, Dialogs, Menus, ComCtrls,
    ExtCtrls, LCLVersion, SynEdit, SynHighlighterCpp, SynHighlighterHTML,
    SynHighlighterSQL, SynHighlighterPas, SynEditHighlighter, SynHighlighterJava,
-   SynExportHTML, SynHighlighterJScript, SynHighlighterPerl, PrintersDlgs;
+   SynExportHTML, SynHighlighterJScript, SynHighlighterPerl, SynHighlighterPHP,
+   PrintersDlgs;
 
 type
   TSearchRecord = record
@@ -26,12 +27,14 @@ type
  type
   TCodeFrm = class(TForm)
     actCopyAsHtml: TAction;
+    actSyntaxPHP: TAction;
     actSyntaxPerl: TAction;
     actSyntaxJavaScript: TAction;
     actSaveAsHtml: TAction;
     actSyntaxJava: TAction;
     CodeDB: TBufDataset;
     DataSource1: TDataSource;
+    mitPHP: TMenuItem;
     mitPerl: TMenuItem;
     mitJavaScript: TMenuItem;
     mitEditorSep3: TMenuItem;
@@ -109,6 +112,7 @@ type
     {$ELSE}
     SynPas: TSynPasSyn;
     SynPerl: TSynPerlSyn;
+    SynPHP: TSynPHPSyn;
     {$ENDIF}
     SynSQL: TSynSQLSyn;
     tvTopics: TTreeView;
@@ -604,6 +608,9 @@ begin
       if mitPerl.Checked then
         CodeDB.FieldByName('Language').AsString := 'PERL'
       else
+      if mitPHP.Checked then
+        CodeDB.FieldByName('Language').AsString := 'PHP'
+      else
         CodeDB.FieldByName('Language').AsString := 'NONE'
     end;
     CodeDB.Post;
@@ -654,6 +661,10 @@ begin
           'PERL': begin // This is Perl Script source code
                   mitPerl.Checked := True;
                   FCodeText.HighLighter := SynPerl;
+                 end;
+          'PHP': begin // This is Perl Script source code
+                  mitPHP.Checked := True;
+                  FCodeText.HighLighter := SynPHP;
                  end;
           'PASCAL': begin // This is Pascal source code
                      mitPascal.Checked := True;
@@ -1236,14 +1247,15 @@ procedure TCodeFrm.GenericSyntaxHighlightingExecute(Sender: TObject);
 begin
   Modified := True;
   case (Sender as TAction).Name of
-  'actSyntaxNone':  FCodeText.HighLighter :=  nil;
-  'actSyntaxPascal': FCodeText.HighLighter :=  SynPAS;
-  'actSyntaxCpp': FCodeText.HighLighter := SynCPP;
-  'actSyntaxHtml': FCodeText.HighLighter := SynHTML;
-  'actSyntaxSql': FCodeText.HighLighter := SynSQL;
-  'actSyntaxJava': FCodeText.HighLighter := SynJava;
-  'actSyntaxJavaScript': FCodeText.HighLighter :=SynJavaScript;
-  'actSyntaxPerl': FCodeText.Highlighter:=SynPerl;
+  'actSyntaxNone':              FCodeText.HighLighter :=  nil;
+  'actSyntaxPascal':            FCodeText.HighLighter :=  SynPAS;
+  'actSyntaxCpp':               FCodeText.HighLighter := SynCPP;
+  'actSyntaxHtml':              FCodeText.HighLighter := SynHTML;
+  'actSyntaxSql':               FCodeText.HighLighter := SynSQL;
+  'actSyntaxJava':              FCodeText.HighLighter := SynJava;
+  'actSyntaxJavaScript':        FCodeText.HighLighter :=SynJavaScript;
+  'actSyntaxPerl':              FCodeText.Highlighter:=SynPerl;
+  'actSyntaxPHP':               FCodeText.Highlighter:=SynPHP;
   else
     raise Exception.Create('Internal error selecting language');
   end;
@@ -1274,6 +1286,7 @@ begin
   SourceEditorManagerIntf.GetHighlighterSettings(SynJava);
   SourceEditorManagerIntf.GetHighlighterSettings(SynJavaScript);
   SourceEditorManagerIntf.GetHighlighterSettings(SynPerl);
+  SourceEditorManagerIntf.GetHighlighterSettings(SynPHP);
   SourceEditorManagerIntf.GetHighlighterSettings(SynPas);
 
  {$IF LCL_FULLVERSION < 2010000}
@@ -1324,6 +1337,9 @@ begin
   else
   if mitPerl.Checked then
      FCodeText.HighLighter := SynPerl
+  else
+  if mitPHP.Checked then
+     FCodeText.HighLighter := SynPHP
    else
      FCodeText.HighLighter := nil;
 end;
