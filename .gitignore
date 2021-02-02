@@ -4,7 +4,7 @@ lib/*.ppu
 lib/*.a
 lib/*.compiled
 lib/
-
+src/*.lrj
 binary/*
 !binary/resources/
 
