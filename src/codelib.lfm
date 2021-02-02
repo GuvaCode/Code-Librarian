@@ -1303,13 +1303,13 @@ object CodeFrm: TCodeFrm
   end
   object CodeDB: TBufDataset
     FieldDefs = <>
-    Left = 344
-    Top = 184
+    Left = 120
+    Top = 88
   end
   object DataSource1: TDataSource
     DataSet = CodeDB
-    Left = 344
-    Top = 240
+    Left = 120
+    Top = 152
   end
   object SynCpp: TSynCppSyn
     DefaultFilter = 'Файлы C++ (*.c,*.cpp,*.h,*.hpp,*.hh)|*.c;*.cpp;*.h;*.hpp;*.hh'
