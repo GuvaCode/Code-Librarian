@@ -401,6 +401,11 @@ object CodeFrm: TCodeFrm
         AutoCheck = True
         RadioItem = True
       end
+      object mitPython: TMenuItem
+        Action = actSyntaxPython
+        AutoCheck = True
+        RadioItem = True
+      end
     end
   end
   object mActions: TActionList
@@ -629,6 +634,11 @@ object CodeFrm: TCodeFrm
     object actSyntaxPHP: TAction
       Category = 'Syntax'
       Caption = 'P&HP'
+      OnExecute = GenericSyntaxHighlightingExecute
+    end
+    object actSyntaxPython: TAction
+      Category = 'Syntax'
+      Caption = 'P&ython'
       OnExecute = GenericSyntaxHighlightingExecute
     end
   end
@@ -1387,5 +1397,11 @@ object CodeFrm: TCodeFrm
     Enabled = False
     Left = 120
     Top = 216
+  end
+  object SynPython: TSynPythonSyn
+    DefaultFilter = 'Файлы Python (*.py)|*.py'
+    Enabled = False
+    Left = 120
+    Top = 280
   end
 end

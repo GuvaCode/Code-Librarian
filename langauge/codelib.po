@@ -18,7 +18,6 @@ msgid "folder"
 msgstr ""
 
 #: codelib.rsmenuname
-msgctxt "codelib.rsmenuname"
 msgid "Code Librarian"
 msgstr ""
 
@@ -31,7 +30,6 @@ msgid "New Code"
 msgstr ""
 
 #: codelib.rsnewfolder
-msgctxt "codelib.rsnewfolder"
 msgid "New Folder"
 msgstr ""
 

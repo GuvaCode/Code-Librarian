@@ -66,5 +66,6 @@
 {"hash":217228412,"name":"tcodefrm.actcopyashtml.caption","sourcebytes":[67,111,112,121,32,97,115,32,72,84,77,76],"value":"Copy as HTML"},
 {"hash":62888116,"name":"tcodefrm.actsyntaxjavascript.caption","sourcebytes":[74,97,118,97,38,83,114,105,112,116],"value":"Java&Sript"},
 {"hash":5426316,"name":"tcodefrm.actsyntaxperl.caption","sourcebytes":[80,38,101,114,108],"value":"P&erl"},
-{"hash":338640,"name":"tcodefrm.actsyntaxphp.caption","sourcebytes":[80,38,72,80],"value":"P&HP"}
+{"hash":338640,"name":"tcodefrm.actsyntaxphp.caption","sourcebytes":[80,38,72,80],"value":"P&HP"},
+{"hash":48279310,"name":"tcodefrm.actsyntaxpython.caption","sourcebytes":[80,38,121,116,104,111,110],"value":"P&ython"}
 ]}

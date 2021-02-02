@@ -14,7 +14,7 @@ uses
    ExtCtrls, LCLVersion, SynEdit, SynHighlighterCpp, SynHighlighterHTML,
    SynHighlighterSQL, SynHighlighterPas, SynEditHighlighter, SynHighlighterJava,
    SynExportHTML, SynHighlighterJScript, SynHighlighterPerl, SynHighlighterPHP,
-   PrintersDlgs;
+   SynHighlighterPython, PrintersDlgs;
 
 type
   TSearchRecord = record
@@ -27,6 +27,7 @@ type
  type
   TCodeFrm = class(TForm)
     actCopyAsHtml: TAction;
+    actSyntaxPython: TAction;
     actSyntaxPHP: TAction;
     actSyntaxPerl: TAction;
     actSyntaxJavaScript: TAction;
@@ -34,6 +35,7 @@ type
     actSyntaxJava: TAction;
     CodeDB: TBufDataset;
     DataSource1: TDataSource;
+    mitPython: TMenuItem;
     mitPHP: TMenuItem;
     mitPerl: TMenuItem;
     mitJavaScript: TMenuItem;
@@ -113,6 +115,7 @@ type
     SynPas: TSynPasSyn;
     SynPerl: TSynPerlSyn;
     SynPHP: TSynPHPSyn;
+    SynPython: TSynPythonSyn;
     {$ENDIF}
     SynSQL: TSynSQLSyn;
     tvTopics: TTreeView;
@@ -611,6 +614,9 @@ begin
       if mitPHP.Checked then
         CodeDB.FieldByName('Language').AsString := 'PHP'
       else
+      if mitPython.Checked then
+        CodeDB.FieldByName('Language').AsString := 'PYTHON'
+      else
         CodeDB.FieldByName('Language').AsString := 'NONE'
     end;
     CodeDB.Post;
@@ -665,6 +671,10 @@ begin
           'PHP': begin // This is Perl Script source code
                   mitPHP.Checked := True;
                   FCodeText.HighLighter := SynPHP;
+                 end;
+          'PYTHON': begin // This is Perl Script source code
+                  mitPython.Checked := True;
+                  FCodeText.HighLighter := SynPython;
                  end;
           'PASCAL': begin // This is Pascal source code
                      mitPascal.Checked := True;
@@ -1256,6 +1266,7 @@ begin
   'actSyntaxJavaScript':        FCodeText.HighLighter :=SynJavaScript;
   'actSyntaxPerl':              FCodeText.Highlighter:=SynPerl;
   'actSyntaxPHP':               FCodeText.Highlighter:=SynPHP;
+  'actSyntaxPython':            FCodeText.Highlighter:=SynPython;
   else
     raise Exception.Create('Internal error selecting language');
   end;
@@ -1287,6 +1298,7 @@ begin
   SourceEditorManagerIntf.GetHighlighterSettings(SynJavaScript);
   SourceEditorManagerIntf.GetHighlighterSettings(SynPerl);
   SourceEditorManagerIntf.GetHighlighterSettings(SynPHP);
+  SourceEditorManagerIntf.GetHighlighterSettings(SynPython);
   SourceEditorManagerIntf.GetHighlighterSettings(SynPas);
 
  {$IF LCL_FULLVERSION < 2010000}
@@ -1340,6 +1352,9 @@ begin
   else
   if mitPHP.Checked then
      FCodeText.HighLighter := SynPHP
+  else
+  if mitPython.Checked then
+     FCodeText.HighLighter := SynPython
    else
      FCodeText.HighLighter := nil;
 end;
