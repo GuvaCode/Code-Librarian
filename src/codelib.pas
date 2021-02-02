@@ -14,7 +14,8 @@ uses
    ExtCtrls, LCLVersion, SynEdit, SynHighlighterCpp, SynHighlighterHTML,
    SynHighlighterSQL, SynHighlighterPas, SynEditHighlighter, SynHighlighterJava,
    SynExportHTML, SynHighlighterJScript, SynHighlighterPerl, SynHighlighterPHP,
-   SynHighlighterPython, synhighlighterunixshellscript, PrintersDlgs;
+   SynHighlighterPython, synhighlighterunixshellscript, SynHighlighterBat,
+   PrintersDlgs;
 
 type
   TSearchRecord = record
@@ -27,6 +28,7 @@ type
  type
   TCodeFrm = class(TForm)
     actCopyAsHtml: TAction;
+    actSyntaxBat: TAction;
     actSyntaxUNIXShell: TAction;
     actSyntaxPython: TAction;
     actSyntaxPHP: TAction;
@@ -36,6 +38,7 @@ type
     actSyntaxJava: TAction;
     CodeDB: TBufDataset;
     DataSource1: TDataSource;
+    mitBat: TMenuItem;
     mitUNIXShell: TMenuItem;
     mitSeparatorHighliter: TMenuItem;
     mitPython: TMenuItem;
@@ -107,6 +110,7 @@ type
     mitEditContractAll: TMenuItem;
     mitHTML: TMenuItem;
     mitSQL: TMenuItem;
+    SynBat: TSynBatSyn;
     SynCpp: TSynCppSyn;
     SynExportHTML: TSynExporterHTML;
     SynHTML: TSynHTMLSyn;
@@ -624,6 +628,9 @@ begin
       if mitUNIXShell.Checked then
         CodeDB.FieldByName('Language').AsString := 'UNIXSHELL'
       else
+      if mitBat.Checked then
+        CodeDB.FieldByName('Language').AsString := 'MSDOSBAT'
+      else
         CodeDB.FieldByName('Language').AsString := 'NONE'
     end;
     CodeDB.Post;
@@ -671,21 +678,25 @@ begin
                   mitJAVAScript.Checked := True;
                   FCodeText.HighLighter := SynJavaScript;
                  end;
-          'PERL': begin // This is Perl Script source code
+          'PERL': begin // This is Perl source code
                   mitPerl.Checked := True;
                   FCodeText.HighLighter := SynPerl;
                  end;
-          'PHP': begin // This is Php Script source code
+          'PHP': begin // This is Php source code
                   mitPHP.Checked := True;
                   FCodeText.HighLighter := SynPHP;
                  end;
-          'PYTHON': begin // This is Python Script source code
+          'PYTHON': begin // This is Python source code
                   mitPython.Checked := True;
                   FCodeText.HighLighter := SynPython;
                  end;
-          'UNIXSHELL': begin // This is Perl Script source code
+          'UNIXSHELL': begin // This is Unix shell source code
                   mitUNIXShell.Checked := True;
                   FCodeText.HighLighter := SynUnixShell;
+                 end;
+          'MSDOSBAT': begin // This is MsDos bat source code
+                  mitBat.Checked := True;
+                  FCodeText.HighLighter := SynBat;
                  end;
           'PASCAL': begin // This is Pascal source code
                      mitPascal.Checked := True;
@@ -1279,6 +1290,7 @@ begin
   'actSyntaxPHP':               FCodeText.Highlighter := SynPHP;
   'actSyntaxPython':            FCodeText.Highlighter := SynPython;
   'actSyntaxUNIXShell':         FCodeText.Highlighter := SynUnixShell;
+  'actSyntaxBat':               FCodeText.Highlighter := SynBat;
   else
     raise Exception.Create('Internal error selecting language');
   end;
@@ -1312,6 +1324,7 @@ begin
   SourceEditorManagerIntf.GetHighlighterSettings(SynPHP);
   SourceEditorManagerIntf.GetHighlighterSettings(SynPython);
   SourceEditorManagerIntf.GetHighlighterSettings(SynUnixShell);
+  SourceEditorManagerIntf.GetHighlighterSettings(SynBat);
   SourceEditorManagerIntf.GetHighlighterSettings(SynPas);
 
  {$IF LCL_FULLVERSION < 2010000}
@@ -1371,6 +1384,9 @@ begin
   else
   if mitUnixShell.Checked then
      FCodeText.HighLighter := SynUnixShell
+  else
+  if mitBat.Checked then
+     FCodeText.HighLighter := SynBat
    else
      FCodeText.HighLighter := nil;
 end;

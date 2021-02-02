@@ -414,6 +414,11 @@ object CodeFrm: TCodeFrm
         AutoCheck = True
         RadioItem = True
       end
+      object mitBat: TMenuItem
+        Action = actSyntaxBat
+        AutoCheck = True
+        RadioItem = True
+      end
     end
   end
   object mActions: TActionList
@@ -652,6 +657,11 @@ object CodeFrm: TCodeFrm
     object actSyntaxUNIXShell: TAction
       Category = 'Syntax'
       Caption = 'UNIX Shell Script'
+      OnExecute = GenericSyntaxHighlightingExecute
+    end
+    object actSyntaxBat: TAction
+      Category = 'Syntax'
+      Caption = 'MS-DOS Batch Files '
       OnExecute = GenericSyntaxHighlightingExecute
     end
   end
@@ -1422,5 +1432,11 @@ object CodeFrm: TCodeFrm
     Enabled = False
     Left = 120
     Top = 96
+  end
+  object SynBat: TSynBatSyn
+    DefaultFilter = 'Пакетные файлы MS-DOS (*.bat;*.cmd)|*.bat;*.cmd'
+    Enabled = False
+    Left = 120
+    Top = 160
   end
 end
