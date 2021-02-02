@@ -9,6 +9,7 @@ object CodeFrm: TCodeFrm
   KeyPreview = True
   Menu = MainMenu
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnHide = FormHide
   OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress

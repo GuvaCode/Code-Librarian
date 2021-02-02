@@ -179,6 +179,7 @@ type
     procedure actSaveAsHtmlExecute(Sender: TObject);
     procedure CodeTextChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure mActionsUpdate(AAction: TBasicAction; var Handled: Boolean);
     procedure pmCodePopup(Sender: TObject);
@@ -513,6 +514,14 @@ begin
   InitializeTreeView;
   mitPascal.Checked := True;
   FModified := False;
+end;
+
+procedure TCodeFrm.FormDestroy(Sender: TObject);
+begin
+ if FModified then SaveRecord;
+    SaveSettings;
+    CloseDB(True);
+    FreeAndNil(CodeDB);
 end;
 
 procedure TCodeFrm.FormKeyDown(Sender: TObject; var Key: Word;
