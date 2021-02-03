@@ -28,6 +28,7 @@ type
  type
   TCodeFrm = class(TForm)
     actCopyAsHtml: TAction;
+    actReadOnly: TAction;
     actSyntaxBat: TAction;
     actSyntaxUNIXShell: TAction;
     actSyntaxPython: TAction;
@@ -38,6 +39,8 @@ type
     actSyntaxJava: TAction;
     CodeDB: TBufDataset;
     DataSource1: TDataSource;
+    mitReadOnly: TMenuItem;
+    mitEditorSep4: TMenuItem;
     mitBat: TMenuItem;
     mitUNIXShell: TMenuItem;
     mitSeparatorHighliter: TMenuItem;
@@ -72,7 +75,6 @@ type
     mitHelpSep1: TMenuItem;
     mitHelpAbout: TMenuItem;
     mitFileDelete: TMenuItem;
-
     pnlView: TPanel;
     pmTopics: TPopupMenu;
     mitTreeNew: TMenuItem;
@@ -120,10 +122,10 @@ type
     SynPas: TSynCustomHighlighter;
     {$ELSE}
     SynPas: TSynPasSyn;
+    {$ENDIF}
     SynPerl: TSynPerlSyn;
     SynPHP: TSynPHPSyn;
     SynPython: TSynPythonSyn;
-    {$ENDIF}
     SynSQL: TSynSQLSyn;
     SynUNIXShell: TSynUNIXShellScriptSyn;
     tvTopics: TTreeView;
@@ -176,13 +178,13 @@ type
     mitTreeRename: TMenuItem;
 
     procedure actCopyAsHtmlExecute(Sender: TObject);
+    procedure actReadOnlyExecute(Sender: TObject);
     procedure actSaveAsHtmlExecute(Sender: TObject);
     procedure CodeTextChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure mActionsUpdate(AAction: TBasicAction; var Handled: Boolean);
-    procedure pmCodePopup(Sender: TObject);
     procedure tvTopicsChanging(Sender: TObject; Node: TTreeNode; var AllowChange: Boolean);
     procedure tvTopicsEdited(Sender: TObject; Node: TTreeNode; var S: string);
     procedure tvTopicsChange(Sender: TObject; Node: TTreeNode);
@@ -221,6 +223,7 @@ type
     procedure tvTopicsMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure UpdateActionsCP(Sender: TObject);
   private
     FModified: Boolean;
     FSearch: TSearchRecord;
@@ -238,6 +241,7 @@ type
     procedure SortNodes;
     procedure AddDefaultIndexes(DataSet: TBufDataset);
     procedure SetupSyntaxHighlightingControl;
+
   public
     function AddFolder(Node: TTreeNode; const Desc: string): TTreeNode;
     function AddCode(const Desc: string): TTreeNode;
@@ -265,7 +269,7 @@ type
   DefaultDBFileName = 'codelibrarian.dat';
 
   var
-    CodeFrm: TCodeFrm;// = nil;
+    CodeFrm: TCodeFrm;
 
 implementation
 {$R *.lfm}
@@ -287,6 +291,7 @@ begin
      FieldDefs.Add('System', ftInteger, 0, False);
      FieldDefs.Add('Topic', ftString, 250, False);
      FieldDefs.Add('Code', ftMemo, 0, False);
+     FieldDefs.Add('Protect', ftBoolean, 0, false);
      FieldDefs.Add('Language', ftString, 10, False);
      IndexDefs.Add('Main', 'Key', [ixPrimary]);
      IndexDefs.Add('Parent', 'Parent', []);
@@ -393,11 +398,9 @@ begin
       CodeDB.Next;
     end;
   finally
-    //tvTopics.SortType := stText;
     tvTopics.SortType := stNone;
     tvTopics.Items.EndUpdate;
   end;
-
 end;
 
 function TCodeFrm.AddFolder(Node: TTreeNode; const Desc: string): TTreeNode;
@@ -421,12 +424,10 @@ begin
   NNode.ImageIndex := ClosedFolderImageIndex;
   NNode.SelectedIndex := OpenFolderImageIndex;
   Result := NNode;
-
   SortNodes;
 end;
 
 procedure TCodeFrm.SetModified(New: Boolean);
-
 begin
   FModified := New;
   if FModified then
@@ -440,7 +441,6 @@ var
   Node: TTreeNode;
 begin
   Result := nil;
-
   if tvTopics.Selected = nil then Exit;
   with CodeDB do
   begin
@@ -461,7 +461,6 @@ begin
   Result := Node;
   SortNodes;
 end;
-
 
 procedure TCodeFrm.CodeTextChange(Sender: TObject);
 begin
@@ -503,6 +502,12 @@ begin
   SynExportHTML.CopyToClipboard;
 end;
 
+procedure TCodeFrm.actReadOnlyExecute(Sender: TObject);
+begin
+ FCodeText.ReadOnly:=mitReadOnly.Checked;
+ SaveRecord;
+end;
+
 procedure TCodeFrm.FormCreate(Sender: TObject);
 var dbFPath:string;
 begin
@@ -539,7 +544,7 @@ var
   Editor: TSourceEditorInterface;
 begin
   HaveEditorSelection := Length(FCodeText.SelText) > 0;
-  actEditCut.Enabled := HaveEditorSelection;
+  if not FCodeText.ReadOnly then actEditCut.Enabled := HaveEditorSelection;
   actEditCopy.Enabled := HaveEditorSelection;
   actCopyAsHtml.Enabled:= actEditCopy.Enabled;
   // bug on linux on menu
@@ -550,8 +555,9 @@ begin
   Editor:=SourceEditorManagerIntf.ActiveEditor;
   if Editor <> nil then
   begin
-   actEditCopyFromIde.Enabled := (SnippetIsSelected and (Editor.SelectionAvailable));
-   actEditPasteToIde.Enabled := (SnippetIsSelected and (FCodeText.SelAvail))
+   if not FCodeText.ReadOnly then
+    actEditCopyFromIde.Enabled := (SnippetIsSelected and (Editor.SelectionAvailable));
+    actEditPasteToIde.Enabled := (SnippetIsSelected and (FCodeText.SelAvail))
   end;
 
   actDelete.Enabled := HaveSelectedNode;
@@ -568,24 +574,15 @@ begin
     actNewSnippet.Enabled := not SnippetIsSelected;
     actNewFolder.Enabled := not SnippetIsSelected;
   end;
-
   actPrint.Enabled:=SnippetIsSelected;
   actSaveAsHtml.Enabled:=SnippetIsSelected;
   Handled := True;
-
-
-end;
-
-procedure TCodeFrm.pmCodePopup(Sender: TObject);
-begin
-  actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
 end;
 
 procedure TCodeFrm.tvTopicsChanging(Sender: TObject; Node: TTreeNode;
   var AllowChange: Boolean);
 begin
-  if (tvTopics.Selected <> nil) and Modified then SaveRecord;
-  // Do not alter value of AllowChange.
+  if (tvTopics.Selected <> nil) and Modified then SaveRecord; // Do not alter value of AllowChange.
 end;
 
 procedure TCodeFrm.SaveRecord;
@@ -606,6 +603,7 @@ begin
     if tvTopics.Selected.ImageIndex = CodeSnippetImageIndex then
     begin
       CodeDB.FieldByName('Code').AsString:=FCodeText.Text;
+      CodeDB.FieldByName('Protect').AsBoolean:=FcodeText.ReadOnly;
 
       if mitPascal.Checked then
         CodeDB.FieldByName('Language').AsString := 'PASCAL'
@@ -642,7 +640,7 @@ begin
       else
         CodeDB.FieldByName('Language').AsString := 'NONE'
     end;
-    CodeDB.Post;
+   CodeDB.Post;
   end;
 end;
 
@@ -662,7 +660,6 @@ begin
         FCodeText.Lines.BeginUpdate;
         try
           case  CodeDB.FieldByName('Language').AsString of
-
           'NONE': begin // This is non source code
                    mitNone.Checked := True;
                    FCodeText.HighLighter := nil;
@@ -713,27 +710,29 @@ begin
                     end;
           end;
           FCodeText.Text:=CodeDB.FieldByName('Code').AsString;
-        finally
+     finally
           FCodeText.Lines.EndUpdate;
         end;
       end;
-      FCodeText.ReadOnly := False;
+      actReadOnly.Enabled:=true;
+      FCodeText.ReadOnly := CodeDB.FieldByName('Protect').AsBoolean;
+      actReadOnly.Checked:=FCodeText.ReadOnly;
     end
     else
     begin
       FCodeText.Lines.Clear;
       FCodeText.ReadOnly := True;
+      actReadOnly.Enabled:=False;
     end;
     Modified := False;
   except
     on E: Exception do
       ShowMessage(E.Message);
   end;
-  actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
+  UpdateActionsCP(Sender);
 end;
 
 procedure TCodeFrm.DeleteExecute(Sender: TObject);
-
   procedure DeleteRecords(Node: TTreeNode);
   var
     RNode: TTreeNode;
@@ -746,8 +745,6 @@ procedure TCodeFrm.DeleteExecute(Sender: TObject);
       RNode := RNode.GetNext;
     end;
   end;
-
-
 var
   NodeType: string;
 begin
@@ -780,7 +777,6 @@ end;
 procedure TCodeFrm.PrintExecute(Sender: TObject);
 var  Print : TMySEPrint;
 begin
-
   if dlgPrint.Execute then
   begin
      Print := TMySEPrint.Create(Self);
@@ -804,14 +800,14 @@ end;
 
 procedure TCodeFrm.CutExecute(Sender: TObject);
 begin
+  UpdateActionsCP(Sender);
   FCodeText.CutToClipboard;
-  actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
 end;
 
 procedure TCodeFrm.CopyExecute(Sender: TObject);
 begin
+  UpdateActionsCP(Sender);
   FCodeText.CopyToClipboard;
-  actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
 end;
 
 procedure TCodeFrm.PasteExecute(Sender: TObject);
@@ -825,8 +821,7 @@ begin
 end;
 
 procedure TCodeFrm.CopyFromIdeExecute(Sender: TObject);
-var
-    Editor: TSourceEditorInterface;
+var Editor: TSourceEditorInterface;
 begin
    Editor:=SourceEditorManagerIntf.ActiveEditor;
    if Editor=nil then exit;
@@ -834,8 +829,7 @@ begin
 end;
 
 procedure TCodeFrm.PasteToIdeExecute(Sender: TObject);
-var
-    Editor: TSourceEditorInterface;
+var  Editor: TSourceEditorInterface;
 begin
   Editor:=SourceEditorManagerIntf.ActiveEditor;
    if Editor=nil then exit;
@@ -862,8 +856,6 @@ begin
     on E: Exception do
       showmessage(E.Message);
   end;
-
-
 end;
 
 procedure TCodeFrm.DoSearch(First: Boolean);
@@ -894,7 +886,7 @@ end;
           Exit;
       // If the next character is alphabetic, we didn't find a word match
       if MatchPos + Length(FSearch.Text) <= Length(Text) then
-        if CharIsAlpha(Text[MatchPos + Length(FSearch.Text)]) then
+       if CharIsAlpha(Text[MatchPos + Length(FSearch.Text)]) then
           Exit;
     end;
     Result := MatchPos;
@@ -959,8 +951,6 @@ begin
           tvTopics.SetFocus
         else
         begin
-         { FCodeText.Enabled:=true;
-          FCodeText.SetFocus; }
           Dec(Match);
           tvTopics.OnChange(Self,tvTopics.Selected);
           FCodeText.SelStart := Match + 1;
@@ -1034,7 +1024,6 @@ procedure TCodeFrm.ContractAllExecute(Sender: TObject);
 var
   Node: TTreeNode;
 begin
-  // OnChanging doesn't fire under Delphi 5 when calling Collapse below
   if (tvTopics.Selected <> nil) and Modified then SaveRecord;
   Node := tvTopics.Items.GetFirstNode;
   while Node <> nil do
@@ -1042,74 +1031,17 @@ begin
     Node.Collapse(True);
     Node := Node.GetNextSibling;
   end;
-  // OnChange doesn't fire under Delphi 5 when calling Collapse above
   tvTopicsChange(tvTopics, tvTopics.Selected);
 end;
 
 procedure TCodeFrm.SaveSettings;
 begin
-  // Do not localize any of the following lines.
- { BaseKey := ConfigInfo.GExpertsIdeRootRegistryKey;
-
-  RegIni := TGExpertsSettings.Create(BaseKey);
-  try
-    RegIni.WriteInteger(ConfigurationSection, 'Left', Left);
-    RegIni.WriteInteger(ConfigurationSection, 'Top', Top);
-    RegIni.WriteInteger(ConfigurationSection, 'Width', Width);
-    RegIni.WriteInteger(ConfigurationSection, 'Height', Height);
-    RegIni.WriteInteger(ConfigurationSection, 'Layout', Ord(Layout));
-    if Layout = clSide then
-      RegIni.WriteInteger(ConfigurationSection, 'Splitter', tvTopics.Width)
-    else
-      RegIni.WriteInteger(ConfigurationSection, 'Splitter', tvTopics.Height);
-    RegIni.WriteString(ConfigurationSection, 'DatabasePath', DatabasePath);
-  finally
-    RegIni.Free;
-  end;
-
-  BaseKey := AddTrailingPathDelimiter(BaseKey) + ConfigurationSection;
-  RegIni := TGExpertsSettings.Create(BaseKey);
-  try
-    RegSaveFont(RegIni, 'Editor', FCodeText.Font);
-    RegSaveFont(RegIni, 'TreeView', tvTopics.Font);
-  finally
-    RegIni.Free;
-  end; }
+//
 end;
 
 procedure TCodeFrm.LoadSettings;
-//var
- // RegIni: TGExpertsSettings;
- // BaseKey: string;
 begin
-  // Do not localize any of the following lines.
-  // Do not localize any of the following lines.
-  {BaseKey := ConfigInfo.GExpertsIdeRootRegistryKey;
-
-  RegIni := TGExpertsSettings.Create(BaseKey);
-  try
-    Left := RegIni.ReadInteger(ConfigurationSection, 'Left', Left);
-    Top := RegIni.ReadInteger(ConfigurationSection, 'Top', Top);
-    Width := RegIni.ReadInteger(ConfigurationSection, 'Width', Width);
-    Height := RegIni.ReadInteger(ConfigurationSection, 'Height', Height);
-    Layout := TCodeLayout(RegIni.ReadInteger(ConfigurationSection, 'Layout', 0));
-    if Layout = clSide then
-      tvTopics.Width := RegIni.ReadInteger(ConfigurationSection, 'Splitter', tvTopics.Width)
-    else
-      tvTopics.Height := RegIni.ReadInteger(ConfigurationSection, 'Splitter', tvTopics.Height);
-    DatabasePath := RegIni.ReadString(ConfigurationSection, 'DatabasePath', DatabasePath);
-  finally
-    RegIni.Free;
-  end;
-
-  BaseKey := AddTrailingPathDelimiter(BaseKey) + ConfigurationSection;
-  RegIni := TGExpertsSettings.Create(BaseKey);
-  try
-    RegLoadFont(RegIni, 'Editor', FCodeText.Font);
-    RegLoadFont(RegIni, 'TreeView', tvTopics.Font);
-  finally
-    RegIni.Free;
-  end;  }
+//
 end;
 
 procedure TCodeFrm.HelpExecute(Sender: TObject);
@@ -1124,12 +1056,10 @@ end;
 
 procedure TCodeFrm.StatusBarResize(Sender: TObject);
 begin
-  with StatusBar do
-    Panels[0].Width := Width - Panels[1].Width;
+  with StatusBar do Panels[0].Width := Width - Panels[1].Width;
 end;
 
 procedure TCodeFrm.NewSnippetExecute(Sender: TObject);
-
 var
   Node: TTreeNode;
 begin
@@ -1147,8 +1077,7 @@ begin
 end;
 
 procedure TCodeFrm.NewRootFolderExecute(Sender: TObject);
-var
-  Node: TTreeNode;
+var Node: TTreeNode;
 begin
   Node := AddFolder(nil, rsNewFolder);
   if Node <> nil then
@@ -1159,8 +1088,7 @@ begin
 end;
 
 procedure TCodeFrm.NewFolderExecute(Sender: TObject);
-var
-  Node: TTreeNode;
+var Node: TTreeNode;
 begin
   Screen.Cursor := crHourglass;
   try
@@ -1178,68 +1106,12 @@ end;
 procedure TCodeFrm.tvTopicsKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if (Key = VK_F2) and (tvTopics.Selected <> nil) then
-    tvTopics.Selected.EditText;
+  if (Key = VK_F2) and (tvTopics.Selected <> nil) then tvTopics.Selected.EditText;
 end;
 
 procedure TCodeFrm.OptionsExecute(Sender: TObject);
-//var
- // Dlg: TfmCodeOptions;
 begin
- { Dlg := TfmCodeOptions.Create(nil);
-  try
-    with Dlg do
-    begin
-      edPath.Text := DatabasePath;
-      if Layout = clSide then
-        rbSide.Checked := True
-      else
-        rbTop.Checked := True;
-      fcTreeView.ItemIndex := fcTreeView.Items.IndexOf(tvTopics.Font.Name);
-      udTreeView.Position := tvTopics.Font.Size;
-      fcEditor.ItemIndex := fcEditor.Items.IndexOf(FCodeText.Font.Name);
-      udEditor.Position := FCodeText.Font.Size;
-    end;
-
-    if Dlg.ShowModal = mrOK then
-    begin
-      if (DatabasePath <> Dlg.edPath.Text) then
-      begin
-        if CodeDB <> nil then
-          CloseDB(True);
-
-        FreeAndNil(CodeDB);
-        tvTopics.Items.Clear;
-        DatabasePath := AddTrailingPathDelimiter(Dlg.edPath.Text);
-        CodeDB := OpenDB(DatabasePath + DefaultDBFileName);
-        if CodeDB = nil then
-          CodeDB := CreateNewDB(DatabasePath + DefaultDBFileName);
-        if CodeDB = nil then
-        begin
-          MessageDlg(SCouldNotCreateDatabase, mtError, [mbOK], 0);
-          Exit;
-        end;
-        InitializeTreeView;
-      end;
-      if Dlg.rbSide.Checked then
-        Layout := clSide
-      else
-        Layout := clTop;
-
-      with tvTopics.Font do
-      begin
-        Name := Dlg.fcTreeView.Text;
-        Size := Trunc(StrToInt(Dlg.eTreeView.Text));
-      end;
-      with FCodeText.Font do
-      begin
-        Name := Dlg.fcEditor.Text;
-        Size := Trunc(StrToInt(Dlg.eEditor.Text));
-      end;
-    end;
-  finally
-    Dlg.Free;
-  end;  }
+//
 end;
 
 procedure TCodeFrm.tvTopicsStartDrag(Sender: TObject; var DragObject: TDragObject);
@@ -1275,12 +1147,10 @@ procedure TCodeFrm.FormShow(Sender: TObject);
 begin
   if (CodeDB <> nil) and not CodeDB.Active then CodeDB.Open;
   SetupSyntaxHighlightingControl;
-  tvTopics.OnChange(Self,tvTopics.Selected);
 end;
 
 procedure TCodeFrm.SortNodes;
 begin
-  //tvTopics.AlphaSort;
   tvTopics.SortType := stNone;
 end;
 
@@ -1322,20 +1192,21 @@ begin
   {$ELSE}
   FCodeText.HighLighter := SynCPP;
   {$ENDIF}
-
-  SourceEditorManagerIntf.GetEditorControlSettings(FCodeText);
-  SourceEditorManagerIntf.GetHighlighterSettings(SynCPP);
-  SourceEditorManagerIntf.GetHighlighterSettings(SynSQL);
-  SourceEditorManagerIntf.GetHighlighterSettings(SynHTML);
-  SourceEditorManagerIntf.GetHighlighterSettings(SynJava);
-  SourceEditorManagerIntf.GetHighlighterSettings(SynJavaScript);
-  SourceEditorManagerIntf.GetHighlighterSettings(SynPerl);
-  SourceEditorManagerIntf.GetHighlighterSettings(SynPHP);
-  SourceEditorManagerIntf.GetHighlighterSettings(SynPython);
-  SourceEditorManagerIntf.GetHighlighterSettings(SynUnixShell);
-  SourceEditorManagerIntf.GetHighlighterSettings(SynBat);
-  SourceEditorManagerIntf.GetHighlighterSettings(SynPas);
-
+  with  SourceEditorManagerIntf do
+  begin
+   GetEditorControlSettings(FCodeText);
+   GetHighlighterSettings(SynCPP);
+   GetHighlighterSettings(SynSQL);
+   GetHighlighterSettings(SynHTML);
+   GetHighlighterSettings(SynJava);
+   GetHighlighterSettings(SynJavaScript);
+   GetHighlighterSettings(SynPerl);
+   GetHighlighterSettings(SynPHP);
+   GetHighlighterSettings(SynPython);
+   GetHighlighterSettings(SynUnixShell);
+   GetHighlighterSettings(SynBat);
+   GetHighlighterSettings(SynPas);
+  end;
  {$IF LCL_FULLVERSION < 2010000}
   SynPas.AsmAttri:=SynCpp.AsmAttri;
   SynPas.CommentAttri:=SynCpp.CommentAttri;
@@ -1353,7 +1224,6 @@ begin
   PopupMenu := pmCode;
   OnChange := @CodeTextChange;
   Parent := pnlView;
-  ReadOnly := True;
   Gutter.Parts[0].Visible:=false;
   Gutter.Parts[1].Visible:=false;
   Gutter.Parts[3].Visible:=false;
@@ -1362,7 +1232,7 @@ begin
   Keystrokes[88].ShortCut:=(0); //remove Ctrl+Alt+C from synedit
   EndUpdate;
   end;
-  actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
+  UpdateActionsCP(Self);
 
   if mitPascal.Checked then
      FCodeText.HighLighter := SynPAS
@@ -1400,20 +1270,17 @@ begin
      FCodeText.HighLighter := nil;
 end;
 
-{destructor TCodeFrm.Destroy;
+procedure TCodeFrm.UpdateActionsCP(Sender: TObject);
 begin
-  if FModified then
-    SaveRecord;
-    SaveSettings;
-  CloseDB(True);
-  FreeAndNil(CodeDB);
-  inherited Destroy;
-end; }
+  actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
+  actEditCut.Enabled:= (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
+end;
 
 procedure TCodeFrm.tvTopicsDblClick(Sender: TObject);
 begin
   if tvTopics.Selected <> nil then
   begin
+  tvTopics.SetFocus;
     if tvTopics.Selected.ImageIndex = CodeSnippetImageIndex then
       actEditPasteToIde.Execute;
   end;
@@ -1421,8 +1288,7 @@ end;
 
 procedure TCodeFrm.actEditRenameExecute(Sender: TObject);
 begin
-  if tvTopics.Selected <> nil then
-    tvTopics.Selected.EditText
+  if tvTopics.Selected <> nil then tvTopics.Selected.EditText
 end;
 
 procedure TCodeFrm.tvTopicsMouseDown(Sender: TObject;
@@ -1453,7 +1319,6 @@ begin
     Key := #0;
     actExit.Execute;
   end;
-
 end;
 
 end.

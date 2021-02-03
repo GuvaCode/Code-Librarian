@@ -69,5 +69,6 @@
 {"hash":338640,"name":"tcodefrm.actsyntaxphp.caption","sourcebytes":[80,38,72,80],"value":"P&HP"},
 {"hash":48279310,"name":"tcodefrm.actsyntaxpython.caption","sourcebytes":[80,38,121,116,104,111,110],"value":"P&ython"},
 {"hash":6175796,"name":"tcodefrm.actsyntaxunixshell.caption","sourcebytes":[85,78,73,88,32,83,104,101,108,108,32,83,99,114,105,112,116],"value":"UNIX Shell Script"},
-{"hash":36114928,"name":"tcodefrm.actsyntaxbat.caption","sourcebytes":[77,83,45,68,79,83,32,66,97,116,99,104,32,70,105,108,101,115,32],"value":"MS-DOS Batch Files "}
+{"hash":36114928,"name":"tcodefrm.actsyntaxbat.caption","sourcebytes":[77,83,45,68,79,83,32,66,97,116,99,104,32,70,105,108,101,115,32],"value":"MS-DOS Batch Files "},
+{"hash":192504505,"name":"tcodefrm.actreadonly.caption","sourcebytes":[82,101,97,100,79,110,108,121],"value":"ReadOnly"}
 ]}

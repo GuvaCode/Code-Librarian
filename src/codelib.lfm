@@ -6,6 +6,7 @@ object CodeFrm: TCodeFrm
   Caption = 'Code Librarian'
   ClientHeight = 367
   ClientWidth = 660
+  DoubleBuffered = True
   KeyPreview = True
   Menu = MainMenu
   OnCreate = FormCreate
@@ -14,6 +15,7 @@ object CodeFrm: TCodeFrm
   OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress
   OnShow = FormShow
+  ParentDoubleBuffered = False
   Position = poDesktopCenter
   ShowInTaskBar = stAlways
   LCLVersion = '2.0.10.0'
@@ -319,7 +321,7 @@ object CodeFrm: TCodeFrm
   end
   object pmCode: TPopupMenu
     Images = ilActions
-    OnPopup = pmCodePopup
+    OnPopup = UpdateActionsCP
     Left = 584
     Top = 168
     object mitEditorCut: TMenuItem
@@ -420,6 +422,13 @@ object CodeFrm: TCodeFrm
         AutoCheck = True
         RadioItem = True
       end
+    end
+    object mitEditorSep4: TMenuItem
+      Caption = '-'
+    end
+    object mitReadOnly: TMenuItem
+      Action = actReadOnly
+      AutoCheck = True
     end
   end
   object mActions: TActionList
@@ -664,6 +673,12 @@ object CodeFrm: TCodeFrm
       Category = 'Syntax'
       Caption = 'MS-DOS Batch Files '
       OnExecute = GenericSyntaxHighlightingExecute
+    end
+    object actReadOnly: TAction
+      Category = 'Edit'
+      AutoCheck = True
+      Caption = 'ReadOnly'
+      OnExecute = actReadOnlyExecute
     end
   end
   object ilActions: TImageList
