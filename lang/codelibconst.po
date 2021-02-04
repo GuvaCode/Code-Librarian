@@ -1,0 +1,125 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: codelibconst.rscannotattach
+msgid "Subitems cannot be attached to a code snippet, only folders."
+msgstr ""
+
+#: codelibconst.rsconfirmdelete
+msgid "Delete this %s?"
+msgstr ""
+
+#: codelibconst.rscouldnotcreatedatabase
+msgid "Could not create database."
+msgstr ""
+
+#: codelibconst.rsfolder
+msgid "folder"
+msgstr ""
+
+#: codelibconst.rsmenuname
+msgid "Code Librarian"
+msgstr ""
+
+#: codelibconst.rsmodified
+msgid "Modified"
+msgstr ""
+
+#: codelibconst.rsnewcode
+msgid "New Code"
+msgstr ""
+
+#: codelibconst.rsnewfolder
+msgctxt "codelibconst.rsnewfolder"
+msgid "New Folder"
+msgstr ""
+
+#: codelibconst.rsnotforformfiles
+msgid "Copy/Paste is not allowed in form files."
+msgstr ""
+
+#: codelibconst.rssnippet
+msgid "snippet"
+msgstr ""
+
+#: codelibconst.rs_actcontractall
+msgid "Contract All"
+msgstr ""
+
+#: codelibconst.rs_actdelete
+msgid "Delete"
+msgstr ""
+
+#: codelibconst.rs_acteditcopy
+msgid "&Copy"
+msgstr ""
+
+#: codelibconst.rs_acteditcopyfromide
+msgid "Copy select text from IDE Editor"
+msgstr ""
+
+#: codelibconst.rs_acteditcut
+msgid "Cu&t"
+msgstr ""
+
+#: codelibconst.rs_acteditfind
+msgid "Find..."
+msgstr ""
+
+#: codelibconst.rs_acteditfindnext
+msgid "Find Next"
+msgstr ""
+
+#: codelibconst.rs_acteditpaste
+msgid "&Paste"
+msgstr ""
+
+#: codelibconst.rs_acteditpastetoide
+msgid "Paste select text to IDE Editor"
+msgstr ""
+
+#: codelibconst.rs_actexit
+msgid "Exit"
+msgstr ""
+
+#: codelibconst.rs_actexpandall
+msgid "Expand All"
+msgstr ""
+
+#: codelibconst.rs_actmakeroot
+msgid "Move Folder to Root"
+msgstr ""
+
+#: codelibconst.rs_actnewfolder
+msgctxt "codelibconst.rs_actnewfolder"
+msgid "New Folder"
+msgstr ""
+
+#: codelibconst.rs_actnewrootfolder
+msgid "New Root Folder"
+msgstr ""
+
+#: codelibconst.rs_actnewsnippet
+msgid "New Snippet"
+msgstr ""
+
+#: codelibconst.rs_actoptions
+msgid "Options"
+msgstr ""
+
+#: codelibconst.rs_actprint
+msgid "Print Snippet"
+msgstr ""
+
+#: codelibconst.rs_actprintersetup
+msgid "Printer Setup..."
+msgstr ""
+
+#: codelibconst.rs_actreadonly
+msgid "Read Only"
+msgstr ""
+
+#: codelibconst.rs_actsyntaxnone
+msgid "&None"
+msgstr ""
+

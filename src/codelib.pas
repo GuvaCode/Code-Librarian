@@ -15,7 +15,7 @@ uses
    SynHighlighterSQL, SynHighlighterPas, SynEditHighlighter, SynHighlighterJava,
    SynExportHTML, SynHighlighterJScript, SynHighlighterPerl, SynHighlighterPHP,
    SynHighlighterPython, synhighlighterunixshellscript, SynHighlighterBat,
-   PrintersDlgs;
+   PrintersDlgs, codelibConst;
 
 type
   TSearchRecord = record
@@ -241,39 +241,19 @@ type
     procedure SortNodes;
     procedure AddDefaultIndexes(DataSet: TBufDataset);
     procedure SetupSyntaxHighlightingControl;
-
-  public
+ public
     function AddFolder(Node: TTreeNode; const Desc: string): TTreeNode;
     function AddCode(const Desc: string): TTreeNode;
     property Modified: Boolean read FModified write SetModified;
     property DatabasePath: string read FDatabasePath write FDatabasePath;
   end;
 
- resourcestring
-  rsMenuName = 'Code Librarian';
-  rsModified = 'Modified';
-  rsSnippet = 'snippet';
-  rsFolder = 'folder';
-  rsConfirmDelete = 'Delete this %s?';
-  rsNotForFormFiles = 'Copy/Paste is not allowed in form files.';
-  rsCannotAttach = 'Subitems cannot be attached to a code snippet, only folders.';
-  rsNewCode = 'New Code';
-  rsCouldNotCreateDatabase = 'Could not create database.';
-  rsNewFolder = 'New Folder';
 
-  const
-  ConfigurationSection = 'CodeLib';
-  ClosedFolderImageIndex = 0;
-  OpenFolderImageIndex   = 17;
-  CodeSnippetImageIndex = 18;
-  DefaultDBFileName = 'codelibrarian.dat';
-
-  var
+ var
     CodeFrm: TCodeFrm;
 
 implementation
 {$R *.lfm}
-
 uses
    LazIDEIntf, SrcEditorIntf, MySEPrint,
    IDEOptEditorIntf, EditorSyntaxHighlighterDef, codesrch;
@@ -511,6 +491,7 @@ end;
 procedure TCodeFrm.FormCreate(Sender: TObject);
 var dbFPath:string;
 begin
+  LoadSettings;
   SetupSyntaxHighlightingControl;
   caption:=rsMenuName;
   dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+DefaultDBFileName;
@@ -1040,8 +1021,27 @@ begin
 end;
 
 procedure TCodeFrm.LoadSettings;
-begin
-//
+begin  // loadresource string;
+  actDelete.caption := rs_actDelete;
+  actNewRootFolder.caption := rs_actNewRootFolder;
+  actNewFolder.caption := rs_actNewFolder;
+  actNewSnippet.caption := rs_actNewSnippet;
+  actMakeRoot.caption := rs_actMakeRoot;
+  actPrinterSetup.caption := rs_actPrinterSetup;
+  actPrint.caption := rs_actPrint;
+  actExit.caption := rs_actExit;
+  actEditCut.caption := rs_actEditCut;
+  actEditCopy.caption := rs_actEditCopy;
+  actEditPaste.caption := rs_actEditPaste;
+  actEditCopyFromIde.caption := rs_actEditCopyFromIde;
+  actEditPasteToIde.caption := rs_actEditPasteToIde;
+  actEditFind.caption := rs_actEditFind;
+  actEditFindNext.caption := rs_actEditFindNext;
+  actExpandAll.caption := rs_actExpandAll;
+  actContractAll.caption := rs_actContractAll;
+  actOptions.caption := rs_actOptions;
+  actSyntaxNone.caption := rs_actSyntaxNone;
+  actReadOnly.caption := rs_actReadOnly;
 end;
 
 procedure TCodeFrm.HelpExecute(Sender: TObject);
@@ -1186,12 +1186,11 @@ begin
   SynPas:= TSynPasSyn.Create(Self);
   {$ENDIF}
   end;
-
-  {$IFDEF LCL_FULLVERSION >= 2010000}
+ {$IFDEF LCL_FULLVERSION >= 2010000}
   FCodeText.HighLighter := SynPas;
-  {$ELSE}
+ {$ELSE}
   FCodeText.HighLighter := SynCPP;
-  {$ENDIF}
+ {$ENDIF}
   with  SourceEditorManagerIntf do
   begin
    GetEditorControlSettings(FCodeText);
@@ -1207,17 +1206,19 @@ begin
    GetHighlighterSettings(SynBat);
    GetHighlighterSettings(SynPas);
   end;
+
  {$IF LCL_FULLVERSION < 2010000}
   SynPas.AsmAttri:=SynCpp.AsmAttri;
   SynPas.CommentAttri:=SynCpp.CommentAttri;
-  SynPas.DirectiveAttri:=SynCPP.DirecAttri;
-  SynPas.IdentifierAttri:=SynCPP.IdentifierAttri;
+  SynPas.DirectiveAttri:=SynCpp.DirecAttri;
+  SynPas.IdentifierAttri:=SynSQL.IdentifierAttri;
   SynPas.KeyAttri:=SynCPP.KeyAttri;
   SynPAs.NumberAttri:=SynCPP.NumberAttri;
   SynPas.SpaceAttri:=SynCpp.SpaceAttri;
   SynPas.SymbolAttri:=SynCpp.SymbolAttri;
  {$ENDIF}
-  with FCodeText do
+
+ with FCodeText do
   begin
   BeginUpdate();
   Align := alClient;

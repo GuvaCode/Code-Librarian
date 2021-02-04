@@ -1,7 +1,7 @@
 object CodeFrm: TCodeFrm
-  Left = 429
+  Left = 359
   Height = 391
-  Top = 149
+  Top = 162
   Width = 660
   Caption = 'Code Librarian'
   ClientHeight = 367
@@ -1368,7 +1368,7 @@ object CodeFrm: TCodeFrm
   object DataSource1: TDataSource
     DataSet = CodeDB
     Left = 208
-    Top = 96
+    Top = 104
   end
   object SynCpp: TSynCppSyn
     DefaultFilter = 'Файлы C++ (*.c,*.cpp,*.h,*.hpp,*.hh)|*.c;*.cpp;*.h;*.hpp;*.hh'

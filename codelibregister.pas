@@ -12,7 +12,7 @@ uses
  procedure Register;
 
 implementation
-
+uses CodeLibConst;
 
 procedure ShowCodeLib(Sender: TObject);
 begin

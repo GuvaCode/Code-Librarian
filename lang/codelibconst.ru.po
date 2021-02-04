@@ -1,0 +1,130 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.2\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"Language: ru\n"
+"X-Poedit-Bookmarks: -1,-1,-1,-1,-1,-1,-1,14,-1,-1\n"
+
+#: codelibconst.rscannotattach
+msgid "Subitems cannot be attached to a code snippet, only folders."
+msgstr "Подэлементы не могут быть прикреплены к фрагменту кода, только к папкам. "
+
+#: codelibconst.rsconfirmdelete
+msgid "Delete this %s?"
+msgstr "Удалить %s?"
+
+#: codelibconst.rscouldnotcreatedatabase
+msgid "Could not create database."
+msgstr "Не удалось создать базу данных."
+
+#: codelibconst.rsfolder
+msgid "folder"
+msgstr "папку"
+
+#: codelibconst.rsmenuname
+msgid "Code Librarian"
+msgstr "Библиотекарь кода "
+
+#: codelibconst.rsmodified
+msgid "Modified"
+msgstr "Изменено "
+
+#: codelibconst.rsnewcode
+msgid "New Code"
+msgstr "Новый Код"
+
+#: codelibconst.rsnewfolder codelibconst.rs_actnewfolder
+msgid "New Folder"
+msgstr "Новая папка"
+
+#: codelibconst.rsnotforformfiles
+msgid "Copy/Paste is not allowed in form files."
+msgstr "Копирование / вставка не допускается в файлах форм. "
+
+#: codelibconst.rssnippet
+msgid "snippet"
+msgstr "отрывок"
+
+#: codelibconst.rs_actcontractall
+msgid "Contract All"
+msgstr "Свернуть всё"
+
+#: codelibconst.rs_actdelete
+msgid "Delete"
+msgstr "Удалить"
+
+#: codelibconst.rs_acteditcopy
+msgid "&Copy"
+msgstr "&Копировать"
+
+#: codelibconst.rs_acteditcopyfromide
+msgid "Copy select text from IDE Editor"
+msgstr "Вставить выделенный текст из редактора IDE"
+
+#: codelibconst.rs_acteditcut
+msgid "Cu&t"
+msgstr "&Вырезать"
+
+#: codelibconst.rs_acteditfind
+msgid "Find..."
+msgstr "Найти..."
+
+#: codelibconst.rs_acteditfindnext
+msgid "Find Next"
+msgstr "Найти следующее"
+
+#: codelibconst.rs_acteditpaste
+msgid "&Paste"
+msgstr "В&ставить"
+
+#: codelibconst.rs_acteditpastetoide
+msgid "Paste select text to IDE Editor"
+msgstr "Вставить выделенный текст в редактор IDE"
+
+#: codelibconst.rs_actexit
+msgid "Exit"
+msgstr "Выход"
+
+#: codelibconst.rs_actexpandall
+msgid "Expand All"
+msgstr "Развернуть все"
+
+#: codelibconst.rs_actmakeroot
+msgid "Move Folder to Root"
+msgstr "Переместить папку в корень"
+
+#: codelibconst.rs_actnewrootfolder
+msgid "New Root Folder"
+msgstr "Новая корневая папка"
+
+#: codelibconst.rs_actnewsnippet
+msgid "New Snippet"
+msgstr "Новый фрагмент"
+
+#: codelibconst.rs_actoptions
+msgid "Options"
+msgstr "Параметры"
+
+#: codelibconst.rs_actprint
+msgid "Print Snippet"
+msgstr "Распечатать фрагмент"
+
+#: codelibconst.rs_actprintersetup
+msgid "Printer Setup..."
+msgstr "Настройка принтера..."
+
+#: codelibconst.rs_actreadonly
+msgid "Read Only"
+msgstr "Только чтение"
+
+#: codelibconst.rs_actsyntaxnone
+msgid "&None"
+msgstr "Без подсветки"

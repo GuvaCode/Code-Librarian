@@ -13,7 +13,7 @@
         <CustomOptions Value="$(IDEBuildOptions)"/>
       </Other>
     </CompilerOptions>
-    <Files Count="2">
+    <Files Count="3">
       <Item1>
         <Filename Value="codelibregister.pas"/>
         <HasRegisterProc Value="True"/>
@@ -21,12 +21,17 @@
       </Item1>
       <Item2>
         <Filename Value="src/codelib.pas"/>
+        <DisableI18NForLFM Value="True"/>
         <UnitName Value="codelib"/>
       </Item2>
+      <Item3>
+        <Filename Value="src/codelibconst.pas"/>
+        <UnitName Value="codelibconst"/>
+      </Item3>
     </Files>
     <i18n>
       <EnableI18N Value="True"/>
-      <OutDir Value="langauge"/>
+      <OutDir Value="lang"/>
       <EnableI18NForLFM Value="True"/>
     </i18n>
     <RequiredPkgs Count="3">
