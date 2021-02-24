@@ -17,6 +17,7 @@ type
     BitBtn2: TBitBtn;
     DirectoryEdit: TDirectoryEdit;
     Label1: TLabel;
+    procedure BitBtn2Click(Sender: TObject);
     procedure DirectoryEditAcceptDirectory(Sender: TObject; var Value: String);
     procedure FormCreate(Sender: TObject);
   private
@@ -37,8 +38,13 @@ implementation
 procedure TFrmOptions.DirectoryEditAcceptDirectory(Sender: TObject;
   var Value: String);
 begin
-  codelib.CodeFrm.DatabasePath:=value;
   DirectoryEdit.Directory:=Value;
+end;
+
+procedure TFrmOptions.BitBtn2Click(Sender: TObject);
+begin
+ codelib.CodeFrm.DatabasePath:=DirectoryEdit.Directory;
+ close;
 end;
 
 procedure TFrmOptions.FormCreate(Sender: TObject);
