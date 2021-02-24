@@ -25,6 +25,7 @@ var
   IDEShortCutX: TIDEShortCut;
   IDECommandCategory: TIDECommandCategory;
   IDECommand: TIDECommand;
+  SectionEditorMnu: TIDEMenuSection;
 begin
   IDEShortCutX := IDEShortCut(VK_C, [ssCtrl, ssAlt], VK_UNKNOWN, []);
   IDECommandCategory := IDECommandList.FindCategoryByName(CommandCategoryToolMenuName);
@@ -36,6 +37,10 @@ begin
       RegisterIDEButtonCommand(IDECommand);
   end;
   RegisterIDEMenuCommand(itmOptionsDialogs, 'Code Librarian', rsMenuName+' ...',
+    nil, @ShowCodeLib, IDECommand, 'ce_interface');
+
+  SectionEditorMnu:=RegisterIDEMenuSection(SrcEditMenuSectionFirstStatic,'CodeLib');
+   RegisterIDEMenuCommand(SectionEditorMnu, 'CodeLib', rsMenuName+' ...',
     nil, @ShowCodeLib, IDECommand, 'ce_interface');
 end;
 

@@ -8,7 +8,7 @@ unit codelib;
 { TODO : Undo /Redo  }
 { TODO : Initsert editor menu for run codelib }
 { TODO : Insert all text from editor in active tab }
-
+{ TODO 1 : settings save and load }
 interface
 
 uses
