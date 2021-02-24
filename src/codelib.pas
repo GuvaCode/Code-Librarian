@@ -5,6 +5,9 @@ unit codelib;
 {$WARN 6058 off : Call to subroutine "$1" marked as inline is not inlined}
 {$WARN 5024 off : Parameter "$1" not used}
 {$WARN 4055 off : Conversion between ordinals and pointers is not portable}
+{ TODO : Undo /Redo  }
+{ TODO : Initsert editor menu for run codelib }
+{ TODO : Insert all text from editor in active tab }
 
 interface
 
@@ -1180,9 +1183,9 @@ begin
   if not Assigned(FCodeText) then
   begin
   FCodeText := TSynEdit.Create(Self);
-  {$IF LCL_FULLVERSION >= 2010000}
-  SynPas := TSynCustomHighlighter(IDEEditorOptions.CreateSynHighlighter(lshFreePascal));
-  {$ELSE}
+ {$IF LCL_FULLVERSION >= 2010000}
+ SynPas := TSynCustomHighlighter(IDEEditorOptions.CreateSynHighlighter(lshFreePascal));
+ {$ELSE}
   SynPas:= TSynPasSyn.Create(Self);
   {$ENDIF}
   end;
