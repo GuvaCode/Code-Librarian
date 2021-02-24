@@ -14,7 +14,7 @@ interface
 uses
    Clipbrd, Forms, Db, BufDataset, ImgList, Controls, StdActns, Classes,
    LazFileUtils, SysUtils, LCLType, ActnList, Dialogs, Menus, ComCtrls,
-   ExtCtrls, LCLVersion, SynEdit, SynHighlighterCpp, SynHighlighterHTML,
+   ExtCtrls, LCLVersion,SynEdit, SynHighlighterCpp, SynHighlighterHTML,
    SynHighlighterSQL, SynHighlighterPas, SynEditHighlighter, SynHighlighterJava,
    SynExportHTML, SynHighlighterJScript, SynHighlighterPerl, SynHighlighterPHP,
    SynHighlighterPython, synhighlighterunixshellscript, SynHighlighterBat,
@@ -258,8 +258,10 @@ type
 implementation
 {$R *.lfm}
 uses
-   LazIDEIntf, SrcEditorIntf, MySEPrint,
-   IDEOptEditorIntf, EditorSyntaxHighlighterDef, codesrch;
+   LazIDEIntf, SrcEditorIntf, MySEPrint, LazConfigStorage, BaseIDEIntf,
+   LCLProc,
+   IDEOptEditorIntf, EditorSyntaxHighlighterDef,
+   codesrch, codeoptions;
 
 function TCodeFrm.CreateNewDB(const DatabaseFile: string): TBufDataset;
 begin
@@ -492,17 +494,17 @@ begin
 end;
 
 procedure TCodeFrm.FormCreate(Sender: TObject);
-var dbFPath:string;
+//var dbFPath:string;
 begin
   LoadSettings;
-  SetupSyntaxHighlightingControl;
+ { SetupSyntaxHighlightingControl;
   caption:=rsMenuName;
   dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+DefaultDBFileName;
   CodeDB := OpenDB(dbFPath); // do not localize
   if CodeDB = nil then CodeDB := createNewDb(dbFPath);
   InitializeTreeView;
   mitPascal.Checked := True;
-  FModified := False;
+  FModified := False; }
 end;
 
 procedure TCodeFrm.FormDestroy(Sender: TObject);
@@ -1019,12 +1021,26 @@ begin
 end;
 
 procedure TCodeFrm.SaveSettings;
+var  Config: TConfigStorage;
 begin
-//
+    try
+      Config:=GetIDEConfigStorage('codelib.xml',false);
+      try
+        Config.SetDeleteValue('CodeLib/DBPath/Value', DatabasePath ,LazarusIDE.GetPrimaryConfigPath);
+      finally
+        Config.Free;
+      end;
+    except
+      on E: Exception do begin
+        DebugLn(['Saving codelib.xml failed: ',E.Message]);
+      end;
+    end;
 end;
 
 procedure TCodeFrm.LoadSettings;
+var    Config: TConfigStorage;
 begin  // loadresource string;
+
   actDelete.caption := rs_actDelete;
   actNewRootFolder.caption := rs_actNewRootFolder;
   actNewFolder.caption := rs_actNewFolder;
@@ -1045,6 +1061,33 @@ begin  // loadresource string;
   actOptions.caption := rs_actOptions;
   actSyntaxNone.caption := rs_actSyntaxNone;
   actReadOnly.caption := rs_actReadOnly;
+
+  SetupSyntaxHighlightingControl;
+  caption:=rsMenuName;
+
+ // dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+DefaultDBFileName;
+
+  try
+    Config:=GetIDEConfigStorage('codelib.xml',true);
+    try
+        FDatabasePath:=Config.GetValue('CodeLib/DBPath/Value',LazarusIDE.GetPrimaryConfigPath);
+    finally
+      Config.Free;
+    end;
+  except
+    on E: Exception do begin
+      DebugLn(['Loading codelib.xml failed: ',E.Message]);
+    end;
+  end;
+
+  CodeDB := OpenDB(AppendPathDelim(FDatabasePath)+DefaultDBFileName); // do not localize
+
+  if CodeDB = nil then CodeDB := CreateNewDb(AppendPathDelim(FDatabasePath)+DefaultDBFileName);
+
+  InitializeTreeView;
+  mitPascal.Checked := True;
+  FModified := False;
+
 end;
 
 procedure TCodeFrm.HelpExecute(Sender: TObject);
@@ -1114,7 +1157,24 @@ end;
 
 procedure TCodeFrm.OptionsExecute(Sender: TObject);
 begin
-//
+  try
+      with TFrmOptions.Create(nil) do
+      try
+        if ShowModal = mrOK then
+        begin
+         DatabasePath := DirectoryEdit.Directory;
+       end;
+      finally
+        SaveSettings;
+        Free;
+        if CodeDB<>nil then CodeDB.Close;
+        tvTopics.Items.Clear;
+        LoadSettings;
+      end;
+    except
+      on E: Exception do
+        showmessage(E.Message);
+    end;
 end;
 
 procedure TCodeFrm.tvTopicsStartDrag(Sender: TObject; var DragObject: TDragObject);
@@ -1144,6 +1204,7 @@ procedure TCodeFrm.FormHide(Sender: TObject);
 begin
   if FModified then SaveRecord;
   CloseDB;
+  SaveSettings;
 end;
 
 procedure TCodeFrm.FormShow(Sender: TObject);

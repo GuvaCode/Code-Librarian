@@ -1,0 +1,67 @@
+object FrmOptions: TFrmOptions
+  Left = 470
+  Height = 119
+  Top = 277
+  Width = 329
+  Caption = 'FrmOptions'
+  ClientHeight = 119
+  ClientWidth = 329
+  OnCreate = FormCreate
+  Position = poDesktopCenter
+  LCLVersion = '2.0.12.0'
+  object DirectoryEdit: TDirectoryEdit
+    Left = 8
+    Height = 27
+    Top = 30
+    Width = 313
+    Directory = 'DirectoryEdit'
+    OnAcceptDirectory = DirectoryEditAcceptDirectory
+    ShowHidden = False
+    ButtonWidth = 23
+    NumGlyphs = 1
+    Align = alTop
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 12
+    BorderSpacing.Right = 8
+    MaxLength = 0
+    TabOrder = 0
+    Text = 'DirectoryEdit'
+  end
+  object Label1: TLabel
+    Left = 12
+    Height = 14
+    Top = 4
+    Width = 305
+    Align = alTop
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Around = 4
+    Caption = 'Select data base path ..'
+    ParentColor = False
+  end
+  object BitBtn1: TBitBtn
+    Left = 239
+    Height = 30
+    Top = 80
+    Width = 82
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    DefaultCaption = True
+    Kind = bkCancel
+    ModalResult = 2
+    TabOrder = 1
+  end
+  object BitBtn2: TBitBtn
+    Left = 8
+    Height = 30
+    Top = 80
+    Width = 52
+    Anchors = [akLeft, akBottom]
+    AutoSize = True
+    Default = True
+    DefaultCaption = True
+    Kind = bkOK
+    ModalResult = 1
+    TabOrder = 2
+  end
+end
