@@ -13,7 +13,7 @@
         <CustomOptions Value="$(IDEBuildOptions)"/>
       </Other>
     </CompilerOptions>
-    <Files Count="4">
+    <Files Count="5">
       <Item1>
         <Filename Value="codelibregister.pas"/>
         <HasRegisterProc Value="True"/>
@@ -32,6 +32,10 @@
         <Filename Value="src/codeoptions.pas"/>
         <UnitName Value="codeoptions"/>
       </Item4>
+      <Item5>
+        <Filename Value="src/codesrch.pas"/>
+        <UnitName Value="codesrch"/>
+      </Item5>
     </Files>
     <i18n>
       <EnableI18N Value="True"/>

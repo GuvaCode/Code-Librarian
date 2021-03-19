@@ -277,21 +277,6 @@ object CodeFrm: TCodeFrm
         Action = actOptions
       end
     end
-    object mitHelp: TMenuItem
-      Caption = '&Help'
-      object mitHelpHelp: TMenuItem
-        Action = actHelpHelp
-      end
-      object mitHelpContents: TMenuItem
-        Action = actHelpContents
-      end
-      object mitHelpSep1: TMenuItem
-        Caption = '-'
-      end
-      object mitHelpAbout: TMenuItem
-        Action = actHelpAbout
-      end
-    end
   end
   object pmTopics: TPopupMenu
     Images = ilActions
@@ -585,26 +570,6 @@ object CodeFrm: TCodeFrm
       ImageIndex = 16
       OnExecute = OptionsExecute
       ShortCut = 16463
-    end
-    object actHelpAbout: TAction
-      Category = 'Help'
-      Caption = 'About GExperts...'
-      Hint = 'About GExperts...'
-      OnExecute = HelpAboutExecute
-    end
-    object actHelpContents: TAction
-      Category = 'Help'
-      Caption = 'Contents'
-      Hint = 'Contents'
-      OnExecute = HelpContentsExecute
-    end
-    object actHelpHelp: TAction
-      Category = 'Help'
-      Caption = 'Help'
-      Hint = 'Help'
-      ImageIndex = 19
-      OnExecute = HelpExecute
-      ShortCut = 112
     end
     object actSyntaxNone: TAction
       Category = 'Syntax'

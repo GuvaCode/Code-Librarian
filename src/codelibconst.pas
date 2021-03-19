@@ -49,6 +49,13 @@ resourcestring
  rs_actSyntaxNone='&None';
  rs_actReadOnly='Read Only';
 
+ rs_mitFile='File';
+ rs_mitFileNew='&New';
+ rs_mitExportHtml='Export as Html';
+ rs_mitEdit='&Edit';
+ rs_mitOptions='&Options';
+
+ rs_mitEditorHighlighting='Syntax &Highlighting';
 
 
 

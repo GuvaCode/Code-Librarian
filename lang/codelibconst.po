@@ -131,3 +131,27 @@ msgstr ""
 msgid "&None"
 msgstr ""
 
+#: codelibconst.rs_mitedit
+msgid "&Edit"
+msgstr ""
+
+#: codelibconst.rs_miteditorhighlighting
+msgid "Syntax &Highlighting"
+msgstr ""
+
+#: codelibconst.rs_mitexporthtml
+msgid "Export as Html"
+msgstr ""
+
+#: codelibconst.rs_mitfile
+msgid "File"
+msgstr ""
+
+#: codelibconst.rs_mitfilenew
+msgid "&New"
+msgstr ""
+
+#: codelibconst.rs_mitoptions
+msgid "&Options"
+msgstr ""
+

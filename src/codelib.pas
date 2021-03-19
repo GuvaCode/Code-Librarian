@@ -5,8 +5,6 @@ unit codelib;
 {$WARN 6058 off : Call to subroutine "$1" marked as inline is not inlined}
 {$WARN 5024 off : Parameter "$1" not used}
 {$WARN 4055 off : Conversion between ordinals and pointers is not portable}
-{ TODO : Undo /Redo  }
-{ TODO : Insert all text from editor in active tab }
 
 interface
 
@@ -76,11 +74,6 @@ type
     mitEditPaste: TMenuItem;
     mitEditCopy: TMenuItem;
     mitEditCut: TMenuItem;
-    mitHelp: TMenuItem;
-    mitHelpHelp: TMenuItem;
-    mitHelpContents: TMenuItem;
-    mitHelpSep1: TMenuItem;
-    mitHelpAbout: TMenuItem;
     mitFileDelete: TMenuItem;
     pnlView: TPanel;
     pmTopics: TPopupMenu;
@@ -172,9 +165,6 @@ type
     tbnSep4: TToolButton;
     tbnFind: TToolButton;
     actOptions: TAction;
-    actHelpAbout: TAction;
-    actHelpContents: TAction;
-    actHelpHelp: TAction;
     tbnFindNext: TToolButton;
     actSyntaxNone: TAction;
     actSyntaxPascal: TAction;
@@ -204,7 +194,6 @@ type
     procedure CutExecute(Sender: TObject);
     procedure CopyExecute(Sender: TObject);
     procedure PasteExecute(Sender: TObject);
-    procedure HelpAboutExecute(Sender: TObject);
     procedure CopyFromIdeExecute(Sender: TObject);
     procedure PasteToIdeExecute(Sender: TObject);
     procedure FindExecute(Sender: TObject);
@@ -213,8 +202,6 @@ type
     procedure tvTopicsDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
     procedure ExpandAllExecute(Sender: TObject);
     procedure ContractAllExecute(Sender: TObject);
-    procedure HelpExecute(Sender: TObject);
-    procedure HelpContentsExecute(Sender: TObject);
     procedure StatusBarResize(Sender: TObject);
     procedure NewSnippetExecute(Sender: TObject);
     procedure NewRootFolderExecute(Sender: TObject);
@@ -510,17 +497,8 @@ begin
 end;
 
 procedure TCodeFrm.FormCreate(Sender: TObject);
-//var dbFPath:string;
 begin
   LoadSettings;
- { SetupSyntaxHighlightingControl;
-  caption:=rsMenuName;
-  dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+DefaultDBFileName;
-  CodeDB := OpenDB(dbFPath); // do not localize
-  if CodeDB = nil then CodeDB := createNewDb(dbFPath);
-  InitializeTreeView;
-  mitPascal.Checked := True;
-  FModified := False; }
 end;
 
 procedure TCodeFrm.FormDestroy(Sender: TObject);
@@ -821,10 +799,6 @@ begin
   if not FCodeText.ReadOnly then FCodeText.PasteFromClipBoard
 end;
 
-procedure TCodeFrm.HelpAboutExecute(Sender: TObject);
-begin
- // ShowGXAboutForm;
-end;
 
 procedure TCodeFrm.CopyFromIdeExecute(Sender: TObject);
 var Editor: TSourceEditorInterface;
@@ -1084,12 +1058,19 @@ begin  // loadresource string;
   actSyntaxNone.caption := rs_actSyntaxNone;
   actReadOnly.caption := rs_actReadOnly;
 
+ mitFile.Caption := rs_mitFile;
+ mitFileNew.Caption:=rs_mitFileNew;
+ mitExportHtml.Caption:=rs_mitExportHtml;
+ mitEdit.Caption:=rs_mitEdit;
+ mitOptions.Caption:=rs_mitOptions;
+
+ mitEditorHighlighting.Caption:=rs_mitEditorHighlighting;
+
+
   SetupSyntaxHighlightingControl;
   caption:=rsMenuName;
 
- // dbFPath:=AppendPathDelim(LazarusIDE.GetPrimaryConfigPath)+DefaultDBFileName;
-
-  try
+ try
     Config:=GetIDEConfigStorage('codelib.xml',true);
     try
         FDatabasePath:=Config.GetValue('CodeLib/DBPath/Value',LazarusIDE.GetPrimaryConfigPath);
@@ -1109,17 +1090,6 @@ begin  // loadresource string;
   InitializeTreeView;
   mitPascal.Checked := True;
   FModified := False;
-
-end;
-
-procedure TCodeFrm.HelpExecute(Sender: TObject);
-begin
- // GxContextHelp(Self, 17);
-end;
-
-procedure TCodeFrm.HelpContentsExecute(Sender: TObject);
-begin
- // GxContextHelpContents(Self);
 end;
 
 procedure TCodeFrm.StatusBarResize(Sender: TObject);

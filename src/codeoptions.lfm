@@ -27,7 +27,7 @@ object FrmOptions: TFrmOptions
     TabOrder = 0
     Text = 'DirectoryEdit'
   end
-  object Label1: TLabel
+  object optLbl: TLabel
     Left = 12
     Height = 14
     Top = 4

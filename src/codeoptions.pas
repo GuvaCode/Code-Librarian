@@ -16,7 +16,7 @@ type
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     DirectoryEdit: TDirectoryEdit;
-    Label1: TLabel;
+    optLbl: TLabel;
     procedure BitBtn2Click(Sender: TObject);
     procedure DirectoryEditAcceptDirectory(Sender: TObject; var Value: String);
     procedure FormCreate(Sender: TObject);
@@ -28,6 +28,11 @@ type
 
 var
   FrmOptions: TFrmOptions;
+
+
+resourcestring
+  rs_optlbl='Select data base path ..';
+  rs_optcaption='Options ...';
 
 implementation
 
@@ -49,6 +54,8 @@ end;
 
 procedure TFrmOptions.FormCreate(Sender: TObject);
 begin
+  caption:=rs_optcaption;
+  optlbl.Caption:=rs_optlbl;
   DirectoryEdit.Directory:=CodeFrm.DatabasePath;
 end;
 

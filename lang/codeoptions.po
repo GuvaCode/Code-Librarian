@@ -1,0 +1,11 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: codeoptions.rs_optcaption
+msgid "Options ..."
+msgstr ""
+
+#: codeoptions.rs_optlbl
+msgid "Select data base path .."
+msgstr ""
+

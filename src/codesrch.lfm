@@ -8,21 +8,14 @@ object fmCodeSearch: TfmCodeSearch
   ClientHeight = 151
   ClientWidth = 460
   KeyPreview = True
+  OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '2.0.10.0'
-  object lblFind: TLabel
-    Left = 8
-    Height = 14
-    Top = 11
-    Width = 70
-    Caption = 'Text to find'
-    ParentColor = False
-  end
+  LCLVersion = '2.0.12.0'
   object edSearch: TEdit
-    Left = 88
+    Left = 8
     Height = 27
-    Top = 7
-    Width = 360
+    Top = 8
+    Width = 441
     TabOrder = 0
   end
   object gbxOptions: TGroupBox
@@ -52,20 +45,20 @@ object fmCodeSearch: TfmCodeSearch
     end
   end
   object btnOK: TButton
-    Left = 288
+    Left = 256
     Height = 25
     Top = 112
-    Width = 75
+    Width = 96
     Caption = 'OK'
     Default = True
     ModalResult = 1
     TabOrder = 2
   end
   object btnCancel: TButton
-    Left = 373
+    Left = 360
     Height = 25
     Top = 112
-    Width = 75
+    Width = 89
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2
