@@ -41,6 +41,8 @@ resourcestring
  rs_actEditPasteToIde = 'Paste select text to IDE Editor';
  rs_actEditFind = 'Find...';
  rs_actEditFindNext = 'Find Next';
+ rs_actEditUndo ='Undo';
+ rs_actEditRedo ='Redo';
  rs_actExpandAll = 'Expand All';
  rs_actContractAll = 'Contract All';
  rs_actOptions='Options';

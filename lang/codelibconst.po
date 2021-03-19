@@ -78,6 +78,14 @@ msgstr ""
 msgid "Paste select text to IDE Editor"
 msgstr ""
 
+#: codelibconst.rs_acteditredo
+msgid "Redo"
+msgstr ""
+
+#: codelibconst.rs_acteditundo
+msgid "Undo"
+msgstr ""
+
 #: codelibconst.rs_actexit
 msgid "Exit"
 msgstr ""

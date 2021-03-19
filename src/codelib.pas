@@ -6,9 +6,8 @@ unit codelib;
 {$WARN 5024 off : Parameter "$1" not used}
 {$WARN 4055 off : Conversion between ordinals and pointers is not portable}
 { TODO : Undo /Redo  }
-{ TODO : Initsert editor menu for run codelib }
 { TODO : Insert all text from editor in active tab }
-{ TODO 1 : settings save and load }
+
 interface
 
 uses
@@ -31,6 +30,8 @@ type
  type
   TCodeFrm = class(TForm)
     actCopyAsHtml: TAction;
+    actEditUndo: TAction;
+    actEditRedo: TAction;
     actReadOnly: TAction;
     actSyntaxBat: TAction;
     actSyntaxUNIXShell: TAction;
@@ -42,6 +43,9 @@ type
     actSyntaxJava: TAction;
     CodeDB: TBufDataset;
     DataSource1: TDataSource;
+    mitEditorRedo: TMenuItem;
+    mitEditorUndo: TMenuItem;
+    mitEditorSep5: TMenuItem;
     mitReadOnly: TMenuItem;
     mitEditorSep4: TMenuItem;
     mitBat: TMenuItem;
@@ -181,6 +185,8 @@ type
     mitTreeRename: TMenuItem;
 
     procedure actCopyAsHtmlExecute(Sender: TObject);
+    procedure actEditRedoExecute(Sender: TObject);
+    procedure actEditUndoExecute(Sender: TObject);
     procedure actReadOnlyExecute(Sender: TObject);
     procedure actSaveAsHtmlExecute(Sender: TObject);
     procedure CodeTextChange(Sender: TObject);
@@ -487,6 +493,16 @@ begin
   SynExportHTML.CopyToClipboard;
 end;
 
+procedure TCodeFrm.actEditRedoExecute(Sender: TObject);
+begin
+ FCodeText.Redo;
+end;
+
+procedure TCodeFrm.actEditUndoExecute(Sender: TObject);
+begin
+ FCodeText.Undo;
+end;
+
 procedure TCodeFrm.actReadOnlyExecute(Sender: TObject);
 begin
  FCodeText.ReadOnly:=mitReadOnly.Checked;
@@ -531,8 +547,12 @@ var
 begin
   HaveEditorSelection := Length(FCodeText.SelText) > 0;
   if not FCodeText.ReadOnly then actEditCut.Enabled := HaveEditorSelection;
+
   actEditCopy.Enabled := HaveEditorSelection;
   actCopyAsHtml.Enabled:= actEditCopy.Enabled;
+  actEditUndo.Enabled:=FCodeText.CanUndo;
+  actEditRedo.Enabled:=FCodeText.CanRedo;
+
   // bug on linux on menu
   // actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
   HaveSelectedNode  := tvTopics.Selected <> nil;
@@ -1056,6 +1076,8 @@ begin  // loadresource string;
   actEditPasteToIde.caption := rs_actEditPasteToIde;
   actEditFind.caption := rs_actEditFind;
   actEditFindNext.caption := rs_actEditFindNext;
+  actEditUndo.Caption:=rs_actEditUndo;
+  actEditRedo.Caption:=rs_actEditRedo;
   actExpandAll.caption := rs_actExpandAll;
   actContractAll.caption := rs_actContractAll;
   actOptions.caption := rs_actOptions;
