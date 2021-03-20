@@ -5,17 +5,18 @@ unit codelib;
 {$WARN 6058 off : Call to subroutine "$1" marked as inline is not inlined}
 {$WARN 5024 off : Parameter "$1" not used}
 {$WARN 4055 off : Conversion between ordinals and pointers is not portable}
+{$HINTS OFF}
 
 interface
 
 uses
    Clipbrd, Forms, Db, BufDataset, ImgList, Controls, StdActns, Classes,
    LazFileUtils, SysUtils, LCLType, ActnList, Dialogs, Menus, ComCtrls,
-   ExtCtrls, LCLVersion,SynEdit, SynHighlighterCpp, SynHighlighterHTML,
+   ExtCtrls, LCLVersion, SynEdit, SynHighlighterCpp, SynHighlighterHTML,
    SynHighlighterSQL, SynHighlighterPas, SynEditHighlighter, SynHighlighterJava,
    SynExportHTML, SynHighlighterJScript, SynHighlighterPerl, SynHighlighterPHP,
    SynHighlighterPython, synhighlighterunixshellscript, SynHighlighterBat,
-   PrintersDlgs, codelibConst;
+   SynHighlighterAny, PrintersDlgs, codelibConst;
 
 type
   TSearchRecord = record
@@ -112,6 +113,7 @@ type
     mitHTML: TMenuItem;
     mitSQL: TMenuItem;
     StatusBar: TStatusBar;
+    SynAny: TSynAnySyn;
     SynBat: TSynBatSyn;
     SynCpp: TSynCppSyn;
     SynExportHTML: TSynExporterHTML;
@@ -450,13 +452,17 @@ var T : TStringList;
 begin
   dlgSave.Filter:= SynExportHTML.DefaultFilter;
   dlgSave.DefaultExt:='.html';
+
   if dlgSave.Execute then
   begin
    SynExportHTML.Highlighter:=FCodeText.Highlighter;
    SynExportHTML.Title:='';//FCodeText;
    SynExportHTML.Color:=FCodeText.Color;
    SynExportHTML.ExportAsText:=true;
-   if FCodeText.SelText='' then
+  // SynExportHTML.DefaultFilter:=dlgSave.DefaultExt;
+  // SynExportHTML.CreateHTMLFragment:=True;
+
+    if FCodeText.SelText='' then
    SynExportHTML.ExportAll(FCodeText.Lines) else
      begin
       T := TStringList.Create;
@@ -1214,7 +1220,7 @@ procedure TCodeFrm.GenericSyntaxHighlightingExecute(Sender: TObject);
 begin
   Modified := True;
   case (Sender as TAction).Name of
-  'actSyntaxNone':              FCodeText.HighLighter := nil;
+  'actSyntaxNone':              FCodeText.HighLighter := SynAny;
   'actSyntaxPascal':            FCodeText.HighLighter := SynPAS;
   'actSyntaxCpp':               FCodeText.HighLighter := SynCPP;
   'actSyntaxHtml':              FCodeText.HighLighter := SynHTML;

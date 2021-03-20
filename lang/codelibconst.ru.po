@@ -17,8 +17,8 @@ msgid "Subitems cannot be attached to a code snippet, only folders."
 msgstr "Вложенные элементы не могут быть прикреплены к фрагменту кода, только к папкам."
 
 #: codelibconst.rsconfirmdelete
-msgid "Delete this %s?"
-msgstr "Удалить этот %s?"
+msgid "Delete this %s ?"
+msgstr "Удалить %s ?"
 
 #: codelibconst.rscouldnotcreatedatabase
 msgid "Could not create database."
@@ -26,7 +26,7 @@ msgstr "Не удалось создать базу данных."
 
 #: codelibconst.rsfolder
 msgid "folder"
-msgstr "папка"
+msgstr "папку"
 
 #: codelibconst.rsmenuname
 msgid "Code Librarian"
@@ -169,8 +169,8 @@ msgid "Syntax &highlighting"
 msgstr "&Подсветка синтаксиса"
 
 #: codelibconst.rs_mitexporthtml
-msgid "Export as Html"
-msgstr "Экспорт в формате Html"
+msgid "Export as HTML"
+msgstr "Экспорт в формате HTML"
 
 #: codelibconst.rs_mitfile
 msgid "File"
@@ -191,4 +191,3 @@ msgstr "Опции ..."
 #: codelibconst.rs_optlbl
 msgid "Select data base path .."
 msgstr "Выберите путь к базе данных .."
-

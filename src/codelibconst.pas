@@ -19,7 +19,7 @@ resourcestring
  rsModified = 'Modified';
  rsSnippet = 'snippet';
  rsFolder = 'folder';
- rsConfirmDelete = 'Delete this %s?';
+ rsConfirmDelete = 'Delete this %s ?';
  rsNotForFormFiles = 'Copy/Paste is not allowed in form files.';
  rsCannotAttach = 'Subitems cannot be attached to a code snippet, only folders.';
  rsNewCode = 'New code';
@@ -51,7 +51,7 @@ resourcestring
 
  rs_mitFile='File';
  rs_mitFileNew='&New';
- rs_mitExportHtml='Export as Html';
+ rs_mitExportHtml='Export as HTML';
  rs_mitEdit='&Edit';
  rs_mitOptions='&Options';
 

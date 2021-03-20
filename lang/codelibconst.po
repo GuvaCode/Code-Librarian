@@ -6,7 +6,7 @@ msgid "Subitems cannot be attached to a code snippet, only folders."
 msgstr ""
 
 #: codelibconst.rsconfirmdelete
-msgid "Delete this %s?"
+msgid "Delete this %s ?"
 msgstr ""
 
 #: codelibconst.rscouldnotcreatedatabase
@@ -158,7 +158,7 @@ msgid "Syntax &highlighting"
 msgstr ""
 
 #: codelibconst.rs_mitexporthtml
-msgid "Export as Html"
+msgid "Export as HTML"
 msgstr ""
 
 #: codelibconst.rs_mitfile

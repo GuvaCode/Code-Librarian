@@ -1,7 +1,7 @@
 object CodeFrm: TCodeFrm
-  Left = 334
+  Left = 530
   Height = 462
-  Top = 150
+  Top = 188
   Width = 640
   Caption = 'Code Librarian'
   ClientHeight = 438
@@ -1441,7 +1441,9 @@ object CodeFrm: TCodeFrm
   end
   object SynExportHTML: TSynExporterHTML
     Color = clWindow
+    CreateHTMLFragment = True
     DefaultFilter = 'Документ HTML (*.htm,*.html)|*.htm;*.html'
+    Options = [heoFragmentOnly]
     Font.Color = clBlack
     Font.Height = -13
     Font.Name = 'Courier New'
@@ -1490,5 +1492,17 @@ object CodeFrm: TCodeFrm
     Enabled = False
     Left = 120
     Top = 160
+  end
+  object SynAny: TSynAnySyn
+    Enabled = False
+    Comments = []
+    DetectPreprocessor = False
+    IdentifierChars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'
+    Markup = False
+    Entity = False
+    DollarVariables = False
+    ActiveDot = False
+    Left = 122
+    Top = 346
   end
 end
