@@ -125,6 +125,14 @@ msgstr ""
 msgid "Read only"
 msgstr ""
 
+#: codelibconst.rs_actsaveashtml
+msgid "Export snippet as html page"
+msgstr ""
+
+#: codelibconst.rs_actsaveastxt
+msgid "Export snippet as text file"
+msgstr ""
+
 #: codelibconst.rs_actsyntaxnone
 msgid "&None"
 msgstr ""
@@ -157,8 +165,8 @@ msgstr ""
 msgid "Syntax &highlighting"
 msgstr ""
 
-#: codelibconst.rs_mitexporthtml
-msgid "Export as HTML"
+#: codelibconst.rs_mitexport
+msgid "Export"
 msgstr ""
 
 #: codelibconst.rs_mitfile

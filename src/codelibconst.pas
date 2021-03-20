@@ -13,6 +13,7 @@ ClosedFolderImageIndex = 0;
 OpenFolderImageIndex   = 17;
 CodeSnippetImageIndex = 18;
 DefaultDBFileName = 'codelibrarian.dat';
+ExportTextFilter  =  'Text Files (*.txt)|*.txt';
 
 resourcestring
  rsMenuName = 'Code Librarian';
@@ -49,9 +50,13 @@ resourcestring
  rs_actSyntaxNone='&None';
  rs_actReadOnly='Read only';
 
+ rs_actSaveAsHtml='Export snippet as html page';
+ rs_actSaveAsTXT ='Export snippet as text file';
+
  rs_mitFile='File';
  rs_mitFileNew='&New';
- rs_mitExportHtml='Export as HTML';
+ rs_mitExport='Export';
+
  rs_mitEdit='&Edit';
  rs_mitOptions='&Options';
 

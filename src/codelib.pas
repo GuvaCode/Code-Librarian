@@ -5,6 +5,7 @@ unit codelib;
 {$WARN 6058 off : Call to subroutine "$1" marked as inline is not inlined}
 {$WARN 5024 off : Parameter "$1" not used}
 {$WARN 4055 off : Conversion between ordinals and pointers is not portable}
+{$WARN 4046 off : Constructing a class "$1" with abstract method "$2"}
 {$HINTS OFF}
 
 interface
@@ -31,6 +32,7 @@ type
     actCopyAsHtml: TAction;
     actEditUndo: TAction;
     actEditRedo: TAction;
+    actSaveAsTXT: TAction;
     actReadOnly: TAction;
     actSyntaxBat: TAction;
     actSyntaxUNIXShell: TAction;
@@ -42,6 +44,9 @@ type
     actSyntaxJava: TAction;
     CodeDB: TBufDataset;
     DataSource1: TDataSource;
+    mitExportHtml: TMenuItem;
+    mitExportTXT: TMenuItem;
+    mitExport: TMenuItem;
     mitEditorRedo: TMenuItem;
     mitEditorUndo: TMenuItem;
     mitEditorSep5: TMenuItem;
@@ -56,7 +61,6 @@ type
     mitJavaScript: TMenuItem;
     mitEditorSep3: TMenuItem;
     mitEditorCopyHtml: TMenuItem;
-    mitExportHtml: TMenuItem;
     mitExpSep: TMenuItem;
     mitJAVA: TMenuItem;
     dlgPrinterSetup: TPrinterSetupDialog;
@@ -181,6 +185,7 @@ type
     procedure actEditUndoExecute(Sender: TObject);
     procedure actReadOnlyExecute(Sender: TObject);
     procedure actSaveAsHtmlExecute(Sender: TObject);
+    procedure actSaveAsTXTExecute(Sender: TObject);
     procedure CodeTextChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -472,6 +477,24 @@ begin
   end;
 end;
 
+procedure TCodeFrm.actSaveAsTXTExecute(Sender: TObject);
+var T : TStringList;
+begin
+  dlgSave.Filter:= ExportTextFilter;
+  dlgSave.DefaultExt:='.txt';
+  if dlgSave.Execute then
+  begin
+    if FCodeText.SelText='' then
+    FCodeText.Lines.SaveToFile(dlgSave.FileName) else
+     begin
+      T := TStringList.Create;
+      T.Add(FCodeText.SelText);
+      T.SaveToFile(dlgSave.FileName);
+      T.Free;
+     end;
+  end;
+end;
+
 procedure TCodeFrm.actCopyAsHtmlExecute(Sender: TObject);
 begin
   If FCodeText.Highlighter<> nil then
@@ -563,7 +586,11 @@ begin
     actNewFolder.Enabled := not SnippetIsSelected;
   end;
   actPrint.Enabled:=SnippetIsSelected;
+
   actSaveAsHtml.Enabled:=SnippetIsSelected;
+  actSaveAsTXT.Enabled:=SnippetIsSelected;
+  mitExport.Enabled:=SnippetIsSelected;
+
   Handled := True;
 end;
 
@@ -650,7 +677,7 @@ begin
           case  CodeDB.FieldByName('Language').AsString of
           'NONE': begin // This is non source code
                    mitNone.Checked := True;
-                   FCodeText.HighLighter := nil;
+                   FCodeText.HighLighter := SynAny;
                   end;
           'CPP': begin // This is CPP source code
                   mitCPP.Checked := True;
@@ -1063,9 +1090,14 @@ begin  // loadresource string;
   actSyntaxNone.caption := rs_actSyntaxNone;
   actReadOnly.caption := rs_actReadOnly;
 
+  actSaveAsHtml.Caption:= rs_actSaveAsHtml;
+  actSaveAsTXT.Caption :=  rs_actSaveAsTXT;
+
   mitFile.Caption := rs_mitFile;
   mitFileNew.Caption:=rs_mitFileNew;
-  mitExportHtml.Caption:=rs_mitExportHtml;
+
+  mitExport.Caption:=rs_mitExport;
+
   mitEdit.Caption:=rs_mitEdit;
   mitOptions.Caption:=rs_mitOptions;
   mitEditorHighlighting.Caption:=rs_mitEditorHighlighting;

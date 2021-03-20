@@ -215,8 +215,14 @@ object CodeFrm: TCodeFrm
       object mitFileSep1: TMenuItem
         Caption = '-'
       end
-      object mitExportHtml: TMenuItem
-        Action = actSaveAsHtml
+      object mitExport: TMenuItem
+        Caption = 'mitExport'
+        object mitExportTXT: TMenuItem
+          Action = actSaveAsTXT
+        end
+        object mitExportHtml: TMenuItem
+          Action = actSaveAsHtml
+        end
       end
       object mitExpSep: TMenuItem
         Caption = '-'
@@ -651,6 +657,11 @@ object CodeFrm: TCodeFrm
       ImageIndex = 22
       OnExecute = actEditRedoExecute
       ShortCut = 16473
+    end
+    object actSaveAsTXT: TAction
+      Category = 'File'
+      Caption = 'Export as Text'
+      OnExecute = actSaveAsTXTExecute
     end
   end
   object ilActions: TImageList
