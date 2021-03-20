@@ -61,7 +61,6 @@ type
     dlgPrinterSetup: TPrinterSetupDialog;
     dlgPrint: TPrintDialog;
     dlgSave: TSaveDialog;
-    StatusBar: TStatusBar;
     Splitter: TSplitter;
     MainMenu: TMainMenu;
     mitFile: TMenuItem;
@@ -112,6 +111,7 @@ type
     mitEditContractAll: TMenuItem;
     mitHTML: TMenuItem;
     mitSQL: TMenuItem;
+    StatusBar: TStatusBar;
     SynBat: TSynBatSyn;
     SynCpp: TSynCppSyn;
     SynExportHTML: TSynExporterHTML;
@@ -1052,20 +1052,20 @@ begin  // loadresource string;
   actEditFindNext.caption := rs_actEditFindNext;
   actEditUndo.Caption:=rs_actEditUndo;
   actEditRedo.Caption:=rs_actEditRedo;
+  actEditRename.Caption:=rs_actEditRename;
   actExpandAll.caption := rs_actExpandAll;
   actContractAll.caption := rs_actContractAll;
   actOptions.caption := rs_actOptions;
   actSyntaxNone.caption := rs_actSyntaxNone;
   actReadOnly.caption := rs_actReadOnly;
 
- mitFile.Caption := rs_mitFile;
- mitFileNew.Caption:=rs_mitFileNew;
- mitExportHtml.Caption:=rs_mitExportHtml;
- mitEdit.Caption:=rs_mitEdit;
- mitOptions.Caption:=rs_mitOptions;
-
- mitEditorHighlighting.Caption:=rs_mitEditorHighlighting;
-
+  mitFile.Caption := rs_mitFile;
+  mitFileNew.Caption:=rs_mitFileNew;
+  mitExportHtml.Caption:=rs_mitExportHtml;
+  mitEdit.Caption:=rs_mitEdit;
+  mitOptions.Caption:=rs_mitOptions;
+  mitEditorHighlighting.Caption:=rs_mitEditorHighlighting;
+  mitTreeNew.Caption:=rs_mitFileNew;
 
   SetupSyntaxHighlightingControl;
   caption:=rsMenuName;
@@ -1117,7 +1117,7 @@ end;
 procedure TCodeFrm.NewRootFolderExecute(Sender: TObject);
 var Node: TTreeNode;
 begin
-  Node := AddFolder(nil, rsNewFolder);
+  Node := AddFolder(nil, rs_actNewFolder);
   if Node <> nil then
   begin
     tvTopics.Selected := Node;
@@ -1130,7 +1130,7 @@ var Node: TTreeNode;
 begin
   Screen.Cursor := crHourglass;
   try
-    Node := AddFolder(tvTopics.Selected, rsNewFolder);
+    Node := AddFolder(tvTopics.Selected, rs_actNewFolder);
     if Node <> nil then
     begin
       tvTopics.Selected := Node;

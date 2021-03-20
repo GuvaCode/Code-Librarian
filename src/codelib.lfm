@@ -1,11 +1,11 @@
 object CodeFrm: TCodeFrm
-  Left = 434
-  Height = 391
-  Top = 133
-  Width = 660
+  Left = 334
+  Height = 462
+  Top = 150
+  Width = 640
   Caption = 'Code Librarian'
-  ClientHeight = 367
-  ClientWidth = 660
+  ClientHeight = 438
+  ClientWidth = 640
   DoubleBuffered = True
   KeyPreview = True
   Menu = MainMenu
@@ -21,37 +21,16 @@ object CodeFrm: TCodeFrm
   LCLVersion = '2.0.12.0'
   object Splitter: TSplitter
     Left = 180
-    Height = 326
+    Height = 397
     Top = 24
     Width = 4
     ParentColor = False
   end
-  object StatusBar: TStatusBar
-    Left = 0
-    Height = 17
-    Top = 350
-    Width = 660
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Ubuntu'
-    Panels = <    
-      item
-        Width = 450
-      end    
-      item
-        Alignment = taCenter
-        Width = 90
-      end>
-    ParentColor = False
-    ParentFont = False
-    SimplePanel = False
-    OnResize = StatusBarResize
-  end
   object pnlView: TPanel
     Left = 184
-    Height = 326
+    Height = 397
     Top = 24
-    Width = 476
+    Width = 456
     Align = alClient
     BevelOuter = bvNone
     ParentColor = False
@@ -59,7 +38,7 @@ object CodeFrm: TCodeFrm
   end
   object tvTopics: TTreeView
     Left = 0
-    Height = 326
+    Height = 397
     Top = 24
     Width = 180
     Align = alLeft
@@ -92,7 +71,7 @@ object CodeFrm: TCodeFrm
     Left = 0
     Height = 24
     Top = 0
-    Width = 660
+    Width = 640
     AutoSize = True
     Images = ilActions
     TabOrder = 0
@@ -123,6 +102,8 @@ object CodeFrm: TCodeFrm
       Left = 78
       Top = 2
       Action = actEditCut
+      ParentShowHint = False
+      ShowHint = True
     end
     object tbnCopy: TToolButton
       Left = 101
@@ -188,6 +169,27 @@ object CodeFrm: TCodeFrm
       Top = 2
       Action = actEditFindNext
     end
+  end
+  object StatusBar: TStatusBar
+    Left = 0
+    Height = 17
+    Top = 421
+    Width = 640
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Ubuntu'
+    Panels = <    
+      item
+        Width = 450
+      end    
+      item
+        Alignment = taCenter
+        Width = 90
+      end>
+    ParentColor = False
+    ParentFont = False
+    SimplePanel = False
+    OnResize = StatusBarResize
   end
   object MainMenu: TMainMenu
     Images = ilActions
@@ -433,7 +435,6 @@ object CodeFrm: TCodeFrm
     object actDelete: TAction
       Category = 'File'
       Caption = 'Delete'
-      Hint = 'Delete'
       ImageIndex = 2
       OnExecute = DeleteExecute
       ShortCut = 16430
@@ -441,7 +442,6 @@ object CodeFrm: TCodeFrm
     object actNewRootFolder: TAction
       Category = 'File'
       Caption = 'New Root Folder'
-      Hint = 'New Root Folder'
       ImageIndex = 10
       OnExecute = NewRootFolderExecute
       ShortCut = 16466
@@ -449,7 +449,6 @@ object CodeFrm: TCodeFrm
     object actNewFolder: TAction
       Category = 'File'
       Caption = 'New Folder'
-      Hint = 'New Folder'
       ImageIndex = 0
       OnExecute = NewFolderExecute
       ShortCut = 16460
@@ -457,7 +456,6 @@ object CodeFrm: TCodeFrm
     object actNewSnippet: TAction
       Category = 'File'
       Caption = 'New Snippet'
-      Hint = 'New Snippet'
       ImageIndex = 1
       OnExecute = NewSnippetExecute
       ShortCut = 16467
@@ -465,20 +463,17 @@ object CodeFrm: TCodeFrm
     object actMakeRoot: TAction
       Category = 'File'
       Caption = 'Move Folder to Root'
-      Hint = 'Move Folder to Root'
       OnExecute = MakeRootExecute
       ShortCut = 24658
     end
     object actPrinterSetup: TAction
       Category = 'File'
       Caption = 'Printer Setup...'
-      Hint = 'Printer Setup...'
       OnExecute = PrinterSetupExecute
     end
     object actPrint: TAction
       Category = 'File'
       Caption = 'Print Snippet'
-      Hint = 'Print Snippet'
       ImageIndex = 15
       OnExecute = PrintExecute
       ShortCut = 16464
@@ -486,7 +481,6 @@ object CodeFrm: TCodeFrm
     object actExit: TAction
       Category = 'File'
       Caption = 'Exit'
-      Hint = 'Exit'
       ImageIndex = 20
       OnExecute = ExitExecute
       ShortCut = 32883
@@ -494,7 +488,6 @@ object CodeFrm: TCodeFrm
     object actEditCut: TEditCut
       Category = 'Edit'
       Caption = 'Cu&t'
-      Hint = 'Cut'
       ImageIndex = 5
       OnExecute = CutExecute
       ShortCut = 16472
@@ -502,7 +495,6 @@ object CodeFrm: TCodeFrm
     object actEditCopy: TEditCopy
       Category = 'Edit'
       Caption = '&Copy'
-      Hint = 'Copy'
       ImageIndex = 6
       OnExecute = CopyExecute
       ShortCut = 16451
@@ -510,7 +502,6 @@ object CodeFrm: TCodeFrm
     object actEditPaste: TEditPaste
       Category = 'Edit'
       Caption = '&Paste'
-      Hint = 'Paste'
       ImageIndex = 7
       OnExecute = PasteExecute
       ShortCut = 16470
@@ -518,7 +509,6 @@ object CodeFrm: TCodeFrm
     object actEditCopyFromIde: TAction
       Category = 'Edit'
       Caption = 'Insert select text from IDE Editor'
-      Hint = 'Copy select text from IDE Editor'
       ImageIndex = 9
       OnExecute = CopyFromIdeExecute
       ShortCut = 24662
@@ -526,7 +516,6 @@ object CodeFrm: TCodeFrm
     object actEditPasteToIde: TAction
       Category = 'Edit'
       Caption = 'Inser select text to IDE Editor'
-      Hint = 'Paste select text to IDE Editor'
       ImageIndex = 8
       OnExecute = PasteToIdeExecute
       ShortCut = 24643
@@ -534,7 +523,6 @@ object CodeFrm: TCodeFrm
     object actEditFind: TAction
       Category = 'Edit'
       Caption = 'Find...'
-      Hint = 'Find...'
       ImageIndex = 11
       OnExecute = FindExecute
       ShortCut = 16454
@@ -542,7 +530,6 @@ object CodeFrm: TCodeFrm
     object actEditFindNext: TAction
       Category = 'Edit'
       Caption = 'Find Next'
-      Hint = 'Find Next'
       ImageIndex = 12
       OnExecute = FindNextExecute
       ShortCut = 114
@@ -550,7 +537,6 @@ object CodeFrm: TCodeFrm
     object actExpandAll: TAction
       Category = 'Edit'
       Caption = 'Expand All'
-      Hint = 'Expand All'
       ImageIndex = 3
       OnExecute = ExpandAllExecute
       ShortCut = 16453
@@ -558,7 +544,6 @@ object CodeFrm: TCodeFrm
     object actContractAll: TAction
       Category = 'Edit'
       Caption = 'Contract All'
-      Hint = 'Contract All'
       ImageIndex = 4
       OnExecute = ContractAllExecute
       ShortCut = 16468
@@ -599,7 +584,6 @@ object CodeFrm: TCodeFrm
     object actEditRename: TAction
       Category = 'Edit'
       Caption = 'Rename'
-      Hint = 'Rename folder/snippet'
       OnExecute = actEditRenameExecute
       ShortCut = 113
     end

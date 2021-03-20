@@ -45,7 +45,7 @@ object fmCodeSearch: TfmCodeSearch
     end
   end
   object btnOK: TButton
-    Left = 256
+    Left = 353
     Height = 25
     Top = 112
     Width = 96
@@ -55,7 +55,7 @@ object fmCodeSearch: TfmCodeSearch
     TabOrder = 2
   end
   object btnCancel: TButton
-    Left = 360
+    Left = 256
     Height = 25
     Top = 112
     Width = 89

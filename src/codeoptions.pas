@@ -29,13 +29,9 @@ type
 var
   FrmOptions: TFrmOptions;
 
-
-resourcestring
-  rs_optlbl='Select data base path ..';
-  rs_optcaption='Options ...';
-
 implementation
 
+uses codelibconst;
 {$R *.lfm}
 
 { TFrmOptions }

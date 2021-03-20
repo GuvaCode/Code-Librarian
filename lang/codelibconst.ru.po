@@ -1,183 +1,194 @@
 msgid ""
-msgstr "Content-Type: text/plain; charset=UTF-8"
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: Code librarian\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Gunko Vadim\n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+"Language: ru_RU\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 
 #: codelibconst.rscannotattach
 msgid "Subitems cannot be attached to a code snippet, only folders."
-msgstr ""
+msgstr "Вложенные элементы не могут быть прикреплены к фрагменту кода, только к папкам."
 
 #: codelibconst.rsconfirmdelete
 msgid "Delete this %s?"
-msgstr ""
+msgstr "Удалить этот %s?"
 
 #: codelibconst.rscouldnotcreatedatabase
 msgid "Could not create database."
-msgstr ""
+msgstr "Не удалось создать базу данных."
 
 #: codelibconst.rsfolder
 msgid "folder"
-msgstr ""
+msgstr "папка"
 
 #: codelibconst.rsmenuname
 msgid "Code Librarian"
-msgstr ""
+msgstr "Библиотекарь кода"
 
 #: codelibconst.rsmodified
 msgid "Modified"
-msgstr ""
+msgstr "Изменено"
 
 #: codelibconst.rsnewcode
 msgid "New code"
-msgstr ""
+msgstr "Новый Код"
 
 #: codelibconst.rsnotforformfiles
 msgid "Copy/Paste is not allowed in form files."
-msgstr ""
+msgstr "Копирование / вставка не допускается в файлах форм."
 
 #: codelibconst.rssnippet
 msgid "snippet"
-msgstr ""
+msgstr "фрагмент"
 
 #: codelibconst.rs_actcontractall
 msgid "Сollapse all"
-msgstr ""
+msgstr "Свернуть все"
 
 #: codelibconst.rs_actdelete
 msgid "Delete"
-msgstr ""
+msgstr "Удалить"
 
 #: codelibconst.rs_acteditcopy
 msgid "&Copy"
-msgstr ""
+msgstr "&Копировать"
 
 #: codelibconst.rs_acteditcopyfromide
 msgid "Copy select text from IDE editor"
-msgstr ""
+msgstr "Копировать выделенный текст из редактора IDE"
 
 #: codelibconst.rs_acteditcut
 msgid "Cu&t"
-msgstr ""
+msgstr "Выреза&ть"
 
 #: codelibconst.rs_acteditfind
 msgid "Find..."
-msgstr ""
+msgstr "Найти ..."
 
 #: codelibconst.rs_acteditfindnext
 msgid "Find next"
-msgstr ""
+msgstr "Найти далее"
 
 #: codelibconst.rs_acteditpaste
 msgid "&Paste"
-msgstr ""
+msgstr "&Вставить"
 
 #: codelibconst.rs_acteditpastetoide
 msgid "Paste select text to IDE editor"
-msgstr ""
+msgstr "Вставить выделенный текст в редактор IDE"
 
 #: codelibconst.rs_acteditredo
 msgid "Redo"
-msgstr ""
+msgstr "Вернуть"
 
 #: codelibconst.rs_acteditrename
 msgid "Rename"
-msgstr ""
+msgstr "Переименовать"
 
 #: codelibconst.rs_acteditundo
 msgid "Undo"
-msgstr ""
+msgstr "Отменить"
 
 #: codelibconst.rs_actexit
 msgid "Exit"
-msgstr ""
+msgstr "Выход"
 
 #: codelibconst.rs_actexpandall
 msgid "Expand all"
-msgstr ""
+msgstr "Развернуть все"
 
 #: codelibconst.rs_actmakeroot
 msgid "Move folder to root"
-msgstr ""
+msgstr "Переместить папку в корень"
 
 #: codelibconst.rs_actnewfolder
 msgid "New folder"
-msgstr ""
+msgstr "Новая папка"
 
 #: codelibconst.rs_actnewrootfolder
 msgid "New root folder"
-msgstr ""
+msgstr "Новая корневая папка"
 
 #: codelibconst.rs_actnewsnippet
 msgid "New snippet"
-msgstr ""
+msgstr "Новый фрагмент"
 
 #: codelibconst.rs_actoptions
 msgid "Options"
-msgstr ""
+msgstr "Опции"
 
 #: codelibconst.rs_actprint
 msgid "Print snippet"
-msgstr ""
+msgstr "Распечатать фрагмент"
 
 #: codelibconst.rs_actprintersetup
 msgid "Printer setup..."
-msgstr ""
+msgstr "Настройка печати..."
 
 #: codelibconst.rs_actreadonly
 msgid "Read only"
-msgstr ""
+msgstr "Только для чтения"
 
 #: codelibconst.rs_actsyntaxnone
 msgid "&None"
-msgstr ""
+msgstr "&Без подсветки"
 
 #: codelibconst.rs_btncancel
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #: codelibconst.rs_btnok
 msgid "Find"
-msgstr ""
+msgstr "Найти"
 
 #: codelibconst.rs_caption
 msgid "Find ..."
-msgstr ""
+msgstr "Найти ..."
 
 #: codelibconst.rs_cbcasesensitive
 msgid "Case sensitive"
-msgstr ""
+msgstr "С учётом регистра"
 
 #: codelibconst.rs_cbwholeword
 msgid "Whole words only"
-msgstr ""
+msgstr "Только слова целиком"
 
 #: codelibconst.rs_mitedit
 msgid "&Edit"
-msgstr ""
+msgstr "&Правка"
 
 #: codelibconst.rs_miteditorhighlighting
 msgid "Syntax &highlighting"
-msgstr ""
+msgstr "&Подсветка синтаксиса"
 
 #: codelibconst.rs_mitexporthtml
 msgid "Export as Html"
-msgstr ""
+msgstr "Экспорт в формате Html"
 
 #: codelibconst.rs_mitfile
 msgid "File"
-msgstr ""
+msgstr "Файл"
 
 #: codelibconst.rs_mitfilenew
 msgid "&New"
-msgstr ""
+msgstr "Создать"
 
 #: codelibconst.rs_mitoptions
 msgid "&Options"
-msgstr ""
+msgstr "&Опции"
 
 #: codelibconst.rs_optcaption
 msgid "Options ..."
-msgstr ""
+msgstr "Опции ..."
 
 #: codelibconst.rs_optlbl
 msgid "Select data base path .."
-msgstr ""
+msgstr "Выберите путь к базе данных .."
 

@@ -1,183 +1,193 @@
 msgid ""
-msgstr "Content-Type: text/plain; charset=UTF-8"
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en_EN\n"
+"X-Generator: Poedit 2.3\n"
 
 #: codelibconst.rscannotattach
 msgid "Subitems cannot be attached to a code snippet, only folders."
-msgstr ""
+msgstr "Subitems cannot be attached to a code snippet, only folders."
 
 #: codelibconst.rsconfirmdelete
 msgid "Delete this %s?"
-msgstr ""
+msgstr "Delete this %s?"
 
 #: codelibconst.rscouldnotcreatedatabase
 msgid "Could not create database."
-msgstr ""
+msgstr "Could not create database."
 
 #: codelibconst.rsfolder
 msgid "folder"
-msgstr ""
+msgstr "folder"
 
 #: codelibconst.rsmenuname
 msgid "Code Librarian"
-msgstr ""
+msgstr "Code Librarian"
 
 #: codelibconst.rsmodified
 msgid "Modified"
-msgstr ""
+msgstr "Modified"
 
 #: codelibconst.rsnewcode
 msgid "New code"
-msgstr ""
+msgstr "New code"
 
 #: codelibconst.rsnotforformfiles
 msgid "Copy/Paste is not allowed in form files."
-msgstr ""
+msgstr "Copy/Paste is not allowed in form files."
 
 #: codelibconst.rssnippet
 msgid "snippet"
-msgstr ""
+msgstr "snippet"
 
 #: codelibconst.rs_actcontractall
 msgid "Сollapse all"
-msgstr ""
+msgstr "Сollapse all"
 
 #: codelibconst.rs_actdelete
 msgid "Delete"
-msgstr ""
+msgstr "Delete"
 
 #: codelibconst.rs_acteditcopy
 msgid "&Copy"
-msgstr ""
+msgstr "&Copy"
 
 #: codelibconst.rs_acteditcopyfromide
 msgid "Copy select text from IDE editor"
-msgstr ""
+msgstr "Copy select text from IDE editor"
 
 #: codelibconst.rs_acteditcut
 msgid "Cu&t"
-msgstr ""
+msgstr "Cu&t"
 
 #: codelibconst.rs_acteditfind
 msgid "Find..."
-msgstr ""
+msgstr "Find..."
 
 #: codelibconst.rs_acteditfindnext
 msgid "Find next"
-msgstr ""
+msgstr "Find next"
 
 #: codelibconst.rs_acteditpaste
 msgid "&Paste"
-msgstr ""
+msgstr "&Paste"
 
 #: codelibconst.rs_acteditpastetoide
 msgid "Paste select text to IDE editor"
-msgstr ""
+msgstr "Paste select text to IDE editor"
 
 #: codelibconst.rs_acteditredo
 msgid "Redo"
-msgstr ""
+msgstr "Redo"
 
 #: codelibconst.rs_acteditrename
 msgid "Rename"
-msgstr ""
+msgstr "Rename"
 
 #: codelibconst.rs_acteditundo
 msgid "Undo"
-msgstr ""
+msgstr "Undo"
 
 #: codelibconst.rs_actexit
 msgid "Exit"
-msgstr ""
+msgstr "Exit"
 
 #: codelibconst.rs_actexpandall
 msgid "Expand all"
-msgstr ""
+msgstr "Expand all"
 
 #: codelibconst.rs_actmakeroot
 msgid "Move folder to root"
-msgstr ""
+msgstr "Move folder to root"
 
 #: codelibconst.rs_actnewfolder
 msgid "New folder"
-msgstr ""
+msgstr "New folder"
 
 #: codelibconst.rs_actnewrootfolder
 msgid "New root folder"
-msgstr ""
+msgstr "New root folder"
 
 #: codelibconst.rs_actnewsnippet
 msgid "New snippet"
-msgstr ""
+msgstr "New snippet"
 
 #: codelibconst.rs_actoptions
 msgid "Options"
-msgstr ""
+msgstr "Options"
 
 #: codelibconst.rs_actprint
 msgid "Print snippet"
-msgstr ""
+msgstr "Print snippet"
 
 #: codelibconst.rs_actprintersetup
 msgid "Printer setup..."
-msgstr ""
+msgstr "Printer setup..."
 
 #: codelibconst.rs_actreadonly
 msgid "Read only"
-msgstr ""
+msgstr "Read only"
 
 #: codelibconst.rs_actsyntaxnone
 msgid "&None"
-msgstr ""
+msgstr "&None"
 
 #: codelibconst.rs_btncancel
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel"
 
 #: codelibconst.rs_btnok
 msgid "Find"
-msgstr ""
+msgstr "Find"
 
 #: codelibconst.rs_caption
 msgid "Find ..."
-msgstr ""
+msgstr "Find..."
 
 #: codelibconst.rs_cbcasesensitive
 msgid "Case sensitive"
-msgstr ""
+msgstr "Case sensitive"
 
 #: codelibconst.rs_cbwholeword
 msgid "Whole words only"
-msgstr ""
+msgstr "Whole words only"
 
 #: codelibconst.rs_mitedit
 msgid "&Edit"
-msgstr ""
+msgstr "&Edit"
 
 #: codelibconst.rs_miteditorhighlighting
 msgid "Syntax &highlighting"
-msgstr ""
+msgstr "Syntax &highlighting"
 
 #: codelibconst.rs_mitexporthtml
 msgid "Export as Html"
-msgstr ""
+msgstr "Export as Html"
 
 #: codelibconst.rs_mitfile
 msgid "File"
-msgstr ""
+msgstr "File"
 
 #: codelibconst.rs_mitfilenew
 msgid "&New"
-msgstr ""
+msgstr "&New"
 
 #: codelibconst.rs_mitoptions
 msgid "&Options"
-msgstr ""
+msgstr "&Options"
 
 #: codelibconst.rs_optcaption
 msgid "Options ..."
-msgstr ""
+msgstr "Options ..."
 
 #: codelibconst.rs_optlbl
 msgid "Select data base path .."
-msgstr ""
-
+msgstr "Select data base path .."

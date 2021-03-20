@@ -29,16 +29,10 @@ type
     { Public declarations }
   end;
 
-resourcestring
-  rs_caption='Search';
-  rs_gbxOptions ='Options';
-  rs_cbCaseSensitive = 'Case sensitive';
-  rs_cbWholeWord = 'Whole words only';
-  rs_btnOk='OK';
-  rs_btnCancel='Cancel';
+
 
 implementation
-
+ uses codelibconst;
 {$R *.lfm}
 
 { TfmCodeSearch }
@@ -46,7 +40,7 @@ implementation
 procedure TfmCodeSearch.FormCreate(Sender: TObject);
 begin
   caption:=rs_Caption;
-  gbxOptions.Caption:=rs_gbxOptions;
+  gbxOptions.Caption:=rs_actOptions;
   cbCaseSensitive.Caption:=rs_cbCaseSensitive;
   cbWholeWord.Caption:=rs_cbWholeWord;
   btnOk.Caption:=rs_btnOk;
