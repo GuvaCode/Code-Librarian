@@ -459,8 +459,6 @@ begin
    SynExportHTML.Title:='';//FCodeText;
    SynExportHTML.Color:=FCodeText.Color;
    SynExportHTML.ExportAsText:=true;
-  // SynExportHTML.DefaultFilter:=dlgSave.DefaultExt;
-  // SynExportHTML.CreateHTMLFragment:=True;
 
     if FCodeText.SelText='' then
    SynExportHTML.ExportAll(FCodeText.Lines) else
