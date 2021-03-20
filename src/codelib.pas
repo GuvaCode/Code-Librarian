@@ -660,7 +660,6 @@ begin
   begin
     actMakeRoot.Enabled := False;
     actNewSnippet.Enabled := False;
-
   end
   else
   begin
@@ -671,7 +670,7 @@ begin
   end;
   actPrint.Enabled := SnippetIsSelected;
 
-  actImportTxt.Enabled := not SnippetIsSelected;
+  actImportTxt.Enabled := not SnippetIsSelected  and HaveSelectedNode;
 
   actSaveAsHtml.Enabled := SnippetIsSelected;
   actSaveAsTXT.Enabled := SnippetIsSelected;
