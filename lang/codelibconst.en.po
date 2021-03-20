@@ -106,7 +106,7 @@ msgstr "Expand all"
 
 #: codelibconst.rs_actimporttxt
 msgid "Import"
-msgstr ""
+msgstr "Import"
 
 #: codelibconst.rs_actmakeroot
 msgid "Move folder to root"
@@ -203,4 +203,3 @@ msgstr "Options ..."
 #: codelibconst.rs_optlbl
 msgid "Select data base path .."
 msgstr "Select data base path .."
-
