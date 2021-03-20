@@ -104,6 +104,10 @@ msgstr "Выход"
 msgid "Expand all"
 msgstr "Развернуть все"
 
+#: codelibconst.rs_actimporttxt
+msgid "Import"
+msgstr ""
+
 #: codelibconst.rs_actmakeroot
 msgid "Move folder to root"
 msgstr "Переместить папку в корень"
@@ -199,3 +203,4 @@ msgstr "Опции ..."
 #: codelibconst.rs_optlbl
 msgid "Select data base path .."
 msgstr "Выберите путь к базе данных .."
+

@@ -93,6 +93,10 @@ msgstr ""
 msgid "Expand all"
 msgstr ""
 
+#: codelibconst.rs_actimporttxt
+msgid "Import"
+msgstr ""
+
 #: codelibconst.rs_actmakeroot
 msgid "Move folder to root"
 msgstr ""

@@ -32,6 +32,7 @@ type
     actCopyAsHtml: TAction;
     actEditUndo: TAction;
     actEditRedo: TAction;
+    actImportTxt: TAction;
     actSaveAsTXT: TAction;
     actReadOnly: TAction;
     actSyntaxBat: TAction;
@@ -44,6 +45,7 @@ type
     actSyntaxJava: TAction;
     CodeDB: TBufDataset;
     DataSource1: TDataSource;
+    mitImport: TMenuItem;
     mitExportHtml: TMenuItem;
     mitExportTXT: TMenuItem;
     mitExport: TMenuItem;
@@ -66,6 +68,7 @@ type
     dlgPrinterSetup: TPrinterSetupDialog;
     dlgPrint: TPrintDialog;
     dlgSave: TSaveDialog;
+    dlgOpen: TOpenDialog;
     Splitter: TSplitter;
     MainMenu: TMainMenu;
     mitFile: TMenuItem;
@@ -183,6 +186,7 @@ type
     procedure actCopyAsHtmlExecute(Sender: TObject);
     procedure actEditRedoExecute(Sender: TObject);
     procedure actEditUndoExecute(Sender: TObject);
+    procedure actImportTxtExecute(Sender: TObject);
     procedure actReadOnlyExecute(Sender: TObject);
     procedure actSaveAsHtmlExecute(Sender: TObject);
     procedure actSaveAsTXTExecute(Sender: TObject);
@@ -246,9 +250,10 @@ type
     procedure SetupSyntaxHighlightingControl;
  public
     function AddFolder(Node: TTreeNode; const Desc: string): TTreeNode;
-    function AddCode(const Desc: string): TTreeNode;
+    function AddCode(const Desc: string; Import: boolean = false): TTreeNode;
     property Modified: Boolean read FModified write SetModified;
     property DatabasePath: string read FDatabasePath write FDatabasePath;
+
   end;
 
 
@@ -421,23 +426,64 @@ begin
     StatusBar.Panels[1].Text := ''; // No need to localize.
 end;
 
-function TCodeFrm.AddCode(const Desc: string): TTreeNode;
+function TCodeFrm.AddCode(const Desc: string; Import: boolean): TTreeNode;
 var
   Node: TTreeNode;
+  T : TStringList;
 begin
   Result := nil;
   if tvTopics.Selected = nil then Exit;
+
   with CodeDB do
   begin
     Insert;
     FieldByName('Parent').AsInteger := PtrInt(tvTopics.Selected.Data);  // Do not localize.
     FieldByName('Topic').AsString := Desc;  // Do not localize.
     FieldByName('Type').AsString := 'C';  // Do not localize.
+
+   if import then
+    begin
+      T:=TStringList.Create;
+      T.LoadFromFile(dlgOpen.FileName);
+      FieldByName('Code').AsString :=T.Text;
+      T.Free;
+
+   case ExtractFileExt(dlgOpen.FileName) of
+   '.pas'   : FieldByName('Language').AsString := 'PASCAL';      // Do not localize.
+   '.pp'    : FieldByName('Language').AsString := 'PASCAL';      // Do not localize.
+   '.c'     : FieldByName('Language').AsString := 'CPP';         // Do not localize.
+   '.cpp'   : FieldByName('Language').AsString := 'CPP';         // Do not localize.
+   '.h'     : FieldByName('Language').AsString := 'CPP';         // Do not localize.
+   '.htm'   : FieldByName('Language').AsString := 'HTML';        // Do not localize.
+   '.html'  : FieldByName('Language').AsString := 'HTML';        // Do not localize.
+   '.sql'   : FieldByName('Language').AsString := 'SQL';         // Do not localize.
+   '.java'  : FieldByName('Language').AsString := 'JAVA';        // Do not localize.
+   '.js'    : FieldByName('Language').AsString := 'JAVASCRIPT';  // Do not localize.
+   '.pl'    : FieldByName('Language').AsString := 'PERL';        // Do not localize.
+   '.pm'    : FieldByName('Language').AsString := 'PERL';        // Do not localize.
+   '.t'     : FieldByName('Language').AsString := 'PERL';        // Do not localize.
+   '.php'   : FieldByName('Language').AsString := 'PHP';         // Do not localize.
+   '.py'    : FieldByName('Language').AsString := 'PYTHON';      // Do not localize.
+   '.py3'   : FieldByName('Language').AsString := 'PYTHON';      // Do not localize.
+   '.sh'    : FieldByName('Language').AsString := 'UNIXSHELL';   // Do not localize.
+   '.bash'  : FieldByName('Language').AsString := 'UNIXSHELL';   // Do not localize.
+   '.bat'   : FieldByName('Language').AsString := 'MSDOSBAT';   // Do not localize.
+
+   else
+    FieldByName('Language').AsString := 'NONE';  // Do not localize.
+   end;
+
+   end
+     else
+   begin
     if mitPascal.Checked then
       FieldByName('Language').AsString := 'PASCAL'  // Do not localize.
     else
       FieldByName('Language').AsString := 'NONE';  // Do not localize.
+   end;
+
     Post;
+
   end;
   Node := tvTopics.Items.AddChildObject(tvTopics.Selected, Desc,
     Pointer(PtrInt(CodeDB.FieldByName('Key').AsInteger)));  // Do not localize.
@@ -517,6 +563,21 @@ begin
  FCodeText.Undo;
 end;
 
+procedure TCodeFrm.actImportTxtExecute(Sender: TObject);
+var
+  Node: TTreeNode;
+begin
+  Screen.Cursor := crHourglass;
+  if dlgOpen.Execute then
+  try
+    Node := AddCode(ExtractFileName(dlgOpen.FileName), true);
+    if Node <> nil then
+     tvTopics.Selected := Node;
+  finally
+    Screen.Cursor := crDefault;
+  end;
+end;
+
 procedure TCodeFrm.actReadOnlyExecute(Sender: TObject);
 begin
  FCodeText.ReadOnly:=mitReadOnly.Checked;
@@ -578,6 +639,7 @@ begin
   begin
     actMakeRoot.Enabled := False;
     actNewSnippet.Enabled := False;
+
   end
   else
   begin
@@ -586,6 +648,8 @@ begin
     actNewFolder.Enabled := not SnippetIsSelected;
   end;
   actPrint.Enabled:=SnippetIsSelected;
+
+  actImportTxt.Enabled:= not SnippetIsSelected;
 
   actSaveAsHtml.Enabled:=SnippetIsSelected;
   actSaveAsTXT.Enabled:=SnippetIsSelected;
@@ -724,8 +788,8 @@ begin
                      FCodeText.HighLighter := SynPas;
                     end;
           end;
-          FCodeText.Text:=CodeDB.FieldByName('Code').AsString;
-     finally
+          FCodeText.Text:=CodeDB.FieldByName('Code').AsString ;
+        finally
           FCodeText.Lines.EndUpdate;
         end;
       end;
@@ -1092,6 +1156,8 @@ begin  // loadresource string;
 
   actSaveAsHtml.Caption:= rs_actSaveAsHtml;
   actSaveAsTXT.Caption :=  rs_actSaveAsTXT;
+  actImportTxt.Caption:=rs_actImportTxt;
+
 
   mitFile.Caption := rs_mitFile;
   mitFileNew.Caption:=rs_mitFileNew;

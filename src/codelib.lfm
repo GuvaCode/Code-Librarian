@@ -1,7 +1,7 @@
 object CodeFrm: TCodeFrm
-  Left = 530
+  Left = 380
   Height = 462
-  Top = 188
+  Top = 173
   Width = 640
   Caption = 'Code Librarian'
   ClientHeight = 438
@@ -223,6 +223,9 @@ object CodeFrm: TCodeFrm
         object mitExportHtml: TMenuItem
           Action = actSaveAsHtml
         end
+      end
+      object mitImport: TMenuItem
+        Action = actImportTxt
       end
       object mitExpSep: TMenuItem
         Caption = '-'
@@ -662,6 +665,11 @@ object CodeFrm: TCodeFrm
       Category = 'File'
       Caption = 'Export as Text'
       OnExecute = actSaveAsTXTExecute
+    end
+    object actImportTxt: TAction
+      Category = 'File'
+      Caption = 'actImportTxt'
+      OnExecute = actImportTxtExecute
     end
   end
   object ilActions: TImageList
@@ -1515,5 +1523,9 @@ object CodeFrm: TCodeFrm
     ActiveDot = False
     Left = 122
     Top = 346
+  end
+  object dlgOpen: TOpenDialog
+    Left = 416
+    Top = 128
   end
 end

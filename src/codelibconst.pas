@@ -50,8 +50,11 @@ resourcestring
  rs_actSyntaxNone='&None';
  rs_actReadOnly='Read only';
 
+
  rs_actSaveAsHtml='Export snippet as html page';
  rs_actSaveAsTXT ='Export snippet as text file';
+
+ rs_actImportTxt ='Import';
 
  rs_mitFile='File';
  rs_mitFileNew='&New';
