@@ -8,7 +8,7 @@ msgstr ""
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt_PT\n"
+"Language: pt_BR\n"
 "X-Generator: Poedit 2.4.1\n"
 
 #: codelibconst.rscannotattach
