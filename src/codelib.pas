@@ -653,6 +653,9 @@ begin
     actEditPasteToIde.Enabled := (SnippetIsSelected and (FCodeText.SelAvail));
   end;
 
+
+
+
   actDelete.Enabled := HaveSelectedNode;
   actEditRename.Enabled := HaveSelectedNode;
 
@@ -841,10 +844,12 @@ begin
       actReadOnly.Enabled := False;
     end;
     Modified := False;
+    if (Node <> nil) then statusbar.Panels[0].Text:=node.Text;
   except
     on E: Exception do
       ShowMessage(E.Message);
   end;
+
   UpdateActionsCP(Sender);
 end;
 

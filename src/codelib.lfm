@@ -49,9 +49,11 @@ object CodeFrm: TCodeFrm
     HideSelection = False
     Images = ilActions
     Indent = 19
+    ParentShowHint = False
     PopupMenu = pmTopics
     RightClickSelect = True
     ScrollBars = ssAutoBoth
+    ShowHint = True
     SortType = stText
     TabOrder = 2
     ToolTips = False
