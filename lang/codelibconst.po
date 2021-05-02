@@ -6,6 +6,7 @@ msgid "Subitems cannot be attached to a code snippet, only folders."
 msgstr ""
 
 #: codelibconst.rsconfirmdelete
+#, object-pascal-format
 msgid "Delete this %s ?"
 msgstr ""
 
@@ -192,4 +193,3 @@ msgstr ""
 #: codelibconst.rs_optlbl
 msgid "Select data base path .."
 msgstr ""
-
