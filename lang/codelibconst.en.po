@@ -17,6 +17,7 @@ msgid "Subitems cannot be attached to a code snippet, only folders."
 msgstr "Subitems cannot be attached to a code snippet, only folders."
 
 #: codelibconst.rsconfirmdelete
+#, object-pascal-format
 msgid "Delete this %s ?"
 msgstr "Delete this %s ?"
 
