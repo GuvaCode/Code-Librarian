@@ -49,16 +49,18 @@ resourcestring
  rs_actOptions='Options';
  rs_actSyntaxNone='&None';
  rs_actReadOnly='Read only';
-
+ rs_actSetBackgoundColor='Set editor backgound color';
 
  rs_actSaveAsHtml='Export snippet as html page';
  rs_actSaveAsTXT ='Export snippet as text file';
 
- rs_actImportTxt ='Import';
+ rs_actImportOneFileTxt ='Import one Text file';
+ rs_actImportSeveralFilesTxt = 'Import several Text files';
 
  rs_mitFile='File';
  rs_mitFileNew='&New';
  rs_mitExport='Export';
+ rs_mitImport='Import';
 
  rs_mitEdit='&Edit';
  rs_mitOptions='&Options';
@@ -74,10 +76,13 @@ resourcestring
   rs_btnCancel='Cancel';
 
 // Options
-  rs_optlbl='Select data base path ..';
+  rs_optlbl='Select data base path ...';
   rs_optcaption='Options ...';
 
+// Add\import code
+  rs_noFolderSelected='Please, select an importing folder.';
+  rs_noFileFoundInImportingFolder='No *.txt file found in the importing folder.';
+  rs_error='Error';
 implementation
 
 end.
-

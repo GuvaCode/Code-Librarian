@@ -12,12 +12,12 @@ interface
 
 uses
   Clipbrd, Forms, DB, BufDataset, ImgList, Controls, StdActns, Classes,
-  LazFileUtils, SysUtils, LCLType, ActnList, Dialogs, Menus, ComCtrls,
-  ExtCtrls, LCLVersion, SynEdit, SynHighlighterCpp, SynHighlighterHTML,
+  LazFileUtils, SysUtils, LCLType, ActnList, Dialogs, Menus, ComCtrls, ExtCtrls,
+  LCLVersion, XMLPropStorage, SynEdit, SynHighlighterCpp, SynHighlighterHTML,
   SynHighlighterSQL, SynHighlighterPas, SynEditHighlighter, SynHighlighterJava,
   SynExportHTML, SynHighlighterJScript, SynHighlighterPerl, SynHighlighterPHP,
   SynHighlighterPython, synhighlighterunixshellscript, SynHighlighterBat,
-  SynHighlighterAny, PrintersDlgs, codelibConst;
+  SynHighlighterAny, PrintersDlgs, codelibConst, Graphics;
 
 type
   TSearchRecord = record
@@ -32,8 +32,10 @@ type
     actCopyAsHtml: TAction;
     actEditUndo: TAction;
     actEditRedo: TAction;
-    actImportTxt: TAction;
-    actSaveAsTXT: TAction;
+    actImportOneFileTxt: TAction;
+    actImportSeveralFilesTxt: TAction;
+    actSetBackgoundColor: TAction;
+    actSaveAsTxt: TAction;
     actReadOnly: TAction;
     actSyntaxBat: TAction;
     actSyntaxUNIXShell: TAction;
@@ -44,7 +46,12 @@ type
     actSaveAsHtml: TAction;
     actSyntaxJava: TAction;
     CodeDB: TBufDataset;
+    dlgColor: TColorDialog;
     DataSource1: TDataSource;
+    mitImportSeveralFilesTXT: TMenuItem;
+    mitImportOneFileTXT: TMenuItem;
+    mitEditorSep6: TMenuItem;
+    mitSetColor: TMenuItem;
     mitImport: TMenuItem;
     mitExportHtml: TMenuItem;
     mitExportTXT: TMenuItem;
@@ -69,6 +76,7 @@ type
     dlgPrint: TPrintDialog;
     dlgSave: TSaveDialog;
     dlgOpen: TOpenDialog;
+    dlgDirectory: TSelectDirectoryDialog;
     Splitter: TSplitter;
     MainMenu: TMainMenu;
     mitFile: TMenuItem;
@@ -186,10 +194,12 @@ type
     procedure actCopyAsHtmlExecute(Sender: TObject);
     procedure actEditRedoExecute(Sender: TObject);
     procedure actEditUndoExecute(Sender: TObject);
-    procedure actImportTxtExecute(Sender: TObject);
+    procedure actImportOneFileTxtExecute(Sender: TObject);
+    procedure actImportSeveralFilesTxtExecute(Sender: TObject);
     procedure actReadOnlyExecute(Sender: TObject);
     procedure actSaveAsHtmlExecute(Sender: TObject);
-    procedure actSaveAsTXTExecute(Sender: TObject);
+    procedure actSaveAsTxtExecute(Sender: TObject);
+    procedure actSetBackgoundColorExecute(Sender: TObject);
     procedure CodeTextChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -237,6 +247,7 @@ type
     FModified: boolean;
     FSearch: TSearchRecord;
     FDatabasePath: string;
+    FBackgroundColor: TColor;
     FCodeText: TSynEdit;
     function CreateNewDB(const DatabaseFile: string): TBufDataset;
     function OpenDB(const DatabaseFile: string): TBufDataset;
@@ -252,7 +263,7 @@ type
     procedure SetupSyntaxHighlightingControl;
   public
     function AddFolder(Node: TTreeNode; const Desc: string): TTreeNode;
-    function AddCode(const Desc: string; Import: boolean = False): TTreeNode;
+    function AddCode(const Desc: string; FullpathFilenameToImport: string; Import: boolean = False): TTreeNode;
     property Modified: boolean read FModified write SetModified;
     property DatabasePath: string read FDatabasePath write FDatabasePath;
 
@@ -437,14 +448,16 @@ begin
     StatusBar.Panels[1].Text := ''; // No need to localize.
 end;
 
-function TCodeFrm.AddCode(const Desc: string; Import: boolean): TTreeNode;
+function TCodeFrm.AddCode(const Desc: string; FullpathFilenameToImport: string; Import: boolean = False): TTreeNode;
 var
   Node: TTreeNode;
   T: TStringList;
 begin
   Result := nil;
-  if tvTopics.Selected = nil then
+  if tvTopics.Selected = nil then begin
+    Dialogs.MessageDlg(rs_error, rs_noFolderSelected, mtError, [mbOK], 0);
     Exit;
+  end;
 
   with CodeDB do
   begin
@@ -454,14 +467,14 @@ begin
     FieldByName('Topic').AsString := Desc;  // Do not localize.
     FieldByName('Type').AsString := 'C';  // Do not localize.
 
-    if import then
+    if Import then
     begin
       T := TStringList.Create;
-      T.LoadFromFile(dlgOpen.FileName);
+     	T.LoadFromFile(FullpathFilenameToImport);
       FieldByName('Code').AsString := T.Text;
       T.Free;
 
-      case ExtractFileExt(dlgOpen.FileName) of
+      case ExtractFileExt(FullpathFilenameToImport) of
         '.pas': FieldByName('Language').AsString := 'PASCAL';      // Do not localize.
         '.pp': FieldByName('Language').AsString := 'PASCAL';      // Do not localize.
         '.c': FieldByName('Language').AsString := 'CPP';         // Do not localize.
@@ -483,7 +496,7 @@ begin
         '.bat': FieldByName('Language').AsString := 'MSDOSBAT';   // Do not localize.
 
         else
-          FieldByName('Language').AsString := 'NONE';  // Do not localize.
+          FieldByName('Language').AsString := 'PASCAL';  // Do not localize.
       end;
 
     end
@@ -521,7 +534,7 @@ begin
   if dlgSave.Execute then
   begin
     SynExportHTML.Highlighter := FCodeText.Highlighter;
-    SynExportHTML.Title := '';//FCodeText;
+    SynExportHTML.Title := '';
     SynExportHTML.Color := FCodeText.Color;
     SynExportHTML.ExportAsText := True;
 
@@ -538,7 +551,7 @@ begin
   end;
 end;
 
-procedure TCodeFrm.actSaveAsTXTExecute(Sender: TObject);
+procedure TCodeFrm.actSaveAsTxtExecute(Sender: TObject);
 var
   T: TStringList;
 begin
@@ -556,6 +569,18 @@ begin
       T.Free;
     end;
   end;
+end;
+
+procedure TCodeFrm.actSetBackgoundColorExecute(Sender: TObject);
+begin
+  Screen.Cursor := crHourglass;
+  if dlgColor.Execute then
+    try
+      FBackgroundColor := dlgColor.Color;
+      FCodeText.Color := FBackgroundColor;
+    finally
+      Screen.Cursor := crDefault;
+    end;
 end;
 
 procedure TCodeFrm.actCopyAsHtmlExecute(Sender: TObject);
@@ -580,19 +605,69 @@ begin
   FCodeText.Undo;
 end;
 
-procedure TCodeFrm.actImportTxtExecute(Sender: TObject);
+procedure TCodeFrm.actImportOneFileTxtExecute(Sender: TObject);
 var
   Node: TTreeNode;
 begin
-  Screen.Cursor := crHourglass;
-  if dlgOpen.Execute then
+  if dlgOpen.Execute then begin
     try
-      Node := AddCode(ExtractFileName(dlgOpen.FileName), True);
+      Screen.Cursor := crHourglass;
+      Node := AddCode(ExtractFileName(dlgOpen.FileName), dlgOpen.FileName, True);
       if Node <> nil then
         tvTopics.Selected := Node;
     finally
+        Screen.Cursor := crDefault;
+    end;
+  end;
+end;
+
+procedure TCodeFrm.actImportSeveralFilesTxtExecute(Sender: TObject);
+
+
+          function GetStrlistOfTextFilesToImport(const sImportingDir: string): TStringList;
+          var
+           recDirSR: TSearchRec;
+           o_List: TStringList;
+          const
+            sMaskGlobex: string = '*.txt';
+          begin
+            o_List := TStringList.Create;
+            o_List.Sorted := False;
+            o_List.Duplicates := dupIgnore;
+            o_List.CaseSensitive := False;
+            if FindFirst(sImportingDir + DirectorySeparator + sMaskGlobex, faAnyFile, recDirSR) = 0 then begin
+             repeat
+               o_List.Add(sImportingDir + DirectorySeparator + recDirSR.Name);
+             until FindNext(recDirSR) <> 0;
+            findclose(recDirSR);
+            end;
+	          Result := o_List;
+          end;
+
+
+var
+	oStrlstTextFilesToImport: TStringList;
+  sTextFile: string;
+  i, iNbrFiles: integer;
+begin
+  if dlgDirectory.Execute then begin
+    try
+      Screen.Cursor := crHourglass;
+      oStrlstTextFilesToImport:= GetStrlistOfTextFilesToImport(dlgDirectory.FileName);
+      iNbrFiles := oStrlstTextFilesToImport.Count;
+      if iNbrFiles > 0 then begin
+			  for i := 0 to Pred(iNbrFiles) do begin
+          sTextFile := oStrlstTextFilesToImport.Strings[i];
+          AddCode(ExtractFileName(sTextFile), sTextFile, True);
+        end;
+      end
+      else
+        Dialogs.MessageDlg(rs_error, rs_noFileFoundInImportingFolder, mtError, [mbOK], 0);
+    finally
+      if Assigned(oStrlstTextFilesToImport) then FreeAndNil(oStrlstTextFilesToImport);
       Screen.Cursor := crDefault;
     end;
+  end;
 end;
 
 procedure TCodeFrm.actReadOnlyExecute(Sender: TObject);
@@ -653,9 +728,6 @@ begin
     actEditPasteToIde.Enabled := (SnippetIsSelected and (FCodeText.SelAvail));
   end;
 
-
-
-
   actDelete.Enabled := HaveSelectedNode;
   actEditRename.Enabled := HaveSelectedNode;
 
@@ -673,10 +745,11 @@ begin
   end;
   actPrint.Enabled := SnippetIsSelected;
 
-  actImportTxt.Enabled := not SnippetIsSelected  and HaveSelectedNode;
+  actImportOneFileTxt.Enabled := not SnippetIsSelected  and HaveSelectedNode;
+  actImportSeveralFilesTxt.Enabled := not SnippetIsSelected  and HaveSelectedNode;
 
   actSaveAsHtml.Enabled := SnippetIsSelected;
-  actSaveAsTXT.Enabled := SnippetIsSelected;
+  actSaveAsTxt.Enabled := SnippetIsSelected;
   mitExport.Enabled := SnippetIsSelected;
 
   Handled := True;
@@ -844,12 +917,10 @@ begin
       actReadOnly.Enabled := False;
     end;
     Modified := False;
-    if (Node <> nil) then statusbar.Panels[0].Text:=node.Text;
   except
     on E: Exception do
       ShowMessage(E.Message);
   end;
-
   UpdateActionsCP(Sender);
 end;
 
@@ -1175,8 +1246,8 @@ begin
   try
     Config := GetIDEConfigStorage('codelib.xml', False);
     try
-      Config.SetDeleteValue('CodeLib/DBPath/Value',
-        DatabasePath, LazarusIDE.GetPrimaryConfigPath);
+      Config.SetDeleteValue('CodeLib/DBPath/Value', DatabasePath, LazarusIDE.GetPrimaryConfigPath);
+      Config.SetDeleteValue('Color/BackgroundColor/Value', FBackgroundColor, Graphics.clGray);
     finally
       Config.Free;
     end;
@@ -1216,16 +1287,19 @@ begin  // loadresource string;
   actOptions.Caption := rs_actOptions;
   actSyntaxNone.Caption := rs_actSyntaxNone;
   actReadOnly.Caption := rs_actReadOnly;
+  actSetBackgoundColor.Caption := rs_actSetBackgoundColor;
 
   actSaveAsHtml.Caption := rs_actSaveAsHtml;
-  actSaveAsTXT.Caption := rs_actSaveAsTXT;
-  actImportTxt.Caption := rs_actImportTxt;
+  actSaveAsTxt.Caption := rs_actSaveAsTXT;
+  actImportOneFileTxt.Caption := rs_actImportOneFileTxt;
+  actImportSeveralFilesTxt.Caption := rs_actImportSeveralFilesTxt;
 
 
   mitFile.Caption := rs_mitFile;
   mitFileNew.Caption := rs_mitFileNew;
 
   mitExport.Caption := rs_mitExport;
+  mitImport.Caption := rs_mitImport;
 
   mitEdit.Caption := rs_mitEdit;
   mitOptions.Caption := rs_mitOptions;
@@ -1238,8 +1312,8 @@ begin  // loadresource string;
   try
     Config := GetIDEConfigStorage('codelib.xml', True);
     try
-      FDatabasePath := Config.GetValue('CodeLib/DBPath/Value',
-        LazarusIDE.GetPrimaryConfigPath);
+      FDatabasePath := Config.GetValue('CodeLib/DBPath/Value', LazarusIDE.GetPrimaryConfigPath);
+      FBackgroundColor := Config.GetValue('Color/BackgroundColor/Value', Graphics.clGray);
     finally
       Config.Free;
     end;
@@ -1272,7 +1346,7 @@ var
 begin
   Screen.Cursor := crHourglass;
   try
-    Node := AddCode(rsNewCode);
+    Node := AddCode(rsNewCode, '', False);
     if Node <> nil then
     begin
       tvTopics.Selected := Node;
@@ -1500,6 +1574,8 @@ begin
     FCodeText.HighLighter := SynBat
   else
     FCodeText.HighLighter := nil;
+
+  FCodeText.Color := FBackgroundColor;
 end;
 
 procedure TCodeFrm.UpdateActionsCP(Sender: TObject);
