@@ -6,7 +6,6 @@ msgid "Subitems cannot be attached to a code snippet, only folders."
 msgstr ""
 
 #: codelibconst.rsconfirmdelete
-#, object-pascal-format
 msgid "Delete this %s ?"
 msgstr ""
 
@@ -94,8 +93,12 @@ msgstr ""
 msgid "Expand all"
 msgstr ""
 
-#: codelibconst.rs_actimporttxt
-msgid "Import"
+#: codelibconst.rs_actimportonefiletxt
+msgid "Import one Text file"
+msgstr ""
+
+#: codelibconst.rs_actimportseveralfilestxt
+msgid "Import several Text files"
 msgstr ""
 
 #: codelibconst.rs_actmakeroot
@@ -138,6 +141,10 @@ msgstr ""
 msgid "Export snippet as text file"
 msgstr ""
 
+#: codelibconst.rs_actsetbackgoundcolor
+msgid "Set editor backgound color"
+msgstr ""
+
 #: codelibconst.rs_actsyntaxnone
 msgid "&None"
 msgstr ""
@@ -162,6 +169,10 @@ msgstr ""
 msgid "Whole words only"
 msgstr ""
 
+#: codelibconst.rs_error
+msgid "Error"
+msgstr ""
+
 #: codelibconst.rs_mitedit
 msgid "&Edit"
 msgstr ""
@@ -182,8 +193,21 @@ msgstr ""
 msgid "&New"
 msgstr ""
 
+#: codelibconst.rs_mitimport
+msgctxt "codelibconst.rs_mitimport"
+msgid "Import"
+msgstr ""
+
 #: codelibconst.rs_mitoptions
 msgid "&Options"
+msgstr ""
+
+#: codelibconst.rs_nofilefoundinimportingfolder
+msgid "No *.txt file found in the importing folder."
+msgstr ""
+
+#: codelibconst.rs_nofolderselected
+msgid "Please, select an importing folder."
 msgstr ""
 
 #: codelibconst.rs_optcaption
@@ -191,5 +215,5 @@ msgid "Options ..."
 msgstr ""
 
 #: codelibconst.rs_optlbl
-msgid "Select data base path .."
+msgid "Select data base path ..."
 msgstr ""
