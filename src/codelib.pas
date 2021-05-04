@@ -496,7 +496,7 @@ begin
         '.bat': FieldByName('Language').AsString := 'MSDOSBAT';   // Do not localize.
 
         else
-          FieldByName('Language').AsString := 'NONE';  // Do not localize.
+          FieldByName('Language').AsString := 'PASCAL';  // Do not localize.
       end;
 
     end
@@ -609,15 +609,16 @@ procedure TCodeFrm.actImportOneFileTxtExecute(Sender: TObject);
 var
   Node: TTreeNode;
 begin
-  Screen.Cursor := crHourglass;
-  if dlgOpen.Execute then
+  if dlgOpen.Execute then begin
     try
+      Screen.Cursor := crHourglass;
       Node := AddCode(ExtractFileName(dlgOpen.FileName), dlgOpen.FileName, True);
       if Node <> nil then
         tvTopics.Selected := Node;
     finally
-      Screen.Cursor := crDefault;
+        Screen.Cursor := crDefault;
     end;
+  end;
 end;
 
 procedure TCodeFrm.actImportSeveralFilesTxtExecute(Sender: TObject);
@@ -628,7 +629,7 @@ procedure TCodeFrm.actImportSeveralFilesTxtExecute(Sender: TObject);
            recDirSR: TSearchRec;
            o_List: TStringList;
           const
-            sMaskGlobex: string = '*.cson';
+            sMaskGlobex: string = '*.txt';
           begin
             o_List := TStringList.Create;
             o_List.Sorted := False;
@@ -649,9 +650,9 @@ var
   sTextFile: string;
   i, iNbrFiles: integer;
 begin
-  Screen.Cursor := crHourglass;
-  try
-    if dlgDirectory.Execute then begin
+  if dlgDirectory.Execute then begin
+    try
+      Screen.Cursor := crHourglass;
       oStrlstTextFilesToImport:= GetStrlistOfTextFilesToImport(dlgDirectory.FileName);
       iNbrFiles := oStrlstTextFilesToImport.Count;
       if iNbrFiles > 0 then begin
@@ -661,11 +662,11 @@ begin
         end;
       end
       else
-      	Dialogs.MessageDlg(rs_error, rs_noFileFoundInImportingFolder, mtError, [mbOK], 0);
+        Dialogs.MessageDlg(rs_error, rs_noFileFoundInImportingFolder, mtError, [mbOK], 0);
+    finally
+      if Assigned(oStrlstTextFilesToImport) then FreeAndNil(oStrlstTextFilesToImport);
+      Screen.Cursor := crDefault;
     end;
-  finally
-    if Assigned(oStrlstTextFilesToImport) then FreeAndNil(oStrlstTextFilesToImport);
-    Screen.Cursor := crDefault;
   end;
 end;
 
