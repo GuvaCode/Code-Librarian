@@ -105,9 +105,13 @@ msgstr "Exit"
 msgid "Expand all"
 msgstr "Expand all"
 
-#: codelibconst.rs_actimporttxt
-msgid "Import"
-msgstr "Import"
+#: codelibconst.rs_actimportonefiletxt
+msgid "Import one Text file"
+msgstr "Import one Text file"
+
+#: codelibconst.rs_actimportseveralfilestxt
+msgid "Import several Text files"
+msgstr "Import several Text files"
 
 #: codelibconst.rs_actmakeroot
 msgid "Move folder to root"
@@ -149,6 +153,10 @@ msgstr "Export snippet as html page"
 msgid "Export snippet as text file"
 msgstr "Export snippet as text file"
 
+#: codelibconst.rs_actsetbackgoundcolor
+msgid "Set editor backgound color"
+msgstr "Set editor backgound color"
+
 #: codelibconst.rs_actsyntaxnone
 msgid "&None"
 msgstr "&None"
@@ -173,6 +181,10 @@ msgstr "Case sensitive"
 msgid "Whole words only"
 msgstr "Whole words only"
 
+#: codelibconst.rs_error
+msgid "Error"
+msgstr "Error"
+
 #: codelibconst.rs_mitedit
 msgid "&Edit"
 msgstr "&Edit"
@@ -193,14 +205,30 @@ msgstr "File"
 msgid "&New"
 msgstr "&New"
 
+#: codelibconst.rs_mitimport
+#, fuzzy
+msgctxt "codelibconst.rs_mitimport"
+msgid "Import"
+msgstr "Import"
+
 #: codelibconst.rs_mitoptions
 msgid "&Options"
 msgstr "&Options"
+
+#: codelibconst.rs_nofilefoundinimportingfolder
+msgid "No *.txt file found in the importing folder."
+msgstr "No *.txt file found in the importing folder."
+
+#: codelibconst.rs_nofolderselected
+msgid "Please, select an importing folder."
+msgstr "Please, select an importing folder."
 
 #: codelibconst.rs_optcaption
 msgid "Options ..."
 msgstr "Options ..."
 
 #: codelibconst.rs_optlbl
-msgid "Select data base path .."
+#, fuzzy
+#| msgid "Select data base path .."
+msgid "Select data base path ..."
 msgstr "Select data base path .."
