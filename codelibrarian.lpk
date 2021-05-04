@@ -689,7 +689,7 @@ may consider it more useful to permit linking proprietary applications with
 the library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
 &lt;https://www.gnu.org/licenses/why-not-lgpl.html>."/>
-    <Version Major="1" Release="1"/>
+    <Version Major="1" Minor="4"/>
     <Files Count="3">
       <Item1>
         <Filename Value="codelibregister.pas"/>
