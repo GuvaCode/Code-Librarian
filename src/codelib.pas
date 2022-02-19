@@ -1258,7 +1258,18 @@ end;
 procedure TCodeFrm.SaveSettings;
 var
   Config: TConfigStorage;
+  i: Integer;
 begin
+  FWidth := ClientWidth;
+  FHeight := ClientHeight;
+  FTop := Top;
+  FLeft := Left;
+  for i := Low(windowstateArr) to High(windowstateArr) do
+    if windowstateArr[i] = WindowState then
+    begin
+      FWindowState := i;
+      break;
+    end;
   try
     Config := GetIDEConfigStorage('codelib.xml', False);
     try
@@ -1267,10 +1278,12 @@ begin
       Config.SetDeleteValue('SizePosition/Save/Value', FSaveSizePosition, True);
       if FSaveSizePosition then
       begin
-        Config.SetValue('SizePosition/Width/Value', ClientWidth);
-        Config.SetValue('SizePosition/Height/Value', ClientHeight);
-        Config.SetValue('SizePosition/Top/Value', Top);
-        Config.SetValue('SizePosition/Left/Value', Left);
+        Config.SetValue('SizePosition/Width/Value', FWidth);
+        Config.SetValue('SizePosition/Height/Value', FHeight);
+        Config.SetValue('SizePosition/Top/Value', FTop);
+        Config.SetValue('SizePosition/Left/Value', FLeft);
+        Config.SetValue('SizePosition/WindowState/Value', FWindowState);
+        Config.SetValue('SizePosition/TreeViewWidth/Value', tvTopics.Width);
       end;
     finally
       Config.Free;
@@ -1348,6 +1361,7 @@ begin  // loadresource string;
         FWindowState := Config.GetValue('SizePosition/WindowState/Value', Low(windowstateArr));
         if (FWindowState < Low(windowstateArr)) or (FWindowState > Low(windowstateArr)) then
           FWindowState := Low(windowstateArr);
+        tvTopics.Width := Config.GetValue('SizePosition/TreeViewWidth/Value', tvTopics.Width);
       end;
     finally
       Config.Free;
