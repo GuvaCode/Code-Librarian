@@ -26,3 +26,4 @@ templates/standard_game/
 # GNU+Linux
 *.so
 *.lrj
+*.pot

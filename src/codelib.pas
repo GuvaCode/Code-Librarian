@@ -248,6 +248,12 @@ type
     FSearch: TSearchRecord;
     FDatabasePath: string;
     FBackgroundColor: TColor;
+    FSaveSizePosition: Boolean;
+    FWidth: Integer;
+    FHeight: Integer;
+    FTop: Integer;
+    FLeft: Integer;
+    FWindowState: Integer;
     FCodeText: TSynEdit;
     function CreateNewDB(const DatabaseFile: string): TBufDataset;
     function OpenDB(const DatabaseFile: string): TBufDataset;
@@ -261,14 +267,15 @@ type
     procedure SortNodes;
     procedure AddDefaultIndexes(DataSet: TBufDataset);
     procedure SetupSyntaxHighlightingControl;
+    procedure SetBackgroundColor(AValue: TColor);
   public
     function AddFolder(Node: TTreeNode; const Desc: string): TTreeNode;
     function AddCode(const Desc: string; FullpathFilenameToImport: string; Import: boolean = False): TTreeNode;
     property Modified: boolean read FModified write SetModified;
     property DatabasePath: string read FDatabasePath write FDatabasePath;
-
+    property BackgroundColor: TColor read FBackgroundColor write SetBackgroundColor;
+    property SaveSizePosition: Boolean read FSaveSizePosition write FSaveSizePosition;
   end;
-
 
 var
   CodeFrm: TCodeFrm;
@@ -281,6 +288,9 @@ uses
   LCLProc,
   IDEOptEditorIntf, EditorSyntaxHighlighterDef,
   codesrch, codeoptions;
+
+const
+  windowstateArr: array [0..3] of TWindowState = (wsNormal, wsMinimized, wsMaximized, wsFullScreen);
 
 function TCodeFrm.CreateNewDB(const DatabaseFile: string): TBufDataset;
 begin
@@ -576,8 +586,7 @@ begin
   Screen.Cursor := crHourglass;
   if dlgColor.Execute then
     try
-      FBackgroundColor := dlgColor.Color;
-      FCodeText.Color := FBackgroundColor;
+      BackgroundColor := dlgColor.Color;
     finally
       Screen.Cursor := crDefault;
     end;
@@ -1247,7 +1256,15 @@ begin
     Config := GetIDEConfigStorage('codelib.xml', False);
     try
       Config.SetDeleteValue('CodeLib/DBPath/Value', DatabasePath, LazarusIDE.GetPrimaryConfigPath);
-      Config.SetDeleteValue('Color/BackgroundColor/Value', FBackgroundColor, Graphics.clGray);
+      Config.SetDeleteValue('Color/BackgroundColor/Value', FBackgroundColor, Graphics.clWhite);
+      Config.SetDeleteValue('SizePosition/Save/Value', FSaveSizePosition, True);
+      if FSaveSizePosition then
+      begin
+        Config.SetValue('SizePosition/Width/Value', ClientWidth);
+        Config.SetValue('SizePosition/Height/Value', ClientHeight);
+        Config.SetValue('SizePosition/Top/Value', Top);
+        Config.SetValue('SizePosition/Left/Value', Left);
+      end;
     finally
       Config.Free;
     end;
@@ -1313,7 +1330,18 @@ begin  // loadresource string;
     Config := GetIDEConfigStorage('codelib.xml', True);
     try
       FDatabasePath := Config.GetValue('CodeLib/DBPath/Value', LazarusIDE.GetPrimaryConfigPath);
-      FBackgroundColor := Config.GetValue('Color/BackgroundColor/Value', Graphics.clGray);
+      FBackgroundColor := Config.GetValue('Color/BackgroundColor/Value', Graphics.clWhite);
+      FSaveSizePosition := Config.GetValue('SizePosition/Save/Value', True);
+      if FSaveSizePosition then
+      begin
+        FWidth := Config.GetValue('SizePosition/Width/Value', ClientWidth);
+        FHeight := Config.GetValue('SizePosition/Height/Value', ClientHeight);
+        FTop := Config.GetValue('SizePosition/Top/Value', Top);
+        FLeft := Config.GetValue('SizePosition/Left/Value', Left);
+        FWindowState := Config.GetValue('SizePosition/WindowState/Value', Low(windowstateArr));
+        if (FWindowState < Low(windowstateArr)) or (FWindowState > Low(windowstateArr)) then
+          FWindowState := Low(windowstateArr);
+      end;
     finally
       Config.Free;
     end;
@@ -1452,6 +1480,14 @@ begin
   if (CodeDB <> nil) and not CodeDB.Active then
     CodeDB.Open;
   SetupSyntaxHighlightingControl;
+  if FSaveSizePosition then
+  begin
+    ClientWidth := FWidth;
+    ClientHeight := FHeight;
+    Top := FTop;
+    Left := FLeft;
+    WindowState := windowstateArr[FWindowState];
+  end;
 end;
 
 procedure TCodeFrm.SortNodes;
@@ -1576,6 +1612,15 @@ begin
     FCodeText.HighLighter := nil;
 
   FCodeText.Color := FBackgroundColor;
+end;
+
+procedure TCodeFrm.SetBackgroundColor(AValue: TColor);
+begin
+  if FBackgroundColor <> AValue then
+  begin
+    FBackgroundColor := AValue;
+    FCodeText.Color := FBackgroundColor;
+  end;
 end;
 
 procedure TCodeFrm.UpdateActionsCP(Sender: TObject);
