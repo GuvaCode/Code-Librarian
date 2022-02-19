@@ -47,7 +47,6 @@ type
     actSyntaxJava: TAction;
     CodeDB: TBufDataset;
     dlgColor: TColorDialog;
-    DataSource1: TDataSource;
     mitImportSeveralFilesTXT: TMenuItem;
     mitImportOneFileTXT: TMenuItem;
     mitEditorSep6: TMenuItem;
@@ -190,7 +189,6 @@ type
     actSyntaxSql: TAction;
     actEditRename: TAction;
     mitTreeRename: TMenuItem;
-
     procedure actCopyAsHtmlExecute(Sender: TObject);
     procedure actEditRedoExecute(Sender: TObject);
     procedure actEditUndoExecute(Sender: TObject);
@@ -268,6 +266,8 @@ type
     procedure AddDefaultIndexes(DataSet: TBufDataset);
     procedure SetupSyntaxHighlightingControl;
     procedure SetBackgroundColor(AValue: TColor);
+    procedure CheckDBVersion;
+    procedure tvTopicsExpand(Sender: TObject; Node: TTreeNode);
   public
     function AddFolder(Node: TTreeNode; const Desc: string): TTreeNode;
     function AddCode(const Desc: string; FullpathFilenameToImport: string; Import: boolean = False): TTreeNode;
@@ -310,6 +310,7 @@ begin
       FieldDefs.Add('Code', ftMemo, 0, False);
       FieldDefs.Add('Protect', ftBoolean, 0, False);
       FieldDefs.Add('Language', ftString, 10, False);
+      FieldDefs.Add('Expand', ftBoolean, 0, False);
       IndexDefs.Add('Main', 'Key', [ixPrimary]);
       IndexDefs.Add('Parent', 'Parent', []);
       IndexDefs.Add('System', 'System', []);
@@ -404,6 +405,8 @@ procedure TCodeFrm.InitializeTreeView;
 var
   Node: TTreeNode;
 begin
+  tvTopics.OnExpanded := nil;
+  tvTopics.OnCollapsed := nil;
   tvTopics.SortType := stNone;
   tvTopics.Items.BeginUpdate;
   try
@@ -417,12 +420,15 @@ begin
       Node.ImageIndex := ClosedFolderImageIndex;
       Node.SelectedIndex := OpenFolderImageIndex;
       LoadTreeView(Node, CodeDB.FieldByName('Key').AsInteger); // Do not localize.
+      Node.Expanded := CodeDB.FieldByName('Expand').AsBoolean;
       CodeDB.Next;
     end;
   finally
     tvTopics.SortType := stNone;
     tvTopics.Items.EndUpdate;
   end;
+  tvTopics.OnExpanded := @tvTopicsExpand;
+  tvTopics.OnCollapsed := @tvTopicsExpand;
 end;
 
 function TCodeFrm.AddFolder(Node: TTreeNode; const Desc: string): TTreeNode;
@@ -439,6 +445,7 @@ begin
       FieldByName('Parent').AsInteger := 0;  // Do not localize.
     FieldByName('Topic').AsString := Desc; // Do not localize.
     FieldByName('Type').AsString := 'F';  // Do not localize.
+    FieldByName('Expand').AsBoolean := True;
     Post;
   end;
   NNode := tvTopics.Items.AddChildObject(Node, Desc,
@@ -1355,7 +1362,9 @@ begin  // loadresource string;
   CodeDB := OpenDB(AppendPathDelim(FDatabasePath) + DefaultDBFileName); // do not localize
 
   if CodeDB = nil then
-    CodeDB := CreateNewDb(AppendPathDelim(FDatabasePath) + DefaultDBFileName);
+    CodeDB := CreateNewDb(AppendPathDelim(FDatabasePath) + DefaultDBFileName)
+  else
+    CheckDBVersion;
 
   InitializeTreeView;
   mitPascal.Checked := True;
@@ -1425,10 +1434,7 @@ begin
   try
     with TFrmOptions.Create(nil) do
       try
-        if ShowModal = mrOk then
-        begin
-          DatabasePath := DirectoryEdit.Directory;
-        end;
+        ShowModal;
       finally
         SaveSettings;
         Free;
@@ -1620,6 +1626,55 @@ begin
   begin
     FBackgroundColor := AValue;
     FCodeText.Color := FBackgroundColor;
+  end;
+end;
+
+procedure TCodeFrm.CheckDBVersion;
+var
+  i: Integer;
+  tableOK: Boolean = False;
+  TempDB: TBufDataSet;
+begin
+  for i := 0 to CodeDB.FieldDefs.Count - 1 do
+  begin
+    tableOK := SameText(CodeDB.FieldDefs[i].Name, 'Expand');
+    if tableOK then
+      break;
+  end;
+  if not tableOK then
+  begin
+    CodeDB.Close;
+    FreeAndNil(CodeDB);
+    TempDB := TBufDataset.Create(nil);
+    TempDB.LoadFromFile(AppendPathDelim(FDatabasePath) + DefaultDBFileName);
+    TempDB.Open;
+    if TempDB.RecordCount > 0 then
+    begin
+      CodeDB := CreateNewDb(AppendPathDelim(FDatabasePath) + DefaultDBFileName);
+      TempDB.First;
+      while not TempDB.EOF do
+      begin
+        CodeDB.Insert;
+        for i := 0 to TempDB.Fields.Count - 1 do
+          CodeDB.Fields[i].Value := TempDB.Fields[i].Value;
+        CodeDB.Append;
+        TempDB.Next;
+      end;
+    end;
+    TempDB.Close;
+    FreeAndNil(TempDB);
+  end;
+end;
+
+procedure TCodeFrm.tvTopicsExpand(Sender: TObject; Node: TTreeNode);
+begin
+  if not CodeDB.Active then
+    Exit;
+  if CodeDB.Locate('Key', PtrInt(Node.Data), []) then
+  begin
+    CodeDB.Edit;
+    CodeDB.FieldByName('Expand').AsBoolean := Node.Expanded;
+    CodeDB.Post;
   end;
 end;
 
