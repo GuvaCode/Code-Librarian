@@ -26,6 +26,13 @@ type
     WholeWord: boolean;
   end;
 
+  TLanguageRecord = record
+    ImageIndex: Integer;            
+    Highlighter: TSynCustomHighlighter;
+    MenuItem: TMenuItem;
+    Code: String;
+  end;
+
 { TCodeFrm }
 type
   TCodeFrm = class(TForm)
@@ -268,6 +275,8 @@ type
     procedure SetBackgroundColor(AValue: TColor);
     procedure CheckDBVersion;
     procedure tvTopicsExpand(Sender: TObject; Node: TTreeNode);
+    function IsSnippet(Key: Integer): Boolean;
+    function GetImageIndex(Key: Integer): Integer; 
   public
     function AddFolder(Node: TTreeNode; const Desc: string): TTreeNode;
     function AddCode(const Desc: string; FullpathFilenameToImport: string; Import: boolean = False): TTreeNode;
@@ -291,6 +300,21 @@ uses
 
 const
   windowstateArr: array [0..3] of TWindowState = (wsNormal, wsMinimized, wsMaximized, wsFullScreen);
+
+var
+  languageArr: array [0..11] of TLanguageRecord = (
+    (ImageIndex: 18; Highlighter: nil; MenuItem: nil; Code: 'NONE'),
+    (ImageIndex: 23; Highlighter: nil; MenuItem: nil; Code: 'PASCAL'),
+    (ImageIndex: 24; Highlighter: nil; MenuItem: nil; Code: 'CPP'),
+    (ImageIndex: 25; Highlighter: nil; MenuItem: nil; Code: 'HTML'),
+    (ImageIndex: 26; Highlighter: nil; MenuItem: nil; Code: 'SQL'),
+    (ImageIndex: 27; Highlighter: nil; MenuItem: nil; Code: 'JAVA'),
+    (ImageIndex: 28; Highlighter: nil; MenuItem: nil; Code: 'JAVASCRIPT'),
+    (ImageIndex: 29; Highlighter: nil; MenuItem: nil; Code: 'PERL'),
+    (ImageIndex: 30; Highlighter: nil; MenuItem: nil; Code: 'PHP'),
+    (ImageIndex: 31; Highlighter: nil; MenuItem: nil; Code: 'PYTHON'),
+    (ImageIndex: 32; Highlighter: nil; MenuItem: nil; Code: 'UNIXSHELL'),
+    (ImageIndex: 33; Highlighter: nil; MenuItem: nil; Code: 'MSDOSBAT'));
 
 function TCodeFrm.CreateNewDB(const DatabaseFile: string): TBufDataset;
 begin
@@ -383,16 +407,12 @@ procedure TCodeFrm.InitializeTreeView;
           RNode := tvTopics.Items.AddChildObject(Node,
             CodeDB.FieldByName('Topic').AsString, // Do not localize.
             Pointer(PtrInt(CodeDB.FieldByName('Key').AsInteger))); // Do not localize.
-          if CodeDB.FieldByName('Type').AsString = 'F' then // Do not localize.
+          RNode.ImageIndex := GetImageIndex(CodeDB.FieldByName('Key').AsInteger);
+          RNode.SelectedIndex := GetImageIndex(CodeDB.FieldByName('Key').AsInteger);
+          if not IsSnippet(CodeDB.FieldByName('Key').AsInteger) then // Do not localize.
           begin
-            RNode.ImageIndex := ClosedFolderImageIndex;
-            RNode.SelectedIndex := OpenFolderImageIndex;
             LoadTreeView(RNode, CodeDB.FieldByName('Key').AsInteger); // Do not localize.
-          end
-          else
-          begin
-            RNode.ImageIndex := CodeSnippetImageIndex;
-            RNode.SelectedIndex := CodeSnippetImageIndex;
+            RNode.Expanded := CodeDB.FieldByName('Expand').AsBoolean;
           end;
           CodeDB.Next;
         end;
@@ -417,8 +437,8 @@ begin
       Node := tvTopics.Items.AddObject(nil, CodeDB.FieldByName('Topic').AsString,
         // Do not localize.
         Pointer(PtrInt(CodeDB.FieldByName('Key').AsInteger))); // Do not localize.
-      Node.ImageIndex := ClosedFolderImageIndex;
-      Node.SelectedIndex := OpenFolderImageIndex;
+      Node.ImageIndex := GetImageIndex(CodeDB.FieldByName('Key').AsInteger);
+      Node.SelectedIndex := GetImageIndex(CodeDB.FieldByName('Key').AsInteger);
       LoadTreeView(Node, CodeDB.FieldByName('Key').AsInteger); // Do not localize.
       Node.Expanded := CodeDB.FieldByName('Expand').AsBoolean;
       CodeDB.Next;
@@ -434,15 +454,25 @@ end;
 function TCodeFrm.AddFolder(Node: TTreeNode; const Desc: string): TTreeNode;
 var
   NNode: TTreeNode;
+  ParentId: Integer;
+  Language: String;
 begin
   Result := nil;
+  ParentId := 0;
+  Language := 'PASCAL';
+  if (Node <> nil) then
+  begin
+    ParentId := PtrInt(Node.Data);
+    if IsSnippet(PtrInt(Node.Data)) then
+      exit
+    else
+      Language := CodeDB.FieldByName('Language').AsString;
+  end;
   with CodeDB do
   begin
     Insert;
-    if Node <> nil then
-      FieldByName('Parent').AsInteger := PtrInt(Node.Data)  // Do not localize.
-    else
-      FieldByName('Parent').AsInteger := 0;  // Do not localize.
+    FieldByName('Parent').AsInteger := ParentId;  // Do not localize.
+    FieldByName('Language').AsString := Language;
     FieldByName('Topic').AsString := Desc; // Do not localize.
     FieldByName('Type').AsString := 'F';  // Do not localize.
     FieldByName('Expand').AsBoolean := True;
@@ -450,8 +480,8 @@ begin
   end;
   NNode := tvTopics.Items.AddChildObject(Node, Desc,
     Pointer(PtrInt(CodeDB.FieldByName('Key').AsInteger))); // Do not localize.
-  NNode.ImageIndex := ClosedFolderImageIndex;
-  NNode.SelectedIndex := OpenFolderImageIndex;
+  NNode.ImageIndex := GetImageIndex(CodeDB.FieldByName('Key').AsInteger);
+  NNode.SelectedIndex := GetImageIndex(CodeDB.FieldByName('Key').AsInteger);
   Result := NNode;
   SortNodes;
 end;
@@ -469,13 +499,16 @@ function TCodeFrm.AddCode(const Desc: string; FullpathFilenameToImport: string; 
 var
   Node: TTreeNode;
   T: TStringList;
+  Language: String;
 begin
   Result := nil;
   if tvTopics.Selected = nil then begin
     Dialogs.MessageDlg(rs_error, rs_noFolderSelected, mtError, [mbOK], 0);
     Exit;
-  end;
-
+  end
+  else if IsSnippet(PtrInt(tvTopics.Selected.Data)) then
+    exit;
+  Language := CodeDB.FieldByName('Language').AsString;
   with CodeDB do
   begin
     Insert;
@@ -483,6 +516,7 @@ begin
     // Do not localize.
     FieldByName('Topic').AsString := Desc;  // Do not localize.
     FieldByName('Type').AsString := 'C';  // Do not localize.
+    FieldByName('Language').AsString := Language;
 
     if Import then
     begin
@@ -511,18 +545,8 @@ begin
         '.sh': FieldByName('Language').AsString := 'UNIXSHELL';   // Do not localize.
         '.bash': FieldByName('Language').AsString := 'UNIXSHELL';   // Do not localize.
         '.bat': FieldByName('Language').AsString := 'MSDOSBAT';   // Do not localize.
-
-        else
-          FieldByName('Language').AsString := 'PASCAL';  // Do not localize.
       end;
 
-    end
-    else
-    begin
-      if mitPascal.Checked then
-        FieldByName('Language').AsString := 'PASCAL'  // Do not localize.
-      else
-        FieldByName('Language').AsString := 'NONE';  // Do not localize.
     end;
 
     Post;
@@ -530,8 +554,8 @@ begin
   end;
   Node := tvTopics.Items.AddChildObject(tvTopics.Selected, Desc,
     Pointer(PtrInt(CodeDB.FieldByName('Key').AsInteger)));  // Do not localize.
-  Node.ImageIndex := CodeSnippetImageIndex;
-  Node.SelectedIndex := CodeSnippetImageIndex;
+  Node.ImageIndex := GetImageIndex(CodeDB.FieldByName('Key').AsInteger);
+  Node.SelectedIndex := GetImageIndex(CodeDB.FieldByName('Key').AsInteger);
   Result := Node;
   SortNodes;
 end;
@@ -733,8 +757,7 @@ begin
   // bug on linux on menu
   // actEditPaste.Enabled := (Clipboard.HasFormat(CF_TEXT) and (not FCodeText.ReadOnly));
   HaveSelectedNode := tvTopics.Selected <> nil;
-  SnippetIsSelected := HaveSelectedNode and (tvTopics.Selected.ImageIndex =
-    CodeSnippetImageIndex);
+  SnippetIsSelected := HaveSelectedNode and IsSnippet(PtrInt(tvTopics.Selected.Data));
 
   Editor := SourceEditorManagerIntf.ActiveEditor;
   if Editor <> nil then
@@ -796,45 +819,10 @@ begin
     CodeDB.Edit;
     CodeDB.FieldByName('Topic').AsString := tvTopics.Selected.Text;
 
-    if tvTopics.Selected.ImageIndex = CodeSnippetImageIndex then
+    if IsSnippet(PtrInt(tvTopics.Selected.Data)) then
     begin
       CodeDB.FieldByName('Code').AsString := FCodeText.Text;
       CodeDB.FieldByName('Protect').AsBoolean := FcodeText.ReadOnly;
-
-      if mitPascal.Checked then
-        CodeDB.FieldByName('Language').AsString := 'PASCAL'
-      else
-      if mitCPP.Checked then
-        CodeDB.FieldByName('Language').AsString := 'CPP'
-      else
-      if mitHTML.Checked then
-        CodeDB.FieldByName('Language').AsString := 'HTML'
-      else
-      if mitSQL.Checked then
-        CodeDB.FieldByName('Language').AsString := 'SQL'
-      else
-      if mitJAVA.Checked then
-        CodeDB.FieldByName('Language').AsString := 'JAVA'
-      else
-      if mitJAVASCRIPT.Checked then
-        CodeDB.FieldByName('Language').AsString := 'JAVASCRIPT'
-      else
-      if mitPerl.Checked then
-        CodeDB.FieldByName('Language').AsString := 'PERL'
-      else
-      if mitPHP.Checked then
-        CodeDB.FieldByName('Language').AsString := 'PHP'
-      else
-      if mitPython.Checked then
-        CodeDB.FieldByName('Language').AsString := 'PYTHON'
-      else
-      if mitUNIXShell.Checked then
-        CodeDB.FieldByName('Language').AsString := 'UNIXSHELL'
-      else
-      if mitBat.Checked then
-        CodeDB.FieldByName('Language').AsString := 'MSDOSBAT'
-      else
-        CodeDB.FieldByName('Language').AsString := 'NONE';
     end;
     CodeDB.Post;
   end;
@@ -847,74 +835,25 @@ begin
 end;
 
 procedure TCodeFrm.tvTopicsChange(Sender: TObject; Node: TTreeNode);
+var
+  i: Integer;
 begin
   try
-    if (Node <> nil) and (Node.ImageIndex = CodeSnippetImageIndex) then
+    if (Node <> nil) and IsSnippet(PtrInt(Node.Data)) then
     begin
       if CodeDB.Locate('Key', PtrInt(Node.Data), []) then  // Do not localize.
       begin
         FCodeText.Lines.BeginUpdate;
         try
-          case CodeDB.FieldByName('Language').AsString of
-            'NONE':
-            begin // This is non source code
-              mitNone.Checked := True;
-              FCodeText.HighLighter := SynAny;
-            end;
-            'CPP':
-            begin // This is CPP source code
-              mitCPP.Checked := True;
-              FCodeText.HighLighter := SynCPP;
-            end;
-            'HTML':
-            begin // This is HTML source code
-              mitHTML.Checked := True;
-              FCodeText.HighLighter := SynHTML;
-            end;
-            'SQL':
-            begin // This is SQL source code
-              mitSQL.Checked := True;
-              FCodeText.HighLighter := SynSQL;
-            end;
-            'JAVA':
-            begin // This is Java source code
-              mitJAVA.Checked := True;
-              FCodeText.HighLighter := SynJava;
-            end;
-            'JAVASCRIPT':
-            begin // This is Java Script source code
-              mitJAVAScript.Checked := True;
-              FCodeText.HighLighter := SynJavaScript;
-            end;
-            'PERL':
-            begin // This is Perl source code
-              mitPerl.Checked := True;
-              FCodeText.HighLighter := SynPerl;
-            end;
-            'PHP':
-            begin // This is Php source code
-              mitPHP.Checked := True;
-              FCodeText.HighLighter := SynPHP;
-            end;
-            'PYTHON':
-            begin // This is Python source code
-              mitPython.Checked := True;
-              FCodeText.HighLighter := SynPython;
-            end;
-            'UNIXSHELL':
-            begin // This is Unix shell source code
-              mitUNIXShell.Checked := True;
-              FCodeText.HighLighter := SynUnixShell;
-            end;
-            'MSDOSBAT':
-            begin // This is MsDos bat source code
-              mitBat.Checked := True;
-              FCodeText.HighLighter := SynBat;
-            end;
-            'PASCAL':
-            begin // This is Pascal source code
-              mitPascal.Checked := True;
-              FCodeText.HighLighter := SynPas;
+          FCodeText.HighLighter := languageArr[Low(languageArr)].Highlighter;
+          languageArr[Low(languageArr)].MenuItem.Checked := True;
+          for i := Low(languageArr) to High(languageArr) do
+          begin
+            if SameText(languageArr[i].Code, CodeDB.FieldByName('Language').AsString) then
+            begin
+              FCodeText.HighLighter := languageArr[i].Highlighter;
+              languageArr[i].MenuItem.Checked := True;
+              break;
             end;
           end;
           FCodeText.Text := CodeDB.FieldByName('Code').AsString;
@@ -963,7 +902,7 @@ begin
       Exit;
     if CodeDB.Locate('Key', PtrInt(tvTopics.Selected.Data), []) then  // Do not localize.
     begin
-      if tvTopics.Selected.ImageIndex = CodeSnippetImageIndex then
+      if IsSnippet(PtrInt(tvTopics.Selected.Data)) then
         NodeType := rsSnippet
       else
         NodeType := rsFolder;
@@ -1204,7 +1143,7 @@ begin
     Node := tvTopics.GetNodeAt(X, Y);
     if Node = nil then
       Exit;
-    if Node.ImageIndex = CodeSnippetImageIndex then
+    if IsSnippet(PtrInt(Node.Data)) then
     begin
       MessageDlg(rsCannotAttach, mtError, [mbOK], 0);
       Exit;
@@ -1330,7 +1269,6 @@ begin  // loadresource string;
   actSaveAsTxt.Caption := rs_actSaveAsTXT;
   actImportOneFileTxt.Caption := rs_actImportOneFileTxt;
   actImportSeveralFilesTxt.Caption := rs_actImportSeveralFilesTxt;
-
 
   mitFile.Caption := rs_mitFile;
   mitFileNew.Caption := rs_mitFileNew;
@@ -1476,8 +1414,8 @@ end;
 procedure TCodeFrm.MakeRootExecute(Sender: TObject);
 begin
   with tvTopics do
-    if ((Selected <> nil) and (Selected.Level > 0) and
-      (not (Selected.ImageIndex = CodeSnippetImageIndex))) then
+    if (Selected <> nil) and (Selected.Level > 0) and
+      not IsSnippet(PtrInt(Selected.Data)) then
     begin
       CodeDB.Edit;
       CodeDB.FieldByName('Parent').AsInteger := 0;  // Do not localize.
@@ -1516,23 +1454,27 @@ begin
 end;
 
 procedure TCodeFrm.GenericSyntaxHighlightingExecute(Sender: TObject);
+var
+  i: Integer;
 begin
-  Modified := True;
-  case (Sender as TAction).Name of
-    'actSyntaxNone': FCodeText.HighLighter := SynAny;
-    'actSyntaxPascal': FCodeText.HighLighter := SynPAS;
-    'actSyntaxCpp': FCodeText.HighLighter := SynCPP;
-    'actSyntaxHtml': FCodeText.HighLighter := SynHTML;
-    'actSyntaxSql': FCodeText.HighLighter := SynSQL;
-    'actSyntaxJava': FCodeText.HighLighter := SynJava;
-    'actSyntaxJavaScript': FCodeText.HighLighter := SynJavaScript;
-    'actSyntaxPerl': FCodeText.Highlighter := SynPerl;
-    'actSyntaxPHP': FCodeText.Highlighter := SynPHP;
-    'actSyntaxPython': FCodeText.Highlighter := SynPython;
-    'actSyntaxUNIXShell': FCodeText.Highlighter := SynUnixShell;
-    'actSyntaxBat': FCodeText.Highlighter := SynBat;
-    else
-      raise Exception.Create('Internal error selecting language');
+  if CodeDB.Locate('Key', PtrInt(tvTopics.Selected.Data), []) then
+  begin
+    for i := Low(languageArr) to High(languageArr) do
+    begin
+      if languageArr[i].ImageIndex = (Sender as TAction).ImageIndex then
+      begin
+        CodeDB.Edit;
+        CodeDB.FieldByName('Language').AsString := languageArr[i].Code;
+        CodeDB.Post;
+        FCodeText.Highlighter := languageArr[i].Highlighter;
+        if IsSnippet(PtrInt(tvTopics.Selected.Data)) then
+        begin
+          tvTopics.Selected.ImageIndex := languageArr[i].ImageIndex;
+          tvTopics.Selected.SelectedIndex := languageArr[i].ImageIndex;
+        end;
+        break;
+      end;
+    end;
   end;
 end;
 
@@ -1579,6 +1521,32 @@ begin
   SynPas.SymbolAttri := SynCpp.SymbolAttri;
  {$ENDIF}
 
+  languageArr[0].Highlighter := SynAny;
+  languageArr[1].Highlighter := SynPas;
+  languageArr[2].Highlighter := SynCpp;
+  languageArr[3].Highlighter := SynHTML;
+  languageArr[4].Highlighter := SynSQL;
+  languageArr[5].Highlighter := SynJava;
+  languageArr[6].Highlighter := SynJavaScript;
+  languageArr[7].Highlighter := SynPerl;
+  languageArr[8].Highlighter := SynPHP;
+  languageArr[9].Highlighter := SynPython;
+  languageArr[10].Highlighter := SynUNIXShell;
+  languageArr[11].Highlighter := SynBat;
+
+  languageArr[0].MenuItem := mitNone;
+  languageArr[1].MenuItem := mitPascal;
+  languageArr[2].MenuItem := mitCPP;
+  languageArr[3].MenuItem := mitHTML;
+  languageArr[4].MenuItem := mitSQL;
+  languageArr[5].MenuItem := mitJAVA;
+  languageArr[6].MenuItem := mitJavaScript;
+  languageArr[7].MenuItem := mitPerl;
+  languageArr[8].MenuItem := mitPHP;
+  languageArr[9].MenuItem := mitPython;
+  languageArr[10].MenuItem := mitUNIXShell;
+  languageArr[11].MenuItem := mitBat;
+
   with FCodeText do
   begin
     BeginUpdate();
@@ -1596,40 +1564,7 @@ begin
   end;
   UpdateActionsCP(Self);
 
-  if mitPascal.Checked then
-    FCodeText.HighLighter := SynPAS
-  else
-  if mitCPP.Checked then
-    FCodeText.HighLighter := SynCPP
-  else
-  if mitHTML.Checked then
-    FCodeText.HighLighter := SynHTML
-  else
-  if mitSQL.Checked then
-    FCodeText.HighLighter := SynSQL
-  else
-  if mitJava.Checked then
-    FCodeText.HighLighter := SynJava
-  else
-  if mitJavaScript.Checked then
-    FCodeText.HighLighter := SynJavaScript
-  else
-  if mitPerl.Checked then
-    FCodeText.HighLighter := SynPerl
-  else
-  if mitPHP.Checked then
-    FCodeText.HighLighter := SynPHP
-  else
-  if mitPython.Checked then
-    FCodeText.HighLighter := SynPython
-  else
-  if mitUnixShell.Checked then
-    FCodeText.HighLighter := SynUnixShell
-  else
-  if mitBat.Checked then
-    FCodeText.HighLighter := SynBat
-  else
-    FCodeText.HighLighter := nil;
+  FCodeText.HighLighter := nil;
 
   FCodeText.Color := FBackgroundColor;
 end;
@@ -1690,6 +1625,34 @@ begin
     CodeDB.FieldByName('Expand').AsBoolean := Node.Expanded;
     CodeDB.Post;
   end;
+end;    
+
+function TCodeFrm.IsSnippet(Key: Integer): Boolean;
+begin
+  Result := False;
+  if (CodeDB.FieldByName('Key').AsInteger = Key) or CodeDB.Locate('Key', Key, []) then
+    Result := not SameText(CodeDB.FieldByName('Type').AsString, 'F');
+end;
+
+function TCodeFrm.GetImageIndex(Key: Integer): Integer;
+var
+  i: Integer;
+begin
+  Result := -1;
+  if not IsSnippet(Key) then
+    Result := FolderImageIndex
+  else
+  begin
+    Result := 18;
+    for i := Low(languageArr) to High(languageArr) do
+    begin
+      if SameText(languageArr[i].Code, CodeDB.FieldByName('Language').AsString) then
+      begin
+        Result := languageArr[i].ImageIndex;
+        break;
+      end;
+    end;
+  end;
 end;
 
 procedure TCodeFrm.UpdateActionsCP(Sender: TObject);
@@ -1703,7 +1666,7 @@ begin
   if tvTopics.Selected <> nil then
   begin
     tvTopics.SetFocus;
-    if tvTopics.Selected.ImageIndex = CodeSnippetImageIndex then
+    if IsSnippet(PtrInt(tvTopics.Selected.Data)) then
       actEditPasteToIde.Execute;
   end;
 end;
