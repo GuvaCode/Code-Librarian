@@ -78,6 +78,8 @@ resourcestring
 // Options
   rs_optlbl='Select data base path ...';
   rs_optcaption='Options ...';
+  rs_optbackgoundcolor = 'Editor backgound color';
+  rs_savesizeposition = 'Save window size and position';
 
 // Add\import code
   rs_noFolderSelected='Please, select an importing folder.';

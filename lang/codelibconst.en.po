@@ -223,6 +223,10 @@ msgstr "No *.txt file found in the importing folder."
 msgid "Please, select an importing folder."
 msgstr "Please, select an importing folder."
 
+#: codelibconst.rs_optbackgoundcolor
+msgid "Editor backgound color"
+msgstr ""
+
 #: codelibconst.rs_optcaption
 msgid "Options ..."
 msgstr "Options ..."
@@ -232,3 +236,8 @@ msgstr "Options ..."
 #| msgid "Select data base path .."
 msgid "Select data base path ..."
 msgstr "Select data base path .."
+
+#: codelibconst.rs_savesizeposition
+msgid "Save window size and position"
+msgstr ""
+

@@ -47,7 +47,6 @@ type
     actSyntaxJava: TAction;
     CodeDB: TBufDataset;
     dlgColor: TColorDialog;
-    DataSource1: TDataSource;
     mitImportSeveralFilesTXT: TMenuItem;
     mitImportOneFileTXT: TMenuItem;
     mitEditorSep6: TMenuItem;
@@ -190,7 +189,6 @@ type
     actSyntaxSql: TAction;
     actEditRename: TAction;
     mitTreeRename: TMenuItem;
-
     procedure actCopyAsHtmlExecute(Sender: TObject);
     procedure actEditRedoExecute(Sender: TObject);
     procedure actEditUndoExecute(Sender: TObject);
@@ -248,6 +246,12 @@ type
     FSearch: TSearchRecord;
     FDatabasePath: string;
     FBackgroundColor: TColor;
+    FSaveSizePosition: Boolean;
+    FWidth: Integer;
+    FHeight: Integer;
+    FTop: Integer;
+    FLeft: Integer;
+    FWindowState: Integer;
     FCodeText: TSynEdit;
     function CreateNewDB(const DatabaseFile: string): TBufDataset;
     function OpenDB(const DatabaseFile: string): TBufDataset;
@@ -261,14 +265,17 @@ type
     procedure SortNodes;
     procedure AddDefaultIndexes(DataSet: TBufDataset);
     procedure SetupSyntaxHighlightingControl;
+    procedure SetBackgroundColor(AValue: TColor);
+    procedure CheckDBVersion;
+    procedure tvTopicsExpand(Sender: TObject; Node: TTreeNode);
   public
     function AddFolder(Node: TTreeNode; const Desc: string): TTreeNode;
     function AddCode(const Desc: string; FullpathFilenameToImport: string; Import: boolean = False): TTreeNode;
     property Modified: boolean read FModified write SetModified;
     property DatabasePath: string read FDatabasePath write FDatabasePath;
-
+    property BackgroundColor: TColor read FBackgroundColor write SetBackgroundColor;
+    property SaveSizePosition: Boolean read FSaveSizePosition write FSaveSizePosition;
   end;
-
 
 var
   CodeFrm: TCodeFrm;
@@ -281,6 +288,9 @@ uses
   LCLProc,
   IDEOptEditorIntf, EditorSyntaxHighlighterDef,
   codesrch, codeoptions;
+
+const
+  windowstateArr: array [0..3] of TWindowState = (wsNormal, wsMinimized, wsMaximized, wsFullScreen);
 
 function TCodeFrm.CreateNewDB(const DatabaseFile: string): TBufDataset;
 begin
@@ -300,6 +310,7 @@ begin
       FieldDefs.Add('Code', ftMemo, 0, False);
       FieldDefs.Add('Protect', ftBoolean, 0, False);
       FieldDefs.Add('Language', ftString, 10, False);
+      FieldDefs.Add('Expand', ftBoolean, 0, False);
       IndexDefs.Add('Main', 'Key', [ixPrimary]);
       IndexDefs.Add('Parent', 'Parent', []);
       IndexDefs.Add('System', 'System', []);
@@ -394,6 +405,8 @@ procedure TCodeFrm.InitializeTreeView;
 var
   Node: TTreeNode;
 begin
+  tvTopics.OnExpanded := nil;
+  tvTopics.OnCollapsed := nil;
   tvTopics.SortType := stNone;
   tvTopics.Items.BeginUpdate;
   try
@@ -407,12 +420,15 @@ begin
       Node.ImageIndex := ClosedFolderImageIndex;
       Node.SelectedIndex := OpenFolderImageIndex;
       LoadTreeView(Node, CodeDB.FieldByName('Key').AsInteger); // Do not localize.
+      Node.Expanded := CodeDB.FieldByName('Expand').AsBoolean;
       CodeDB.Next;
     end;
   finally
     tvTopics.SortType := stNone;
     tvTopics.Items.EndUpdate;
   end;
+  tvTopics.OnExpanded := @tvTopicsExpand;
+  tvTopics.OnCollapsed := @tvTopicsExpand;
 end;
 
 function TCodeFrm.AddFolder(Node: TTreeNode; const Desc: string): TTreeNode;
@@ -429,6 +445,7 @@ begin
       FieldByName('Parent').AsInteger := 0;  // Do not localize.
     FieldByName('Topic').AsString := Desc; // Do not localize.
     FieldByName('Type').AsString := 'F';  // Do not localize.
+    FieldByName('Expand').AsBoolean := True;
     Post;
   end;
   NNode := tvTopics.Items.AddChildObject(Node, Desc,
@@ -576,8 +593,7 @@ begin
   Screen.Cursor := crHourglass;
   if dlgColor.Execute then
     try
-      FBackgroundColor := dlgColor.Color;
-      FCodeText.Color := FBackgroundColor;
+      BackgroundColor := dlgColor.Color;
     finally
       Screen.Cursor := crDefault;
     end;
@@ -1242,12 +1258,33 @@ end;
 procedure TCodeFrm.SaveSettings;
 var
   Config: TConfigStorage;
+  i: Integer;
 begin
+  FWidth := ClientWidth;
+  FHeight := ClientHeight;
+  FTop := Top;
+  FLeft := Left;
+  for i := Low(windowstateArr) to High(windowstateArr) do
+    if windowstateArr[i] = WindowState then
+    begin
+      FWindowState := i;
+      break;
+    end;
   try
     Config := GetIDEConfigStorage('codelib.xml', False);
     try
       Config.SetDeleteValue('CodeLib/DBPath/Value', DatabasePath, LazarusIDE.GetPrimaryConfigPath);
-      Config.SetDeleteValue('Color/BackgroundColor/Value', FBackgroundColor, Graphics.clGray);
+      Config.SetDeleteValue('Color/BackgroundColor/Value', FBackgroundColor, Graphics.clWhite);
+      Config.SetDeleteValue('SizePosition/Save/Value', FSaveSizePosition, True);
+      if FSaveSizePosition then
+      begin
+        Config.SetValue('SizePosition/Width/Value', FWidth);
+        Config.SetValue('SizePosition/Height/Value', FHeight);
+        Config.SetValue('SizePosition/Top/Value', FTop);
+        Config.SetValue('SizePosition/Left/Value', FLeft);
+        Config.SetValue('SizePosition/WindowState/Value', FWindowState);
+        Config.SetValue('SizePosition/TreeViewWidth/Value', tvTopics.Width);
+      end;
     finally
       Config.Free;
     end;
@@ -1313,7 +1350,19 @@ begin  // loadresource string;
     Config := GetIDEConfigStorage('codelib.xml', True);
     try
       FDatabasePath := Config.GetValue('CodeLib/DBPath/Value', LazarusIDE.GetPrimaryConfigPath);
-      FBackgroundColor := Config.GetValue('Color/BackgroundColor/Value', Graphics.clGray);
+      FBackgroundColor := Config.GetValue('Color/BackgroundColor/Value', Graphics.clWhite);
+      FSaveSizePosition := Config.GetValue('SizePosition/Save/Value', True);
+      if FSaveSizePosition then
+      begin
+        FWidth := Config.GetValue('SizePosition/Width/Value', ClientWidth);
+        FHeight := Config.GetValue('SizePosition/Height/Value', ClientHeight);
+        FTop := Config.GetValue('SizePosition/Top/Value', Top);
+        FLeft := Config.GetValue('SizePosition/Left/Value', Left);
+        FWindowState := Config.GetValue('SizePosition/WindowState/Value', Low(windowstateArr));
+        if (FWindowState < Low(windowstateArr)) or (FWindowState > Low(windowstateArr)) then
+          FWindowState := Low(windowstateArr);
+        tvTopics.Width := Config.GetValue('SizePosition/TreeViewWidth/Value', tvTopics.Width);
+      end;
     finally
       Config.Free;
     end;
@@ -1327,7 +1376,9 @@ begin  // loadresource string;
   CodeDB := OpenDB(AppendPathDelim(FDatabasePath) + DefaultDBFileName); // do not localize
 
   if CodeDB = nil then
-    CodeDB := CreateNewDb(AppendPathDelim(FDatabasePath) + DefaultDBFileName);
+    CodeDB := CreateNewDb(AppendPathDelim(FDatabasePath) + DefaultDBFileName)
+  else
+    CheckDBVersion;
 
   InitializeTreeView;
   mitPascal.Checked := True;
@@ -1397,10 +1448,7 @@ begin
   try
     with TFrmOptions.Create(nil) do
       try
-        if ShowModal = mrOk then
-        begin
-          DatabasePath := DirectoryEdit.Directory;
-        end;
+        ShowModal;
       finally
         SaveSettings;
         Free;
@@ -1452,6 +1500,14 @@ begin
   if (CodeDB <> nil) and not CodeDB.Active then
     CodeDB.Open;
   SetupSyntaxHighlightingControl;
+  if FSaveSizePosition then
+  begin
+    ClientWidth := FWidth;
+    ClientHeight := FHeight;
+    Top := FTop;
+    Left := FLeft;
+    WindowState := windowstateArr[FWindowState];
+  end;
 end;
 
 procedure TCodeFrm.SortNodes;
@@ -1576,6 +1632,64 @@ begin
     FCodeText.HighLighter := nil;
 
   FCodeText.Color := FBackgroundColor;
+end;
+
+procedure TCodeFrm.SetBackgroundColor(AValue: TColor);
+begin
+  if FBackgroundColor <> AValue then
+  begin
+    FBackgroundColor := AValue;
+    FCodeText.Color := FBackgroundColor;
+  end;
+end;
+
+procedure TCodeFrm.CheckDBVersion;
+var
+  i: Integer;
+  tableOK: Boolean = False;
+  TempDB: TBufDataSet;
+begin
+  for i := 0 to CodeDB.FieldDefs.Count - 1 do
+  begin
+    tableOK := SameText(CodeDB.FieldDefs[i].Name, 'Expand');
+    if tableOK then
+      break;
+  end;
+  if not tableOK then
+  begin
+    CodeDB.Close;
+    FreeAndNil(CodeDB);
+    TempDB := TBufDataset.Create(nil);
+    TempDB.LoadFromFile(AppendPathDelim(FDatabasePath) + DefaultDBFileName);
+    TempDB.Open;
+    if TempDB.RecordCount > 0 then
+    begin
+      CodeDB := CreateNewDb(AppendPathDelim(FDatabasePath) + DefaultDBFileName);
+      TempDB.First;
+      while not TempDB.EOF do
+      begin
+        CodeDB.Insert;
+        for i := 0 to TempDB.Fields.Count - 1 do
+          CodeDB.Fields[i].Value := TempDB.Fields[i].Value;
+        CodeDB.Append;
+        TempDB.Next;
+      end;
+    end;
+    TempDB.Close;
+    FreeAndNil(TempDB);
+  end;
+end;
+
+procedure TCodeFrm.tvTopicsExpand(Sender: TObject; Node: TTreeNode);
+begin
+  if not CodeDB.Active then
+    Exit;
+  if CodeDB.Locate('Key', PtrInt(Node.Data), []) then
+  begin
+    CodeDB.Edit;
+    CodeDB.FieldByName('Expand').AsBoolean := Node.Expanded;
+    CodeDB.Post;
+  end;
 end;
 
 procedure TCodeFrm.UpdateActionsCP(Sender: TObject);

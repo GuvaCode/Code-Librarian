@@ -17,6 +17,7 @@ msgid "Subitems cannot be attached to a code snippet, only folders."
 msgstr "Вложенные элементы не могут быть прикреплены к фрагменту кода, только к папкам."
 
 #: codelibconst.rsconfirmdelete
+#, object-pascal-format
 msgid "Delete this %s ?"
 msgstr "Удалить %s ?"
 
@@ -104,9 +105,13 @@ msgstr "Выход"
 msgid "Expand all"
 msgstr "Развернуть все"
 
-#: codelibconst.rs_actimporttxt
-msgid "Import"
-msgstr "Импорт"
+#: codelibconst.rs_actimportonefiletxt
+msgid "Import one Text file"
+msgstr ""
+
+#: codelibconst.rs_actimportseveralfilestxt
+msgid "Import several Text files"
+msgstr ""
 
 #: codelibconst.rs_actmakeroot
 msgid "Move folder to root"
@@ -148,6 +153,10 @@ msgstr "Экспортировать фрагмент как страницу ht
 msgid "Export snippet as text file"
 msgstr "Экспортировать фрагмент как текстовый файл"
 
+#: codelibconst.rs_actsetbackgoundcolor
+msgid "Set editor backgound color"
+msgstr ""
+
 #: codelibconst.rs_actsyntaxnone
 msgid "&None"
 msgstr "&Без подсветки"
@@ -172,6 +181,10 @@ msgstr "С учётом регистра"
 msgid "Whole words only"
 msgstr "Только слова целиком"
 
+#: codelibconst.rs_error
+msgid "Error"
+msgstr ""
+
 #: codelibconst.rs_mitedit
 msgid "&Edit"
 msgstr "&Правка"
@@ -192,14 +205,39 @@ msgstr "Файл"
 msgid "&New"
 msgstr "Создать"
 
+#: codelibconst.rs_mitimport
+#, fuzzy
+msgctxt "codelibconst.rs_mitimport"
+msgid "Import"
+msgstr "Импорт"
+
 #: codelibconst.rs_mitoptions
 msgid "&Options"
 msgstr "&Опции"
+
+#: codelibconst.rs_nofilefoundinimportingfolder
+msgid "No *.txt file found in the importing folder."
+msgstr ""
+
+#: codelibconst.rs_nofolderselected
+msgid "Please, select an importing folder."
+msgstr ""
+
+#: codelibconst.rs_optbackgoundcolor
+msgid "Editor backgound color"
+msgstr ""
 
 #: codelibconst.rs_optcaption
 msgid "Options ..."
 msgstr "Опции ..."
 
 #: codelibconst.rs_optlbl
-msgid "Select data base path .."
+#, fuzzy
+#| msgid "Select data base path .."
+msgid "Select data base path ..."
 msgstr "Выберите путь к базе данных .."
+
+#: codelibconst.rs_savesizeposition
+msgid "Save window size and position"
+msgstr ""
+
